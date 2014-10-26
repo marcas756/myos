@@ -73,45 +73,45 @@
     ((buffer).items)
 
 /*!
-     \def BUFFER_RAW(buffer)
- 	 Returns an pointer to the buffer items.
- 	 Type of pointer is uint8_t (byte).
+    \def BUFFER_RAW(buffer)
+    Returns an pointer to the buffer items.
+    Type of pointer is uint8_t (byte).
 */
 #define BUFFER_RAW(buffer) \
 	((uint8_t*)BUFFER_ITEMS(buffer))
 
 /*!
- 	 \def BUFFER_SIZEOF(buffer)
- 	 Returns the size of the buffer in bytes.
+    \def BUFFER_SIZEOF(buffer)
+    Returns the size of the buffer in bytes.
 */
 #define BUFFER_SIZEOF(buffer) \
     sizeof(BUFFER_ITEMS(buffer))
 
 
 /*!
- 	 \def BUFFER_SIZE(buffer)
- 	 Returns the maximum number of items the buffer can hold.
+     \def BUFFER_SIZE(buffer)
+     Returns the maximum number of items the buffer can hold.
 */
 #define BUFFER_SIZE(buffer) \
     (BUFFER_SIZEOF(buffer)/sizeof(BUFFER_ITEMS(buffer)[0]))
 
 /*!
- 	 \def BUFFER_COUNT(buffer)
- 	 Returns the current number of used items in the buffer.
+    \def BUFFER_COUNT(buffer)
+    Returns the current number of used items in the buffer.
 */
 #define BUFFER_COUNT(buffer) \
     ((buffer).count)
 
 /*!
- 	 \def BUFFER_INIT(buffer)
- 	 Initializes the buffer.
+    \def BUFFER_INIT(buffer)
+    Initializes the buffer.
 */
 #define BUFFER_INIT(buffer) \
     do{BUFFER_COUNT(buffer)=0;}while(0)
 
 /*!
- 	 \def BUFFER_CLEAR(buffer)
- 	 Initializes the buffer and sets all bytes in the buffer to 0.
+    \def BUFFER_CLEAR(buffer)
+    Initializes the buffer and sets all bytes in the buffer to 0.
 */
 #define BUFFER_CLEAR(buffer) \
     do { \
@@ -121,68 +121,68 @@
     while(0)
 
 /*!
- 	 \def BUFFER_COPY(destination,source)
- 	 Copies source buffer to destination buffer.
- 	 Source and destination buffer have to be of same type.
+    \def BUFFER_COPY(destination,source)
+    Copies source buffer to destination buffer.
+    Source and destination buffer have to be of same type.
 */
 #define BUFFER_COPY(destination,source) \
     do{(destination)=(source);}while(0)
 
 /*!
- 	 \def BUFFER_COMPARE(buffer1,buffer2)
- 	 Compares two buffers. Buffers have to be of same type.
- 	 This macro does not only compare the buffer contents but also the buffer count.
- 	 Returns 0 if the buffers are equal and any other value otherwise.
+    \def BUFFER_COMPARE(buffer1,buffer2)
+    Compares two buffers. Buffers have to be of same type.
+    This macro does not only compare the buffer contents but also the buffer count.
+    Returns 0 if the buffers are equal and any other value otherwise.
 */
 #define BUFFER_COMPARE(buffer1,buffer2) \
     memcmp(&(buffer1),&(buffer2),sizeof(buffer1))
 
 /*!
- 	 \def BUFFER_FULL(buffer)
- 	 Checks if no further buffer items are available.
- 	 Returns 1 if buffer is full, otherwise 0.
+    \def BUFFER_FULL(buffer)
+    Checks if no further buffer items are available.
+    Returns 1 if buffer is full, otherwise 0.
 */
 #define BUFFER_FULL(buffer) \
     (BUFFER_COUNT(buffer)>=BUFFER_SIZE(buffer))
 
 /*!
-     \def BUFFER_EMPTY(buffer)
-     Checks if the buffer has no items stored.
-     Returns 1 if buffer is empty, otherwise 0.
+    \def BUFFER_EMPTY(buffer)
+    Checks if the buffer has no items stored.
+    Returns 1 if buffer is empty, otherwise 0.
 */
 #define BUFFER_EMPTY(buffer) \
     (!BUFFER_COUNT(buffer))
 /*!
- 	 \def BUFFER_NEXT(buffer)
- 	 Moves to next free item in the buffer.
- 	 It does not check for buffer overflow.
- 	 In case of buffer overflow the behaviour is undefined.
- 	 Use BUFFER_FULL to check if buffer is full before using this macro.
+    \def BUFFER_NEXT(buffer)
+    Moves to next free item in the buffer.
+    It does not check for buffer overflow.
+    In case of buffer overflow the behaviour is undefined.
+    Use BUFFER_FULL to check if buffer is full before using this macro.
 */
 #define BUFFER_NEXT(buffer) \
     (++BUFFER_COUNT(buffer))
 
 /*!
- 	 \def BUFFER_VAL(buffer)
- 	 Returns the current free item by value.
+    \def BUFFER_VAL(buffer)
+    Returns the current free item by value.
 */
 #define BUFFER_VAL(buffer) \
     (BUFFER_ITEMS(buffer)[BUFFER_COUNT(buffer)])
 
 /*!
- 	 \def BUFFER_PTR(buffer)
- 	 Returns a pointer to the current free item.
+    \def BUFFER_PTR(buffer)
+    Returns a pointer to the current free item.
 */
 #define BUFFER_PTR(buffer) \
     (&BUFFER_VAL(buffer))
 
 /*!
- 	 \def BUFFER_APPEND(buffer)
- 	 Append an item to the buffer by value.
- 	 Automatically increases the buffer count.
- 	 It does not check for buffer overflow.
- 	 In case of buffer overflow the behaviour is undefined.
-     Use BUFFER_FULL to check if buffer is full before using this macro.
+    \def BUFFER_APPEND(buffer)
+    Append an item to the buffer by value.
+    Automatically increases the buffer count.
+    It does not check for buffer overflow.
+    In case of buffer overflow the behaviour is undefined.
+    Use BUFFER_FULL to check if buffer is full before using this macro.
 */
 #define BUFFER_APPEND(buffer,item) \
 	do {BUFFER_VAL(buffer) = item; BUFFER_NEXT(buffer);}while(0)

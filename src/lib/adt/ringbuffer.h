@@ -73,52 +73,52 @@
     BUFFER_ITEMS((ringbuffer).buffer)
 
 /*!
-     \def RINGBUFFER_RAW(ringbuffer)
-     Returns an pointer to the ringbuffer items.
-     Type of pointer is uint8_t (byte).
+    \def RINGBUFFER_RAW(ringbuffer)
+    Returns an pointer to the ringbuffer items.
+    Type of pointer is uint8_t (byte).
 */
 #define RINGBUFFER_RAW(ringbuffer) \
     BUFFER_RAW((ringbuffer).buffer)
 
 /*!
-     \def RINGBUFFER_SIZE(ringbuffer)
-     Returns the maximum number of items the ringbuffer can hold.
+    \def RINGBUFFER_SIZE(ringbuffer)
+    Returns the maximum number of items the ringbuffer can hold.
 */
 #define RINGBUFFER_SIZE(ringbuffer) \
         BUFFER_SIZE((ringbuffer).buffer)
 
 /*!
-     \def RINGBUFFER_SIZEOF(ringbuffer)
-     Returns the size of the ringbuffer in bytes.
+    \def RINGBUFFER_SIZEOF(ringbuffer)
+    Returns the size of the ringbuffer in bytes.
 */
 #define RINGBUFFER_SIZEOF(ringbuffer) \
     BUFFER_SIZEOF((ringbuffer).buffer)
 
 
 /*!
-     \def RINGBUFFER_COUNT(ringbuffer)
-     Returns the current number of used items in the ringbuffer.
+    \def RINGBUFFER_COUNT(ringbuffer)
+    Returns the current number of used items in the ringbuffer.
 */
 #define RINGBUFFER_COUNT(ringbuffer) \
     BUFFER_COUNT((ringbuffer).buffer)
 
 /*!
-     \def RINGBUFFER_HEAD(ringbuffer)
-     Returns the current head index.
+    \def RINGBUFFER_HEAD(ringbuffer)
+    Returns the current head index.
 */
 #define RINGBUFFER_HEAD(ringbuffer) \
     ((ringbuffer).head)
 
 /*!
-     \def RINGBUFFER_TAIL(ringbuffer)
-     Returns the current tail index.
+    \def RINGBUFFER_TAIL(ringbuffer)
+    Returns the current tail index.
 */
 #define RINGBUFFER_TAIL(ringbuffer) \
     ((ringbuffer).tail)
 
 /*!
-     \def RINGBUFFER_INIT(ringbuffer)
-     Initializes the ringbuffer.
+    \def RINGBUFFER_INIT(ringbuffer)
+    Initializes the ringbuffer.
 */
 #define RINGBUFFER_INIT(ringbuffer) \
     do{ \
@@ -128,39 +128,39 @@
     }while(0)
 
 /*!
-     \def RINGBUFFER_TAIL_VAL(ringbuffer)
-     Returns a reference of the current tail item.
+    \def RINGBUFFER_TAIL_VAL(ringbuffer)
+    Returns a reference of the current tail item.
 */
 #define RINGBUFFER_TAIL_VAL(ringbuffer) \
     (RINGBUFFER_ITEMS(ringbuffer)[RINGBUFFER_TAIL(ringbuffer)])
 
 /*!
-     \def RINGBUFFER_TAIL_PTR(ringbuffer)
-     Returns a pointer to the current tail item.
+    \def RINGBUFFER_TAIL_PTR(ringbuffer)
+    Returns a pointer to the current tail item.
 */
 #define RINGBUFFER_TAIL_PTR(ringbuffer) \
     (&RINGBUFFER_TAIL_VAL(ringbuffer))
 
 /*!
-     \def RINGBUFFER_HEAD_VAL(ringbuffer)
-     Returns a reference of the current head item.
+    \def RINGBUFFER_HEAD_VAL(ringbuffer)
+    Returns a reference of the current head item.
 */
 #define RINGBUFFER_HEAD_VAL(ringbuffer) \
     (RINGBUFFER_ITEMS(ringbuffer)[RINGBUFFER_HEAD(ringbuffer)])
 
 /*!
-     \def RINGBUFFER_HEAD_PTR(ringbuffer)
-     Returns a pointer to the current head item.
+    \def RINGBUFFER_HEAD_PTR(ringbuffer)
+    Returns a pointer to the current head item.
 */
 #define RINGBUFFER_HEAD_PTR(ringbuffer) \
     (&RINGBUFFER_HEAD_VAL(ringbuffer))
 
 /*!
-     \def RINGBUFFER_PUSH(ringbuffer)
-     Pushes the current tail item in the ringbuffer, or in other words: increases
-     the tail index to address the next item in the ringbuffer. Automatically wraps
-     around the tail index in case of index overflow. Also increases the number of items
-     in the ringbuffer by one.
+    \def RINGBUFFER_PUSH(ringbuffer)
+    Pushes the current tail item in the ringbuffer, or in other words: increases
+    the tail index to address the next item in the ringbuffer. Automatically wraps
+    around the tail index in case of index overflow. Also increases the number of items
+    in the ringbuffer by one.
 */
 #define RINGBUFFER_PUSH(ringbuffer) \
     do { \
@@ -172,11 +172,11 @@
 
 
 /*!
-     \def RINGBUFFER_POP(ringbuffer)
-     Pops the current head item in the ringbuffer, or in other words: increases
-     the head index to address the next item in the ringbuffer. Automatically wraps
-     around the head index in case of index overflow. Also decreases the number of items
-     in the ringbuffer by one.
+    \def RINGBUFFER_POP(ringbuffer)
+    Pops the current head item in the ringbuffer, or in other words: increases
+    the head index to address the next item in the ringbuffer. Automatically wraps
+    around the head index in case of index overflow. Also decreases the number of items
+    in the ringbuffer by one.
 */
 #define RINGBUFFER_POP(ringbuffer) \
     do { \
@@ -187,26 +187,26 @@
     }while (0)
 
 /*!
-     \def RINGBUFFER_FULL(ringbuffer)
-     Checks if no further ringbuffer items are available.
-     Returns 1 if ringbuffer is full, otherwise 0.
+    \def RINGBUFFER_FULL(ringbuffer)
+    Checks if no further ringbuffer items are available.
+    Returns 1 if ringbuffer is full, otherwise 0.
 */
 #define RINGBUFFER_FULL(ringbuffer) \
     BUFFER_FULL((ringbuffer).buffer)
 
 /*!
-     \def RINGBUFFER_EMPTY(ringbuffer)
-     Checks if the ringbuffer has no items stored.
-     Returns 1 if ringbuffer is empty, otherwise 0.
+    \def RINGBUFFER_EMPTY(ringbuffer)
+    Checks if the ringbuffer has no items stored.
+    Returns 1 if ringbuffer is empty, otherwise 0.
 */
 #define RINGBUFFER_EMPTY(ringbuffer) \
     BUFFER_EMPTY((ringbuffer).buffer)
 
 /*!
-     \def RINGBUFFER_READ(ringbuffer,var)
-     Reads one item into /a var by reference. Automatically
-     pops the ringbuffer. Read oldest element. App must ensure
-     !RINGBUFFER_EMPTY() first.
+    \def RINGBUFFER_READ(ringbuffer,var)
+    Reads one item into /a var by reference. Automatically
+    pops the ringbuffer. Read oldest element. App must ensure
+    !RINGBUFFER_EMPTY() first.
 */
 #define RINGBUFFER_READ(ringbuffer,var) \
     do { \
@@ -214,11 +214,11 @@
         RINGBUFFER_POP(ringbuffer); \
     }while(0)
 /*!
-     \def RINGBUFFER_WRITE(ringbuffer,value)
-     Writes one item into ringbuffer by value.
-     Automatically pushes the ringbuffer.
-     Overwrites the oldest element if ringbuffer is full. App can
-     choose to avoid the overwrite by checking RINGBUFFER_FULL().
+    \def RINGBUFFER_WRITE(ringbuffer,value)
+    Writes one item into ringbuffer by value.
+    Automatically pushes the ringbuffer.
+    Overwrites the oldest element if ringbuffer is full. App can
+    choose to avoid the overwrite by checking RINGBUFFER_FULL().
 */
 #define RINGBUFFER_WRITE(ringbuffer,value) \
     do { \
