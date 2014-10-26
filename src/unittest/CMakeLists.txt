@@ -1,0 +1,2 @@
+add_executable(unittest_ringbuffer unittest_ringbuffer.c)
+add_executable(unittest_buffer unittest_buffer.c)
