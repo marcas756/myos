@@ -65,14 +65,16 @@ slist_node_t* slist_prev(slist_t *slist, slist_node_t* node)
 {
 	slist_node_t *iterator = slist->head;
 
-	while(iterator->next)
-	{
-		if(iterator->next == node)
-			return iterator;
+	if(!iterator) return NULL;
 
-		iterator = iterator->next;
+    while(iterator->next)
+    {
+        if(iterator->next == node)
+            return iterator;
 
-	}
+        iterator = iterator->next;
+
+    }
 
 	return NULL;
 }

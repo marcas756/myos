@@ -1,1 +1,4 @@
-add_library(adt slist.c)
+add_library(adt 
+    slist.c
+    itempool.c
+    )
