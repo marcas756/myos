@@ -177,7 +177,7 @@
     (&BUFFER_VAL(buffer))
 
 /*!
-    \def BUFFER_APPEND(buffer)
+    \def BUFFER_APPEND(buffer,item)
     Append an item to the buffer by value.
     Automatically increases the buffer count.
     It does not check for buffer overflow.
