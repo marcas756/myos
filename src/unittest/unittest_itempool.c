@@ -48,10 +48,125 @@ UNITTEST_TESTSUITE_INIT();
 
 ITEMPOOL_TYPEDEF(intpool,int,SIZE);
 ITEMPOOL_T(intpool) MyPool;
-
+int *intptrs [SIZE];
 
 
 UNITTEST_TESTCASE_BEGIN(itempool_init)
+
+    int tmp;
+    int garbage_int;
+
+    memset(&MyPool,GARBAGE,sizeof(MyPool));
+    memset(&garbage_int,GARBAGE,sizeof(garbage_int));
+
+    for(tmp=0; tmp < ITEMPOOL_SIZE(MyPool); tmp++)
+        UNITTEST_ASSERT("Status Bytes have to be garbage",ITEMPOOL_STATUS(MyPool)[tmp] == GARBAGE);
+
+    for(tmp=0; tmp < ITEMPOOL_SIZE(MyPool); tmp++)
+        UNITTEST_ASSERT("Items have to be garbage",ITEMPOOL_ITEMS(MyPool)[tmp] == garbage_int);
+
+
+    ITEMPOOL_INIT(MyPool);
+
+    for(tmp=0; tmp < ITEMPOOL_SIZE(MyPool); tmp++)
+        UNITTEST_ASSERT("Status Bytes have to be 0",ITEMPOOL_STATUS(MyPool)[tmp] == ITEMPOOL_ITEM_FREE);
+
+    for(tmp=0; tmp < ITEMPOOL_SIZE(MyPool); tmp++)
+        UNITTEST_ASSERT("Items have to be garbage",ITEMPOOL_ITEMS(MyPool)[tmp] == garbage_int);
+
+UNITTEST_TESTCASE_END()
+
+UNITTEST_TESTCASE_BEGIN(itempool_alloc)
+
+    int tmp;
+    int garbage_int;
+    memset(&garbage_int,GARBAGE,sizeof(garbage_int));
+
+    for(tmp=0; tmp < ITEMPOOL_SIZE(MyPool); tmp++)
+        UNITTEST_ASSERT("Items have to be garbage",ITEMPOOL_ITEMS(MyPool)[tmp] == garbage_int);
+
+    srand(RANDOM_SEED);
+
+    for(tmp=0; tmp < ITEMPOOL_SIZE(MyPool); tmp++)
+    {
+        intptrs[tmp] = (int*)ITEMPOOL_ALLOC(MyPool);
+        *intptrs[tmp] = rand();
+    }
+
+    for(tmp=0; tmp < ITEMPOOL_SIZE(MyPool); tmp++)
+    {
+        UNITTEST_ASSERT("Status Bytes have to be 1",ITEMPOOL_STATUS(MyPool)[tmp] == ITEMPOOL_ITEM_USED);
+        UNITTEST_ASSERT("Expected another item value",ITEMPOOL_ITEMS(MyPool)[tmp] == *intptrs[tmp]);
+        UNITTEST_ASSERT("Expected another item",&ITEMPOOL_ITEMS(MyPool)[tmp] == intptrs[tmp]);
+    }
+
+
+    UNITTEST_ASSERT("No further allocation allowed",!ITEMPOOL_ALLOC(MyPool));
+
+
+
+UNITTEST_TESTCASE_END()
+
+
+
+UNITTEST_TESTCASE_BEGIN(itempool_free)
+
+    int tmp;
+
+    for(tmp=0; tmp < ITEMPOOL_SIZE(MyPool); tmp++)
+        ITEMPOOL_FREE(MyPool,intptrs[tmp]);
+
+    for(tmp=0; tmp < ITEMPOOL_SIZE(MyPool); tmp++)
+    {
+        intptrs[tmp] =(int*)ITEMPOOL_ALLOC(MyPool);
+        UNITTEST_ASSERT("Allocation may not return NULL",intptrs[tmp]);
+    }
+
+    UNITTEST_ASSERT("No further allocation allowed",!ITEMPOOL_ALLOC(MyPool));
+
+    for(tmp=0; tmp < ITEMPOOL_SIZE(MyPool); tmp++)
+        ITEMPOOL_FREE(MyPool,intptrs[tmp]);
+
+UNITTEST_TESTCASE_END()
+
+
+UNITTEST_TESTCASE_BEGIN(itempool_calloc)
+
+    // MyPool should be initialized after unittest itempool_init
+
+    int tmp;
+    int garbage_int;
+    memset(&garbage_int,GARBAGE,sizeof(garbage_int));
+
+    for(tmp=0; tmp < ITEMPOOL_SIZE(MyPool); tmp++)
+    {
+        intptrs[tmp] = (int*)ITEMPOOL_ALLOC(MyPool);
+        UNITTEST_ASSERT("Allocation may not return NULL",intptrs[tmp]);
+        *intptrs[tmp] = garbage_int;
+    }
+
+    for(tmp=0; tmp < ITEMPOOL_SIZE(MyPool); tmp++)
+        ITEMPOOL_FREE(MyPool,intptrs[tmp]);
+
+    for(tmp=0; tmp < ITEMPOOL_SIZE(MyPool); tmp++)
+    {
+        intptrs[tmp] = (int*)ITEMPOOL_ALLOC(MyPool);
+        UNITTEST_ASSERT("Allocation may not return NULL",intptrs[tmp]);
+        UNITTEST_ASSERT("Expected another item value",*intptrs[tmp] == garbage_int);
+    }
+
+    for(tmp=0; tmp < ITEMPOOL_SIZE(MyPool); tmp++)
+        ITEMPOOL_FREE(MyPool,intptrs[tmp]);
+
+    for(tmp=0; tmp < ITEMPOOL_SIZE(MyPool); tmp++)
+    {
+        intptrs[tmp] = (int*)ITEMPOOL_CALLOC(MyPool);
+        UNITTEST_ASSERT("Allocation may not return NULL",intptrs[tmp]);
+        UNITTEST_ASSERT("Expected another item value",*intptrs[tmp] == 0);
+    }
+
+    for(tmp=0; tmp < ITEMPOOL_SIZE(MyPool); tmp++)
+        ITEMPOOL_FREE(MyPool,intptrs[tmp]);
 
 UNITTEST_TESTCASE_END()
 
@@ -60,5 +175,9 @@ UNITTEST_TESTCASE_END()
 UNITTEST_TESTSUITE_BEGIN(itempool)
 
 UNITTEST_ADD_TESTCASE(itempool_init);
+UNITTEST_ADD_TESTCASE(itempool_alloc);
+UNITTEST_ADD_TESTCASE(itempool_free);
+UNITTEST_ADD_TESTCASE(itempool_calloc);
+
 
 UNITTEST_TESTSUITE_END()

@@ -59,7 +59,7 @@
                ITEMPOOL_SIZE(itempool))
 
 #define ITEMPOOL_SIZE(itempool) \
-    (sizeof(ITEMPOOL_STATUS(itempool))/
+    (sizeof(ITEMPOOL_STATUS(itempool))/ \
      sizeof(*ITEMPOOL_STATUS(itempool)))
 
 #define ITEMPOOL_ITEM_SIZE(itempool) \
@@ -78,7 +78,7 @@
         ITEMPOOL_ITEM_SIZE(itempool), \
         ITEMPOOL_SIZE(itempool))
 
-#define ITEMPOOL_CALLOC(itempool,itemptr) \
+#define ITEMPOOL_CALLOC(itempool) \
     itempool_calloc( \
         (uint8_t*)ITEMPOOL_ITEMS(itempool), \
         ITEMPOOL_STATUS(itempool), \
@@ -97,6 +97,7 @@
         do{ITEMPOOL_STATUS(itempool) \
             [((uint8_t*)itemptr-(uint8_t*)ITEMPOOL_ITEMS(itempool))/ \
              ITEMPOOL_ITEM_SIZE(itempool)] \
-             =ITEMPOOL_ITEMS_FREE;}while(0)
+             =ITEMPOOL_ITEM_FREE;}while(0)
+
 
 #endif /* ITEMPOOL_H_ */
