@@ -164,8 +164,7 @@
 */
 #define RINGBUFFER_PUSH(ringbuffer) \
     do { \
-        RINGBUFFER_TAIL(ringbuffer)++; \
-        if(RINGBUFFER_TAIL(ringbuffer) == RINGBUFFER_SIZE(ringbuffer)) \
+        if(++RINGBUFFER_TAIL(ringbuffer) == RINGBUFFER_SIZE(ringbuffer)) \
              RINGBUFFER_TAIL(ringbuffer) = 0; \
         RINGBUFFER_COUNT(ringbuffer)++; \
     }while (0)
@@ -180,8 +179,7 @@
 */
 #define RINGBUFFER_POP(ringbuffer) \
     do { \
-        RINGBUFFER_HEAD(ringbuffer)++; \
-        if(RINGBUFFER_HEAD(ringbuffer) == RINGBUFFER_SIZE(ringbuffer)) \
+        if(++RINGBUFFER_HEAD(ringbuffer) == RINGBUFFER_SIZE(ringbuffer)) \
              RINGBUFFER_HEAD(ringbuffer) = 0; \
         RINGBUFFER_COUNT(ringbuffer)--; \
     }while (0)
