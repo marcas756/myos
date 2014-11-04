@@ -4,5 +4,8 @@ add_executable(unittest_buffer unittest_buffer.c)
 add_executable(unittest_slist unittest_slist.c)
 target_link_libraries(unittest_slist adt)
 
+add_executable(unittest_dlist unittest_dlist.c)
+target_link_libraries(unittest_dlist adt)
+
 add_executable(unittest_itempool unittest_itempool.c)
 target_link_libraries(unittest_itempool adt)

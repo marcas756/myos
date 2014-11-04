@@ -32,6 +32,19 @@
     \brief
 
     \details
+
+
++--------+
+| slist  |
+| +----+ |      +----+      +----+      +----+      +----+
+| |Head|-+----->|Next|----->|Next|----->|Next|----->|Null|
+| +----+ |      +----+      +----+      +----+      +----+
++--------+      |    |      |    |      |    |
+                |Item|      |Item|      |Item|
+                |    |      |    |      |    |
+                +----+      +----+      +----+
+
+
 */
 
 #ifndef SLIST_H_
@@ -77,23 +90,6 @@ typedef struct {
 
 #define slist_init(slistptr) \
 	do{(slistptr)->head=NULL;}while(0)
-
-/*
-Insert elements after position
-The container is extended by inserting a new element after the element at the specified position.
-
-This effectively increases the list size by 1.
-*/
-void slist_insert_after(slist_t* slist, void* position, void* node);
-/*
-Insert elements before position
-The container is extended by inserting a new element before the element at the specified position.
-
-This effectively increases the list size by 1.
-
-
-*/
-void slist_insert_before(slist_t* slist, void* position, void* node);
 
 /*
 Return iterator to beginning
@@ -187,6 +183,25 @@ Adds a new element at the end of the list container, after its current last elem
 This effectively increases the container size by one.
 */
 void slist_push_back(slist_t *slist, void *node);
+
+
+/*
+Insert elements after position
+The container is extended by inserting a new element after the element at the specified position.
+
+This effectively increases the list size by 1.
+*/
+void slist_insert_after(slist_t* slist, void* position, void* node);
+/*
+Insert elements before position
+The container is extended by inserting a new element before the element at the specified position.
+
+This effectively increases the list size by 1.
+
+
+*/
+void slist_insert_before(slist_t* slist, void* position, void* node);
+
 
 /*
 Remove elements with specific value

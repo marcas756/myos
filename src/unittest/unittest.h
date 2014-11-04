@@ -45,7 +45,6 @@
     #include <stdio.h>
     #include <time.h>
 
-
     #define UNITTEST_PRINTF(...) printf(__VA_ARGS__)
 
     /* strings required due to old or not string optimizing compilers */
