@@ -66,7 +66,9 @@ void dlist_pop_front(dlist_t* dlist)
     {
         dlist->head = dlist->head->next;
 
-        if(!dlist->head)
+        if(dlist->head)
+            dlist->head->prev = NULL;
+        else
             dlist->tail = NULL;
     }
 }
@@ -77,7 +79,9 @@ void dlist_pop_back(dlist_t* dlist)
     {
         dlist->tail = dlist->tail->prev;
 
-        if(!dlist->tail)
+        if(dlist->tail)
+            dlist->tail->next = NULL;
+        else
             dlist->head = NULL;
     }
 }

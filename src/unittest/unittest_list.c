@@ -103,10 +103,40 @@ UNITTEST_TESTCASE_BEGIN(push_front_pop_back)
 
 UNITTEST_TESTCASE_END()
 
+UNITTEST_TESTCASE_BEGIN(push_back_pop_front)
+
+    int tmp;
+    list_init(&mylist);
+
+    for(tmp=1; tmp <= SIZE; tmp++)
+    {
+        intnodes[tmp].item = tmp;
+        list_push_back(&mylist,&intnodes[tmp]);
+        UNITTEST_ASSERT("Expected another list size", list_size(&mylist) == tmp);
+        UNITTEST_ASSERT("List must not be empty", !list_empty(&mylist));
+    }
+
+    UNITTEST_ASSERT("Size of list must be SIZE", list_size(&mylist) == SIZE);
+
+    for(tmp=1; tmp <= SIZE; tmp++)
+    {
+
+        UNITTEST_ASSERT("Expected another item content", *(int*)list_item(list_begin(&mylist)) == tmp);
+        UNITTEST_ASSERT("List must not be empty", !list_empty(&mylist));
+        list_pop_front(&mylist);
+        UNITTEST_ASSERT("Expected another list size", list_size(&mylist) == SIZE-tmp);
+    }
+
+    UNITTEST_ASSERT("List must be empty", list_empty(&mylist));
+
+
+UNITTEST_TESTCASE_END()
+
 
 UNITTEST_TESTSUITE_BEGIN_EXP(unittest_list_type)
 
 	UNITTEST_ADD_TESTCASE(init);
     UNITTEST_ADD_TESTCASE(push_front_pop_back);
+    UNITTEST_ADD_TESTCASE(push_back_pop_front)
 
 UNITTEST_TESTSUITE_END()
