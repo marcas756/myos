@@ -238,12 +238,14 @@ Unlike member function list::erase, which erases elements by their position (usi
 */
 void slist_remove(slist_t* slist, item_compare_t compare, item_t* item)
 {
-	slist_node_t *iterator;
+	slist_node_t *iterator = slist->head;
 
-	for(iterator=slist_begin(slist); iterator != slist_end(slist); iterator=slist_next(iterator))
+	while(iterator)
 	{
 		if(compare(slist_item(iterator),item) == ITEM_EQUALS_TO)
 			slist_erase(slist,iterator);
+
+		iterator = iterator->next;
 	}
 }
 
@@ -255,15 +257,7 @@ Notice that an element is only removed from the list container if it compares eq
 */
 void slist_unique(slist_t* slist, item_compare_t compare)
 {
-	slist_node_t* iterator;
-	slist_t tmpList;
 
-	for(iterator=slist_begin(slist); iterator != slist_end(slist); iterator=slist_next(iterator))
-	{
-		tmpList.head = iterator->next;
-		slist_remove(&tmpList,compare, slist_item(iterator));
-		iterator->next = tmpList.head;
-	}
 }
 
 /*
@@ -276,28 +270,5 @@ The resulting order of equivalent elements is IN-stable: i.e., equivalent elemen
  */
 void slist_sort(slist_t* slist, item_compare_t compare)
 {
-	slist_node_t* iterator1,*iterator2;
-	slist_t tmpList;
 
-	slist_init(&tmpList);
-
-	while(slist_begin(slist))
-	{
-		iterator1 = slist_begin(slist);
-		slist_pop_front(slist);
-
-		for (iterator2  = slist_begin(&tmpList); iterator2 != slist_end(&tmpList); iterator2=slist_next(iterator2))
-		{
-			if (compare(slist_item(iterator2),slist_item(iterator1)) == ITEM_LESS_THAN)
-				continue;
-
-			slist_insert_before(&tmpList,iterator2,iterator1);
-			break;
-		}
-
-		if (iterator2 == slist_end(&tmpList))
-			slist_push_back(&tmpList,iterator1);
-	}
-
-	slist_swap(&tmpList,slist);
 }

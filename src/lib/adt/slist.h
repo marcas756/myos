@@ -82,14 +82,16 @@ typedef struct {
 #define slist_node_t(type) \
 	type##_slist_node_t
 
-#define slist_item(nodeptr) \
-		((item_t*)(((slist_node_t*)(nodeptr))+1))
+#define slist_init(slistptr) \
+    do{(slistptr)->head=NULL;}while(0)
 
-#define slist_next(nodeptr) \
+#define slist_next(dlistptr,nodeptr) \
 	(((slist_node_t*)(nodeptr))->next)
 
-#define slist_init(slistptr) \
-	do{(slistptr)->head=NULL;}while(0)
+slist_node_t* slist_prev(slist_t *slist, slist_node_t *node);
+
+#define slist_item(nodeptr) \
+    ((item_t*)(((slist_node_t*)(nodeptr))+1))
 
 /*
 Return iterator to beginning
@@ -118,7 +120,8 @@ If the container is empty, this function returns the same as list::begin.
 #define slist_end(slistptr) (NULL)
 
 slist_node_t* slist_tail(slist_t *slist);
-slist_node_t* slist_prev(slist_t *slist, slist_node_t *node);
+
+
 
 /*
 Test whether container is empty
@@ -172,17 +175,19 @@ Removes the first element in the list container, effectively reducing its size b
 	do{if((slistptr)->head)(slistptr)->head=(slistptr)->head->next;}while(0)
 
 /*
-Delete last element
-Removes the last element in the list container, effectively reducing the container size by one.
-*/
-void slist_pop_back(slist_t *slist);
-/*
 Add element at the end
 Adds a new element at the end of the list container, after its current last element. The content of val is copied (or moved) to the new element.
 
 This effectively increases the container size by one.
 */
 void slist_push_back(slist_t *slist, void *node);
+
+/*
+Delete last element
+Removes the last element in the list container, effectively reducing the container size by one.
+*/
+void slist_pop_back(slist_t *slist);
+
 
 
 /*
@@ -202,6 +207,7 @@ This effectively increases the list size by 1.
 */
 void slist_insert_before(slist_t* slist, void* position, void* node);
 
+void slist_erase(slist_t *slist, slist_node_t *node);
 
 /*
 Remove elements with specific value

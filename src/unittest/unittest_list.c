@@ -39,81 +39,74 @@
 #define UNITTEST_CONF_VERBOSE
 
 #include "unittest.h"
-#include "dlist.h"
 #include <stdlib.h>
 #include <string.h>
 
 UNITTEST_TESTSUITE_INIT();
 
+#ifdef UNITTEST_SLIST
+    #include"unittest_slist.h"
+#elif UNITTEST_DLIST
+    #include"unittest_dlist.h"
+#else
+   #error "Error: No list type defined"
+#endif
+
+#define UNITTEST_TESTSUITE_BEGIN_EXP(x) \
+    UNITTEST_TESTSUITE_BEGIN(x)
+
 #define SIZE 5
 #define RANDOM_SEED 12345
 #define GARBAGE 0xAA
 
-dlist_node_typedef(int);
+list_t mylist;
+list_node_typedef(int);
+list_node_t(int) intnodes [SIZE];
 
-dlist_t mylist;
 
 UNITTEST_TESTCASE_BEGIN(init)
 
-    memset(&mylist,GARBAGE,sizeof(mylist));
-
-    UNITTEST_ASSERT("Expected uninitialized head pointer", mylist.head != NULL);
-    UNITTEST_ASSERT("Expected uninitialized tail pointer", mylist.tail != NULL);
-
-    dlist_init(&mylist);
-
-    UNITTEST_ASSERT("Expected initialized head pointer", mylist.head == NULL);
-    UNITTEST_ASSERT("Expected initialized tail pointer", mylist.tail == NULL);
+    list_init(&mylist);
+    UNITTEST_ASSERT("Begin of list must be NULL", list_begin(&mylist) == NULL);
+    UNITTEST_ASSERT("Tail of list must be NULL", list_tail(&mylist) == NULL);
+    UNITTEST_ASSERT("Size of list must be 0", list_size(&mylist) == 0);
+    UNITTEST_ASSERT("List must be empty", list_empty(&mylist));
 
 UNITTEST_TESTCASE_END()
 
-UNITTEST_TESTCASE_BEGIN(push_front)
-
-    dlist_node_t(int) nodes [SIZE];
-    dlist_node_t(int) *iterator;
+UNITTEST_TESTCASE_BEGIN(push_front_pop_back)
 
     int tmp;
+    list_init(&mylist);
 
-    dlist_init(&mylist);
-
-    for (tmp = 0; tmp < SIZE; tmp++)
-        nodes[tmp].item = tmp;
-
-    for (tmp = 0; tmp < SIZE; tmp++)
-        dlist_push_front(&mylist,&nodes[tmp]);
-
-    iterator = (dlist_node_t(int)*)mylist.head;
-    UNITTEST_ASSERT("Did not expect predecessor node", iterator->link.prev == NULL);
-    UNITTEST_ASSERT("Expected successor node", iterator->link.next != NULL);
-
-    tmp = SIZE-1;
-
-    while(iterator)
+    for(tmp=1; tmp <= SIZE; tmp++)
     {
-        UNITTEST_ASSERT("Expected another node item value", iterator->item == tmp--);
-        iterator = (dlist_node_t(int)*)iterator->link.next;
+        intnodes[tmp].item = tmp;
+        list_push_front(&mylist,&intnodes[tmp]);
+        UNITTEST_ASSERT("Expected another list size", list_size(&mylist) == tmp);
+        UNITTEST_ASSERT("List must not be empty", !list_empty(&mylist));
     }
 
-    iterator = (dlist_node_t(int)*)mylist.tail;
-    UNITTEST_ASSERT("Did not expect successor node", iterator->link.next == NULL);
-    UNITTEST_ASSERT("Expected predecessor node", iterator->link.prev != NULL);
+    UNITTEST_ASSERT("Size of list must be SIZE", list_size(&mylist) == SIZE);
 
-    tmp = 0;
-
-    while(iterator)
+    for(tmp=1; tmp <= SIZE; tmp++)
     {
-        UNITTEST_ASSERT("Expected another node item value", iterator->item == tmp++);
-        iterator = (dlist_node_t(int)*)iterator->link.prev;
+
+        UNITTEST_ASSERT("Expected another item content", *(int*)list_item(list_tail(&mylist)) == tmp);
+        UNITTEST_ASSERT("List must not be empty", !list_empty(&mylist));
+        list_pop_back(&mylist);
+        UNITTEST_ASSERT("Expected another list size", list_size(&mylist) == SIZE-tmp);
     }
 
+    UNITTEST_ASSERT("List must be empty", list_empty(&mylist));
 
 
 UNITTEST_TESTCASE_END()
 
 
-UNITTEST_TESTSUITE_BEGIN(dlist)
+UNITTEST_TESTSUITE_BEGIN_EXP(unittest_list_type)
 
 	UNITTEST_ADD_TESTCASE(init);
-    UNITTEST_ADD_TESTCASE(push_front);
+    UNITTEST_ADD_TESTCASE(push_front_pop_back);
 
 UNITTEST_TESTSUITE_END()

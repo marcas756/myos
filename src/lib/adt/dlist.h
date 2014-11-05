@@ -148,10 +148,10 @@ typedef struct {
             (dlistptr)->tail = NULL; \
         }while(0)
 
-#define dlist_next(nodeptr) \
+#define dlist_next(dlistptr,nodeptr) \
     (((dlist_node_t*)(nodeptr))->next)
 
-#define dlist_prev(nodeptr) \
+#define dlist_prev(dlistptr,nodeptr) \
     (((dlist_node_t*)(nodeptr))->prev)
 
 #define dlist_end(dlistptr) (NULL)
