@@ -52,7 +52,6 @@ typedef dlist_t list_t;
 #define list_item(nodeptr)                          dlist_item(nodeptr)
 #define list_begin(listptr)                         dlist_begin(listptr)
 #define list_end(listptr)                           dlist_end(listptr)
-#define list_tail(listptr)                          dlist_tail(listptr)
 #define list_empty(listptr)                         dlist_empty(listptr)
 #define list_size(listptr)                          dlist_size(listptr)
 #define list_front(listptr)                         dlist_front(listptr)
@@ -63,11 +62,13 @@ typedef dlist_t list_t;
 #define list_pop_back(listptr)                      dlist_pop_back(listptr)
 #define list_insert_after(listptr,posptr,nodeptr)   dlist_insert_after(listptr,posptr,nodeptr)
 #define list_insert_before(listptr,posptr,nodeptr)  dlist_insert_before(listptr,posptr,nodeptr)
+#define list_clear(listptr)                         dlist_clear(listptr)
 #define list_erase(listptr,nodeptr)                 dlist_erase(listptr,nodeptr)
 #define list_remove(listptr,compfptr,itemptr)       dlist_remove(listptr,compfptr,itemptr)
 #define list_unique(listptr,compfptr)               dlist_unique(listptr,compfptr)
 #define list_reverse(listptr)                       dlist_reverse(listptr)
 #define list_sort(listptr,compfptr)                 dlist_sort(listptr,compfptr)
 #define list_find(listptr,nodeptr)                  dlist_find(listptr,nodeptr)
+#define list_swap(listptr1,listptr2)                dlist_swap(listptr1,listptr2);
 
 #endif /* UNITTEST_DLIST_H_ */

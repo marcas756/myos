@@ -66,18 +66,18 @@ typedef struct slist_node_t slist_node_t;
     a structure object, but not at its beginning.
 */
 struct slist_node_t {
-	slist_node_t *next;
+    slist_node_t *next;
 };
 
 typedef struct {
-	slist_node_t *head;
+    slist_node_t *head;
 }slist_t;
 
 #define slist_node_typedef(type) \
-	typedef struct{ \
-		slist_node_t *next; \
-		type item; \
-	}type##_slist_node_t;
+    typedef struct{ \
+        slist_node_t *next; \
+        type item; \
+    }type##_slist_node_t;
 
 #define slist_node_t(type) \
 	type##_slist_node_t
@@ -117,9 +117,9 @@ with list::begin to specify a range including all the elements in the container.
 
 If the container is empty, this function returns the same as list::begin.
 */
-#define slist_end(slistptr) (NULL)
 
-slist_node_t* slist_tail(slist_t *slist);
+
+slist_node_t* slist_end(slist_t *slist);
 
 
 
@@ -156,7 +156,7 @@ Unlike member list::end, which returns an iterator just past this element, this 
 
 Calling this function on an empty container causes undefined behavior.
 */
-#define slist_back(slistptr) ((void*)(slist_tail(slistptr)+1))
+#define slist_back(slistptr) ((void*)(slist_end(slistptr)+1))
 
 /*
 Insert element at beginning
@@ -202,10 +202,15 @@ Insert elements before position
 The container is extended by inserting a new element before the element at the specified position.
 
 This effectively increases the list size by 1.
-
-
 */
 void slist_insert_before(slist_t* slist, void* position, void* node);
+
+/*
+Clear content
+Removes all elements from the list container, and leaving the container with a size of 0.
+*/
+#define  slist_clear(slistptr) \
+    slist_init(slistptr);
 
 void slist_erase(slist_t *slist, slist_node_t *node);
 
@@ -216,12 +221,10 @@ Removes from the container all the elements that compare equal to val. This call
 Unlike member function list::erase, which erases elements by their position (using an iterator), this function (list::remove) removes elements by their value.
 */
 void slist_remove(slist_t* slist, item_compare_t compare, item_t* item);
-
 void slist_unique(slist_t* slist, item_compare_t compare);
-
 void slist_reverse (slist_t * slist);
 void slist_sort(slist_t* slist, item_compare_t compare);
-
 slist_node_t* slist_find(slist_t *slist, slist_node_t *node);
+void slist_swap(slist_t *list1, slist_t *list2);
 
 #endif /* SLIST_H_ */

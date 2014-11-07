@@ -49,7 +49,7 @@ slist_node_t* slist_find(slist_t *slist, slist_node_t *node)
 	return iterator;
 }
 
-slist_node_t* slist_tail(slist_t *slist)
+slist_node_t* slist_end(slist_t *slist)
 {
 	slist_node_t *iterator = slist->head;
 
@@ -102,7 +102,7 @@ This effectively increases the container size by one.
 */
 void slist_push_back(slist_t *slist, void *node)
 {
-	slist_node_t* iterator = slist_tail(slist);
+	slist_node_t* iterator = slist_end(slist);
 
 	((slist_node_t*)node)->next = NULL;
 
@@ -180,14 +180,7 @@ void slist_swap(slist_t *list1, slist_t *list2)
 	list2->head = tmp;
 }
 
-/*
-Clear content
-Removes all elements from the list container, and leaving the container with a size of 0.
-*/
-void slist_clear(slist_t* slist)
-{
-	slist->head = NULL;
-}
+
 
 /*
 Reverse the order of elements
@@ -221,7 +214,7 @@ void slist_merge(slist_t* dest, slist_t* src)
 {
 	if(slist_begin(dest))
 	{
-		slist_tail(dest)->next = src->head;
+		slist_end(dest)->next = src->head;
 		src->head = NULL;
 	}
 	else

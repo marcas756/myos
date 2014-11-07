@@ -52,7 +52,7 @@
 | +----+ |       |
 | |Tail|-+-----. |
 | +----+ |     | |
-+--------+     v v
++--------+     v v       (end)
              +----+      +----+
              |Next|----->|Null|
  +----+      +----+      +----+
@@ -62,7 +62,8 @@
              |Item|
              |    |
              +----+
-
+             (begin)
+             (tail)
 
 
                       +--------+
@@ -74,7 +75,7 @@
               |       | +----+ |      |
               |       +--------+      |
               |                       |
-              v                       v
+              v                       v         (end)
             +----+      +----+      +----+      +----+
             |Next|----->|Next|----->|Next|----->|Null|
 +----+      +----+      +----+      +----+      +----+
@@ -84,7 +85,7 @@
             |Item|      |Item|      |Item|
             |    |      |    |      |    |
             +----+      +----+      +----+
-
+            (begin)                 (tail)
 
 
 */
@@ -108,45 +109,30 @@ typedef struct dlist_node_t dlist_node_t;
     a structure object, but not at its beginning.
 */
 struct dlist_node_t {
-	dlist_node_t *next;
-	dlist_node_t *prev;
+    dlist_node_t *next;
+    dlist_node_t *prev;
 };
 
 typedef struct {
-	dlist_node_t *head;
-	dlist_node_t *tail;
+    dlist_node_t *head;
+    dlist_node_t *tail;
 }dlist_t;
 
 #define dlist_node_typedef(type) \
-	typedef struct{ \
+    typedef struct{ \
         dlist_node_t link; \
-		type item; \
-	}type##_dlist_node_t;
-
-
-#define dlist_begin(dlistptr) \
-    (((dlist_t*)(dlistptr))->head)
-
-#define dlist_tail(dlistptr) \
-    (((dlist_t*)(dlistptr))->tail)
-
-#define dlist_end(dlistptr) (NULL)
-
-#define dlist_item(nodeptr) \
-        ((item_t*)(((dlist_node_t*)(nodeptr))+1))
-
-#define dlist_empty(dlistptr) \
-    (!(dlistptr)->head)
+        type item; \
+    }type##_dlist_node_t;
 
 #define dlist_node_t(type) \
     type##_dlist_node_t
 
-
 #define dlist_init(dlistptr) \
-        do { \
-            (dlistptr)->head = NULL; \
-            (dlistptr)->tail = NULL; \
-        }while(0)
+    do { \
+        (dlistptr)->head = NULL; \
+        (dlistptr)->tail = NULL; \
+    }while(0)
+
 
 #define dlist_next(dlistptr,nodeptr) \
     (((dlist_node_t*)(nodeptr))->next)
@@ -154,16 +140,39 @@ typedef struct {
 #define dlist_prev(dlistptr,nodeptr) \
     (((dlist_node_t*)(nodeptr))->prev)
 
-#define dlist_end(dlistptr) (NULL)
+#define dlist_item(nodeptr) \
+    ((item_t*)(((dlist_node_t*)(nodeptr))+1))
 
-#define dlist_front(dlistptr) ((void*)(dlist_begin(dlistptr)+1))
-#define dlist_back(dlistptr) ((void*)(dlist_tail(dlistptr)+1))
+
+#define dlist_begin(dlistptr) \
+    (((dlist_t*)(dlistptr))->head)
+
+#define dlist_end(dlistptr) \
+    (((dlist_t*)(dlistptr))->tail)
+
+#define dlist_empty(dlistptr) \
+    (!(dlistptr)->head)
+
+size_t dlist_size(dlist_t *dlist);
+
+#define dlist_front(dlistptr) \
+    ((void*)(dlist_begin(dlistptr)+1))
+
+#define dlist_back(dlistptr) \
+    ((void*)(dlist_end(dlistptr)+1))
 
 void dlist_push_front(dlist_t* dlist, void* node);
+void dlist_pop_front(dlist_t* dlist);
 void dlist_push_back(dlist_t* dlist, void* node);
-
-
-
-
-
+void dlist_pop_back(dlist_t* dlist);
+void dlist_insert_after(dlist_t* dlist, void* position, void* node);
+void dlist_insert_before(dlist_t* dlist, void* position, void* node);
+void dlist_clear(dlist_t* dlist);
+void dlist_erase(dlist_t *dlist, void *node);
+void dlist_remove(dlist_t* dlist, item_compare_t compare, item_t* item);
+void dlist_unique(dlist_t* dlist, item_compare_t compare);
+void dlist_reverse (dlist_t * dlist);
+void dlist_sort(dlist_t* dlist, item_compare_t compare);
+void dlist_find(dlist_t* dlist, void* node);
+void dlist_swap(dlist_t *list1, dlist_t *list2);
 #endif /* DLIST_H_ */

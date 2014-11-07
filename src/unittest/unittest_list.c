@@ -27,14 +27,13 @@
     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 /*!
-    \file   unittest_dlist.c
+    \file   unittest_list.c
 
     \brief
 
     \details
 */
 
-/* TODO: WRITE BASE TEST FOR ALL LIST TYPES! */
 
 #define UNITTEST_CONF_VERBOSE
 
@@ -68,7 +67,7 @@ UNITTEST_TESTCASE_BEGIN(init)
 
     list_init(&mylist);
     UNITTEST_ASSERT("Begin of list must be NULL", list_begin(&mylist) == NULL);
-    UNITTEST_ASSERT("Tail of list must be NULL", list_tail(&mylist) == NULL);
+    UNITTEST_ASSERT("Tail of list must be NULL", list_end(&mylist) == NULL);
     UNITTEST_ASSERT("Size of list must be 0", list_size(&mylist) == 0);
     UNITTEST_ASSERT("List must be empty", list_empty(&mylist));
 
@@ -92,7 +91,7 @@ UNITTEST_TESTCASE_BEGIN(push_front_pop_back)
     for(tmp=1; tmp <= SIZE; tmp++)
     {
 
-        UNITTEST_ASSERT("Expected another item content", *(int*)list_item(list_tail(&mylist)) == tmp);
+        UNITTEST_ASSERT("Expected another item content", *(int*)list_item(list_end(&mylist)) == tmp);
         UNITTEST_ASSERT("List must not be empty", !list_empty(&mylist));
         list_pop_back(&mylist);
         UNITTEST_ASSERT("Expected another list size", list_size(&mylist) == SIZE-tmp);
@@ -132,11 +131,122 @@ UNITTEST_TESTCASE_BEGIN(push_back_pop_front)
 
 UNITTEST_TESTCASE_END()
 
+UNITTEST_TESTCASE_BEGIN(push_front_pop_front)
+
+    int tmp;
+    list_init(&mylist);
+
+    UNITTEST_ASSERT("List must be empty", list_empty(&mylist));
+
+    for(tmp = 1; tmp <= SIZE; tmp++)
+    {
+        intnodes[tmp].item = tmp;
+        list_push_front(&mylist,&intnodes[tmp]);
+        UNITTEST_ASSERT("Expected another list size", list_size(&mylist) == tmp);
+        UNITTEST_ASSERT("List must not be empty", !list_empty(&mylist));
+    }
+
+    for(tmp = SIZE; tmp > 0 ; tmp--)
+    {
+        UNITTEST_ASSERT("Expected another list size", list_size(&mylist) == tmp);
+        UNITTEST_ASSERT("Expected another item content", *(int*)list_front(&mylist) == tmp);
+        UNITTEST_ASSERT("List must not be empty", !list_empty(&mylist));
+        list_pop_front(&mylist);
+    }
+
+    UNITTEST_ASSERT("List must be empty", list_empty(&mylist));
+
+UNITTEST_TESTCASE_END()
+
+
+
+UNITTEST_TESTCASE_BEGIN(push_back_pop_back)
+
+    int tmp;
+    list_init(&mylist);
+
+    UNITTEST_ASSERT("List must be empty", list_empty(&mylist));
+
+    for(tmp = 1; tmp <= SIZE; tmp++)
+    {
+        intnodes[tmp].item = tmp;
+        list_push_back(&mylist,&intnodes[tmp]);
+        UNITTEST_ASSERT("Expected another list size", list_size(&mylist) == tmp);
+        UNITTEST_ASSERT("List must not be empty", !list_empty(&mylist));
+    }
+
+    for(tmp = SIZE; tmp > 0 ; tmp--)
+    {
+        UNITTEST_ASSERT("Expected another list size", list_size(&mylist) == tmp);
+        UNITTEST_ASSERT("Expected another item content", *(int*)list_back(&mylist) == tmp);
+        UNITTEST_ASSERT("List must not be empty", !list_empty(&mylist));
+        list_pop_back(&mylist);
+    }
+
+    UNITTEST_ASSERT("List must be empty", list_empty(&mylist));
+
+UNITTEST_TESTCASE_END()
+
+
+UNITTEST_TESTCASE_BEGIN(iterator)
+
+    int tmp;
+    list_node_t* iterator;
+    list_init(&mylist);
+
+    UNITTEST_ASSERT("List must be empty", list_empty(&mylist));
+
+    for(tmp = 1; tmp <= SIZE; tmp++)
+    {
+        intnodes[tmp].item = tmp;
+        list_push_back(&mylist,&intnodes[tmp]);
+        UNITTEST_ASSERT("Expected another list size", list_size(&mylist) == tmp);
+        UNITTEST_ASSERT("List must not be empty", !list_empty(&mylist));
+    }
+
+    UNITTEST_ASSERT("Size of list must be SIZE", list_size(&mylist) == SIZE);
+
+    for (iterator = list_begin(&mylist), tmp = 1; iterator; iterator = list_next(&mylist,iterator), tmp++)
+        UNITTEST_ASSERT("Expected another item value", *(int*)list_item(iterator) == tmp);
+
+
+
+    for (iterator = list_end(&mylist), tmp = SIZE; iterator; iterator = list_prev(&mylist,iterator), tmp--)
+        UNITTEST_ASSERT("Expected another item value", *(int*)list_item(iterator) == tmp);
+
+UNITTEST_TESTCASE_END()
+
+UNITTEST_TESTCASE_BEGIN(front_back_item)
+
+    list_init(&mylist);
+    list_node_typedef(char);
+    list_node_t(char) autonodes [3];
+
+
+    autonodes[0].item = 11;
+    autonodes[1].item = 22;
+    autonodes[2].item = 33;
+
+    list_push_front(&mylist,&autonodes[2]);
+    list_push_front(&mylist,&autonodes[1]);
+    list_push_front(&mylist,&autonodes[0]);
+
+
+    UNITTEST_ASSERT("Expected another item value", *(char*)list_front(&mylist) == 11);
+    UNITTEST_ASSERT("Expected another item value", *(char*)list_back(&mylist) == 33);
+    UNITTEST_ASSERT("Expected another item value",*(char*)list_item(list_next(&mylist,list_begin(&mylist))) == 22);
+    UNITTEST_ASSERT("Expected another item value",*(char*)list_item(list_prev(&mylist,list_end(&mylist))) == 22);
+
+UNITTEST_TESTCASE_END()
 
 UNITTEST_TESTSUITE_BEGIN_EXP(unittest_list_type)
 
-	UNITTEST_ADD_TESTCASE(init);
+    UNITTEST_ADD_TESTCASE(init);
     UNITTEST_ADD_TESTCASE(push_front_pop_back);
-    UNITTEST_ADD_TESTCASE(push_back_pop_front)
+    UNITTEST_ADD_TESTCASE(push_back_pop_front);
+    UNITTEST_ADD_TESTCASE(push_front_pop_front);
+    UNITTEST_ADD_TESTCASE(push_back_pop_back);
+    UNITTEST_ADD_TESTCASE(iterator);
+    UNITTEST_ADD_TESTCASE(front_back_item);
 
 UNITTEST_TESTSUITE_END()
