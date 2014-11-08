@@ -173,6 +173,6 @@ void dlist_remove(dlist_t* dlist, item_compare_t compare, item_t* item);
 void dlist_unique(dlist_t* dlist, item_compare_t compare);
 void dlist_reverse (dlist_t * dlist);
 void dlist_sort(dlist_t* dlist, item_compare_t compare);
-void dlist_find(dlist_t* dlist, void* node);
+dlist_node_t* dlist_find(dlist_t* dlist, void* node);
 void dlist_swap(dlist_t *list1, dlist_t *list2);
 #endif /* DLIST_H_ */

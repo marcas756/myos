@@ -43,16 +43,19 @@
 
     /* Define your output function here */
     #include <stdio.h>
-    #include <time.h>
+
 
     #define UNITTEST_PRINTF(...) printf(__VA_ARGS__)
 
     /* strings required due to old or not string optimizing compilers */
     #define UNITTEST_TESTSUITE_INIT() const char* file_text = __FILE__;\
         const char* assert_text = ": Unittest failed in line ";\
-        const char* testcase_begin_text = "Performing testcase ";
+        const char* testcase_begin_text = "Performing testcase "; \
+        const char* benchmark_begin_text = "Benchmarking ";
+
 
 #ifdef UNITTEST_CONF_TIMESTAMPS
+    #include <time.h>
     #define UNITTEST_PRINTF_TIMESTAMP() UNITTEST_PRINTF("%6.2f: ",(float)clock()/CLOCKS_PER_SEC);
 #else
     #define UNITTEST_PRINTF_TIMESTAMP()
@@ -73,11 +76,27 @@
 
 #define UNITTEST_TESTCASE_END() }}
 
+#define UNITTEST_BENCHMARK_BEGIN(name) \
+    static void unittest_benchmark_##name(size_t benchmark_repetitions){ \
+        UNITTEST_PRINTF_TIMESTAMP(); \
+        UNITTEST_PRINTF("%s%s",benchmark_begin_text,#name); \
+        float start_time = (float)clock()/CLOCKS_PER_SEC; \
+        while(benchmark_repetitions--){
+
+
+
+#define UNITTEST_BENCHMARK_END() \
+        }UNITTEST_PRINTF(" [%.6f]\n",(float)clock()/CLOCKS_PER_SEC-start_time);}
+
+
+
 /* message is not compiled into code, thus it can be used as "in code" information (like remarks) */
 #define UNITTEST_ASSERT(message,test) \
         do{if(!(test)){UNITTEST_PRINTF("%s%s%d\n",file_text,assert_text,__LINE__); exit(__LINE__);}}while(0)
 
 #define UNITTEST_ADD_TESTCASE(name) unittest_##name()
+#define UNITTEST_ADD_BENCHMARK(name,repetitions) unittest_benchmark_##name(repetitions)
+
 
 #ifdef UNITTEST_CONF_VERBOSE
 

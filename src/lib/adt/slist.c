@@ -36,7 +36,7 @@
 
 #include "slist.h"
 
-slist_node_t* slist_find(slist_t *slist, slist_node_t *node)
+slist_node_t* slist_find(slist_t *slist, void *node)
 {
 	slist_node_t *iterator = slist->head;
 
@@ -157,14 +157,14 @@ void slist_insert_after(slist_t* slist, void* position, void* node)
 }
 
 
-void slist_erase(slist_t *slist, slist_node_t *node)
+void slist_erase(slist_t *slist, void *node)
 {
 	slist_node_t *iterator = slist_prev(slist,node);
 
 	if (iterator)
-		iterator->next = node->next;
+		iterator->next = ((slist_node_t*)node)->next;
 	else
-		slist->head = node->next;
+		slist->head = ((slist_node_t*)node)->next;
 }
 
 /*

@@ -212,7 +212,7 @@ Removes all elements from the list container, and leaving the container with a s
 #define  slist_clear(slistptr) \
     slist_init(slistptr);
 
-void slist_erase(slist_t *slist, slist_node_t *node);
+void slist_erase(slist_t *slist, void *node);
 
 /*
 Remove elements with specific value
@@ -224,7 +224,7 @@ void slist_remove(slist_t* slist, item_compare_t compare, item_t* item);
 void slist_unique(slist_t* slist, item_compare_t compare);
 void slist_reverse (slist_t * slist);
 void slist_sort(slist_t* slist, item_compare_t compare);
-slist_node_t* slist_find(slist_t *slist, slist_node_t *node);
+slist_node_t* slist_find(slist_t *slist, void *node);
 void slist_swap(slist_t *list1, slist_t *list2);
 
 #endif /* SLIST_H_ */

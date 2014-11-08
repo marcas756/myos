@@ -36,6 +36,19 @@
 
 #include "dlist.h"
 
+dlist_node_t* dlist_find(dlist_t* dlist, void* node)
+{
+    dlist_node_t *iterator = dlist->head;
+
+    while(iterator)
+    {
+        if (iterator == node) break;
+        iterator = iterator->next;
+    }
+
+    return iterator;
+}
+
 void dlist_push_front(dlist_t* dlist, void* node)
 {
     ((dlist_node_t*)node)->prev = NULL;
@@ -131,6 +144,8 @@ size_t dlist_size(dlist_t *dlist)
 
 void dlist_erase(dlist_t *dlist, void *node)
 {
+    if(!dlist_find(dlist,node)) return; //ouch!
+
     if(node == dlist->head)
     {
         dlist_pop_front(dlist);
