@@ -445,7 +445,7 @@ UNITTEST_BENCHMARK_BEGIN(remove)
 
     for(tmp=0; tmp < SIZE; tmp++)
     {
-        intnodes[tmp].item = (rand()&1)?(~GARBAGE):(GARBAGE);
+        intnodes[tmp].item = (tmp&1)?(~GARBAGE):(GARBAGE);
         list_push_front(&mylist,&intnodes[tmp]);
     }
 
@@ -475,14 +475,24 @@ UNITTEST_BENCHMARK_END()
 
 UNITTEST_BENCHMARK_BEGIN(erase)
 
-    int tmp;
+    size_t tmp;
+
+int cnt;
     list_init(&mylist);
 
     for(tmp=0; tmp < SIZE; tmp++)
         list_push_front(&mylist,&intnodes[tmp]);
 
+
     while(!list_empty(&mylist))
-        list_erase(&mylist,&intnodes[rand()%SIZE]);
+    {
+        tmp = rand()%SIZE;
+        if(list_find(&mylist,&intnodes[tmp]))
+        {
+
+            list_erase(&mylist,&intnodes[tmp]);
+        }
+    }
 
 UNITTEST_BENCHMARK_END()
 
@@ -498,12 +508,13 @@ UNITTEST_TESTSUITE_BEGIN_EXP(unittest_list_type)
     UNITTEST_ADD_TESTCASE(find_and_erase);
     UNITTEST_ADD_TESTCASE(remove);
 
-    UNITTEST_ADD_BENCHMARK(push_front_pop_back,100000);
-    UNITTEST_ADD_BENCHMARK(push_back_pop_front,100000);
-    UNITTEST_ADD_BENCHMARK(push_front_pop_front,100000);
-    UNITTEST_ADD_BENCHMARK(push_back_pop_back,100000);
-    UNITTEST_ADD_BENCHMARK(remove,100000);
-    UNITTEST_ADD_BENCHMARK(find,100000);
-    UNITTEST_ADD_BENCHMARK(erase,100000);
+    UNITTEST_ADD_BENCHMARK(push_front_pop_back,10000);
+    UNITTEST_ADD_BENCHMARK(push_back_pop_front,10000);
+    UNITTEST_ADD_BENCHMARK(push_front_pop_front,10000);
+    UNITTEST_ADD_BENCHMARK(push_back_pop_back,10000);
+    UNITTEST_ADD_BENCHMARK(remove,10000);
+    UNITTEST_ADD_BENCHMARK(find,10000);
+    UNITTEST_ADD_BENCHMARK(erase,10000);
+
 
 UNITTEST_TESTSUITE_END()

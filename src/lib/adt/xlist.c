@@ -27,40 +27,45 @@
     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 /*!
-    \file   dlist.c
+    \file   xlist.c
 
     \brief
 
     \details
 */
 
-#include "dlist.h"
+#include "xlist.h"
 
-dlist_node_t* dlist_find(dlist_t* dlist, void* node)
+xlist_node_t* xlist_find(xlist_t* xlist, void* node)
 {
-    dlist_node_t *iterator = dlist->head;
+    xlist_node_t *iterator = xlist->head;
+    xlist_node_t *predecessor = NULL;
 
     while(iterator)
     {
+        xlist_node_t *tmp = iterator;
         if (iterator == node) break;
-        iterator = iterator->next;
+        iterator = xlist_successor(iterator,predecessor);
+        predecessor = tmp;
     }
 
     return iterator;
 }
 
-void dlist_push_front(dlist_t* dlist, void* node)
+void xlist_push_front(xlist_t* xlist, void* node)
 {
-    ((dlist_node_t*)node)->prev = NULL;
+    if (xlist->head)
+    {
+        xlist_node_t *successor = xlist_link(xlist->head->nextprev)
+        xlist->head->nextprev =
 
-    if((((dlist_node_t*)node)->next = dlist->head))
-        dlist->head->prev = node;
+    }
     else
-        dlist->tail = node;
+    {
 
-    dlist->head = node;
+    }
 }
-
+/*
 void dlist_push_back(dlist_t* dlist, void* node)
 {
     ((dlist_node_t*)node)->next = NULL;
@@ -214,3 +219,4 @@ void dlist_sort(dlist_t* dlist, item_compare_t compare)
 {
 
 }
+*/
