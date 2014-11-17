@@ -9,4 +9,5 @@ before_install:
 
 script: 
   - ./cmake_oz.sh
-  - cd ./build/Debug && make
+  - cd ./build/Debug && make && make test
+  - cd ./build/Release && make && make test
