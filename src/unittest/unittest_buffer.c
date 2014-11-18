@@ -141,70 +141,11 @@ UNITTEST_TESTCASE_BEGIN(buffer_fill_pointer)
 
 UNITTEST_TESTCASE_END()
 
-UNITTEST_TESTCASE_BEGIN(buffer_compare)
-
-    BUFFER_T(buffer) value,pointer,append,copy;
-
-    BUFFER_INIT(value);
-    BUFFER_INIT(pointer);
-    BUFFER_INIT(append);
-
-    srand(RANDOM_SEED);
-
-    while(!BUFFER_FULL(value))
-    {
-        BUFFER_VAL(value)=rand();
-        BUFFER_NEXT(value);
-    }
-
-    srand(RANDOM_SEED);
-
-    while(!BUFFER_FULL(pointer))
-    {
-        *BUFFER_PTR(pointer)=rand();
-        BUFFER_NEXT(pointer);
-    }
-
-    srand(RANDOM_SEED);
-
-    while(!BUFFER_FULL(append))
-        BUFFER_APPEND(append,rand());
-
-    BUFFER_COPY(copy,value);
-
-    UNITTEST_ASSERT("Buffers are different", BUFFER_COMPARE(value,pointer) == 0);
-    UNITTEST_ASSERT("Buffers are different", BUFFER_COMPARE(pointer,append) == 0);
-    UNITTEST_ASSERT("Buffers are different", BUFFER_COMPARE(append,copy) == 0);
-
-    /*
-         Will not work on x64 if struct is defined the following way:
-
-            #define BUFFER_TYPEDEF(name,type,size) \
-            typedef struct { \
-                    type items [size]; \
-                    size_t count; \
-            } name##_buffer_t;
-
-         Currently no idea why ... alignment for memset???
-
-         But works the following way (implemented it now this way):
-
-            #define BUFFER_TYPEDEF(name,type,size) \
-            typedef struct { \
-                    size_t count; \
-                    type items [size]; \
-            } name##_buffer_t;
-     */
-
-UNITTEST_TESTCASE_END()
-
-
 UNITTEST_TESTSUITE_BEGIN(buffer)
 
 UNITTEST_ADD_TESTCASE(buffer_init);
 UNITTEST_ADD_TESTCASE(buffer_fill_append);
 UNITTEST_ADD_TESTCASE(buffer_fill_value);
 UNITTEST_ADD_TESTCASE(buffer_fill_pointer);
-UNITTEST_ADD_TESTCASE(buffer_compare);
 
 UNITTEST_TESTSUITE_END()

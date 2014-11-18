@@ -129,15 +129,6 @@
     do{(destination)=(source);}while(0)
 
 /*!
-    \def BUFFER_COMPARE(buffer1,buffer2)
-    Compares two buffers. Buffers have to be of same type.
-    This macro does not only compare the buffer contents but also the buffer count.
-    Returns 0 if the buffers are equal and any other value otherwise.
-*/
-#define BUFFER_COMPARE(buffer1,buffer2) \
-    memcmp(&(buffer1),&(buffer2),sizeof(buffer1))
-
-/*!
     \def BUFFER_FULL(buffer)
     Checks if no further buffer items are available.
     Returns 1 if buffer is full, otherwise 0.
