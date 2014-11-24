@@ -35,6 +35,7 @@
 */
 
 #include "slist.h"
+#include <stdbool.h>
 
 slist_node_t* slist_find(slist_t *slist, void *node)
 {
@@ -253,6 +254,12 @@ void slist_unique(slist_t* slist, item_compare_t compare)
 
 }
 
+void slist_node_swap(slist_t* slist, void* node1, void* node2)
+{
+
+}
+
+
 /*
 Sort elements in container
 Sorts the elements in the list, altering their position within the container.
@@ -263,5 +270,26 @@ The resulting order of equivalent elements is IN-stable: i.e., equivalent elemen
  */
 void slist_sort(slist_t* slist, item_compare_t compare)
 {
+    bool sorted = true;
+    slist_node_t* iterator = slist->head;
+
+
+    if (!iterator)
+        return;
+
+    while(iterator->next)
+    {
+        if (compare(slist_item(iterator),slist_item(iterator->next)) == ITEM_LARGER_THAN)
+        {
+            sorted = false;
+            slist_node_swap(slist,iterator,iterator->next);
+
+        }
+
+        iterator = iterator->next;
+    }
+
+
+
 
 }

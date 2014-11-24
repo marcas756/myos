@@ -201,7 +201,7 @@ void dlist_reverse (dlist_t * dlist)
         dlist_push_front(&tmp,iterator);
     }
 
-    slist_swap(dlist,&tmp);
+    dlist_swap(dlist,&tmp);
 }
 
 

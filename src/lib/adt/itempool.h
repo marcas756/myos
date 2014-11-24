@@ -100,4 +100,7 @@
              =ITEMPOOL_ITEM_FREE;}while(0)
 
 
+item_t* itempool_alloc(uint8_t* items, uint8_t* status, size_t itemsize, size_t poolsize);
+item_t* itempool_calloc(uint8_t* items, uint8_t* status, size_t itemsize, size_t poolsize);
+
 #endif /* ITEMPOOL_H_ */

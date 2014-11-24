@@ -289,7 +289,7 @@ UNITTEST_TESTCASE_BEGIN(find_and_erase)
     list_push_front(&mylist,&autonodes[1]);
     list_push_front(&mylist,&autonodes[0]);
 
-    tmpnode = slist_find(&mylist,&autonodes[1]);
+    tmpnode = list_find(&mylist,&autonodes[1]);
 
     UNITTEST_ASSERT("Did not find node",tmpnode != NULL);
 
@@ -304,11 +304,11 @@ UNITTEST_TESTCASE_BEGIN(find_and_erase)
     UNITTEST_ASSERT("Expected another item value",*(char*)list_item(list_next(&mylist,list_begin(&mylist))) == 33);
     UNITTEST_ASSERT("Expected another item value",*(char*)list_item(list_prev(&mylist,list_end(&mylist))) == 11);
 
-    tmpnode = slist_find(&mylist,&autonodes[1]);
+    tmpnode = list_find(&mylist,&autonodes[1]);
 
     UNITTEST_ASSERT("Did not expect to find node",tmpnode == NULL);
 
-    tmpnode = slist_find(&mylist,&autonodes[2]);
+    tmpnode = list_find(&mylist,&autonodes[2]);
 
     UNITTEST_ASSERT("Did not find node",tmpnode != NULL);
 
@@ -318,8 +318,8 @@ UNITTEST_TESTCASE_BEGIN(find_and_erase)
 
     UNITTEST_ASSERT("Expected NULL", list_next(&mylist,list_begin(&mylist)) == NULL);
     UNITTEST_ASSERT("Expected NULL", list_prev(&mylist,list_end(&mylist)) == NULL);
-    UNITTEST_ASSERT("Expected node Nr. 0", list_end(&mylist) == &autonodes[0]);
-    UNITTEST_ASSERT("Expected node Nr. 0", list_begin(&mylist) == &autonodes[0]);
+    UNITTEST_ASSERT("Expected node Nr. 0", list_end(&mylist) == (list_node_t*)&autonodes[0]);
+    UNITTEST_ASSERT("Expected node Nr. 0", list_begin(&mylist) == (list_node_t*)&autonodes[0]);
 
 UNITTEST_TESTCASE_END()
 
