@@ -411,15 +411,15 @@ UNITTEST_TESTCASE_END()
 
 UNITTEST_TESTCASE_BEGIN(sort)
     int tmp,tmp2;
-    list_node_t(int) intnodes [20];
+    list_node_t(int) intnodes [10];
     list_node_t *iterator;
 
 
-    for (tmp2 = 0; tmp2 < 5; tmp2++)
+    for (tmp2 = 0; tmp2 <= sizeof(intnodes)/sizeof(*intnodes); tmp2++)
     {
         list_init(&mylist);
 
-        for(tmp = 0; tmp < sizeof(intnodes)/sizeof(*intnodes); tmp++)
+        for(tmp = 0; tmp < tmp2; tmp++)
         {
             *(int*)list_item(&intnodes[tmp]) = rand()%10;
             list_push_front(&mylist,&intnodes[tmp]);
@@ -431,6 +431,8 @@ UNITTEST_TESTCASE_BEGIN(sort)
         print_list(&mylist);
 
         iterator = list_begin(&mylist);
+
+        if(!iterator) continue;
 
         while(list_next(&mylist,iterator))
         {
