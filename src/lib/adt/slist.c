@@ -306,10 +306,6 @@ void slist_sort(slist_t* slist, item_compare_t compare)
     slist_node_t *largest;
     slist_t sorted;
 
-    // list sorted yet?
-    if(!slist->head || !slist->head->next)
-        return;
-
     slist_init(&sorted);
 
     while(slist->head)

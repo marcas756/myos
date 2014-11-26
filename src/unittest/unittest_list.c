@@ -410,22 +410,39 @@ UNITTEST_TESTCASE_BEGIN(remove)
 UNITTEST_TESTCASE_END()
 
 UNITTEST_TESTCASE_BEGIN(sort)
-    int tmp;
-    list_init(&mylist);
-    list_node_t(int) intnodes [40];
+    int tmp,tmp2;
+    list_node_t(int) intnodes [20];
+    list_node_t *iterator;
 
 
-    for(tmp = 0; tmp < sizeof(intnodes)/sizeof(*intnodes); tmp++)
+    for (tmp2 = 0; tmp2 < 5; tmp2++)
     {
-        *(int*)list_item(&intnodes[tmp]) = rand()%10;
-        list_push_front(&mylist,&intnodes[tmp]);
+        list_init(&mylist);
+
+        for(tmp = 0; tmp < sizeof(intnodes)/sizeof(*intnodes); tmp++)
+        {
+            *(int*)list_item(&intnodes[tmp]) = rand()%10;
+            list_push_front(&mylist,&intnodes[tmp]);
+        }
+        UNITTEST_PRINTF("Unsorted ");
+        print_list(&mylist);
+        list_sort(&mylist,intcompare);
+        UNITTEST_PRINTF("Sorted   ");
+        print_list(&mylist);
+
+        iterator = list_begin(&mylist);
+
+        while(list_next(&mylist,iterator))
+        {
+            UNITTEST_ASSERT("List is not sorted", intcompare(list_item(iterator),list_item(list_next(&mylist,iterator))) != ITEM_LARGER_THAN );
+            iterator = list_next(&mylist,iterator);
+        }
+
+
+
+
+
     }
-
-    print_list(&mylist);
-
-    list_sort(&mylist,intcompare);
-
-    print_list(&mylist);
 
 
 UNITTEST_TESTCASE_END()

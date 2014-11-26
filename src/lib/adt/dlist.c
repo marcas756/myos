@@ -216,10 +216,6 @@ void dlist_sort(dlist_t* dlist, item_compare_t compare)
     dlist_node_t *largest;
     dlist_t sorted;
 
-    // list sorted yet?
-    if(!dlist->head || !dlist->head->next)
-        return;
-
     dlist_init(&sorted);
 
     while(dlist->head)
