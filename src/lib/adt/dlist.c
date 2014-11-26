@@ -212,5 +212,34 @@ void dlist_unique(dlist_t* dlist, item_compare_t compare)
 
 void dlist_sort(dlist_t* dlist, item_compare_t compare)
 {
+    dlist_node_t *iterator;
+    dlist_node_t *largest;
+    dlist_t sorted;
+
+    // list sorted yet?
+    if(!dlist->head || !dlist->head->next)
+        return;
+
+    dlist_init(&sorted);
+
+    while(dlist->head)
+    {
+        iterator = dlist->head;
+        largest = iterator;
+
+        while(iterator)
+        {
+            if(compare(dlist_item(iterator),dlist_item(largest)) != ITEM_LESS_THAN)
+                largest = iterator;
+
+            iterator = iterator->next;
+        }
+
+
+        dlist_erase(dlist,largest);
+        dlist_push_front(&sorted,largest);
+    }
+
+    dlist_swap(&sorted,dlist);
 
 }

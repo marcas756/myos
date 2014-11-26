@@ -46,6 +46,7 @@
 
 UNITTEST_TESTSUITE_INIT();
 
+
 #ifdef UNITTEST_SLIST
     #include"unittest_slist.h"
 #elif UNITTEST_DLIST
@@ -64,6 +65,31 @@ UNITTEST_TESTSUITE_INIT();
 list_t mylist;
 list_node_typedef(int);
 list_node_t(int) intnodes [SIZE];
+
+void print_list(list_t *list)
+{
+    list_node_t *iterator = list_begin(list);
+
+    if(!iterator)
+    {
+        UNITTEST_PRINTF("List is empty\n");
+        return;
+    }
+    else
+    {
+        UNITTEST_PRINTF("List [%d] : ",(int)list_size(list));
+    }
+
+    while(iterator)
+    {
+        UNITTEST_PRINTF("[%d]",*(int*)list_item(iterator));
+        iterator = list_next(list,iterator);
+    }
+
+    UNITTEST_PRINTF("\n");
+}
+
+
 
 
 UNITTEST_TESTCASE_BEGIN(init)
@@ -246,7 +272,7 @@ UNITTEST_TESTCASE_END()
 UNITTEST_TESTCASE_BEGIN(find_and_erase)
 
     list_node_typedef(char);
-    list_node_t(char) autonodes [3];
+    list_node_t(int) autonodes [3];
     int tmp;
     list_node_t *tmpnode;
     list_init(&mylist);
@@ -383,6 +409,27 @@ UNITTEST_TESTCASE_BEGIN(remove)
 
 UNITTEST_TESTCASE_END()
 
+UNITTEST_TESTCASE_BEGIN(sort)
+    int tmp;
+    list_init(&mylist);
+    list_node_t(int) intnodes [40];
+
+
+    for(tmp = 0; tmp < sizeof(intnodes)/sizeof(*intnodes); tmp++)
+    {
+        *(int*)list_item(&intnodes[tmp]) = rand()%10;
+        list_push_front(&mylist,&intnodes[tmp]);
+    }
+
+    print_list(&mylist);
+
+    list_sort(&mylist,intcompare);
+
+    print_list(&mylist);
+
+
+UNITTEST_TESTCASE_END()
+
 
 UNITTEST_BENCHMARK_BEGIN(push_front_pop_back)
 
@@ -507,6 +554,7 @@ UNITTEST_TESTSUITE_BEGIN_EXP(unittest_list_type)
     UNITTEST_ADD_TESTCASE(front_back_item);
     UNITTEST_ADD_TESTCASE(find_and_erase);
     UNITTEST_ADD_TESTCASE(remove);
+    UNITTEST_ADD_TESTCASE(sort);
 
     UNITTEST_ADD_BENCHMARK(push_front_pop_back,10000);
     UNITTEST_ADD_BENCHMARK(push_back_pop_front,10000);

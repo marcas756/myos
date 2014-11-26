@@ -254,8 +254,40 @@ void slist_unique(slist_t* slist, item_compare_t compare)
 
 }
 
-void slist_node_swap(slist_t* slist, void* node1, void* node2)
+/*
+ Swaps to nodes in a list
+ Behaviour is undefined, if one or both nodes are not member of the list.
+*/
+void slist_swap_nodes(slist_t* slist, void* node1, void* node2)
 {
+    slist_node_t *prev1,*prev2,*tmp;
+
+    if (node1 == node2) return;
+
+    prev1 = slist_prev(slist,node1); //!!!
+    prev2 = slist_prev(slist,node2); //!!!
+
+    tmp = ((slist_node_t*)node2)->next;
+    ((slist_node_t*)node2)->next = ((slist_node_t*)node1)->next;
+    ((slist_node_t*)node1)->next = tmp;
+
+    if(prev1 && prev2)
+    {
+        prev1->next = node2;
+        prev2->next = node1;
+        return;
+    }
+
+    if(!prev1)
+    {
+        slist->head = node2;
+        prev2->next = node1;
+    }
+    else // !prev2
+    {
+        slist->head = node1;
+        prev1->next = node2;
+    }
 
 }
 
@@ -270,26 +302,33 @@ The resulting order of equivalent elements is IN-stable: i.e., equivalent elemen
  */
 void slist_sort(slist_t* slist, item_compare_t compare)
 {
-    bool sorted = true;
-    slist_node_t* iterator = slist->head;
+    slist_node_t *iterator;
+    slist_node_t *largest;
+    slist_t sorted;
 
-
-    if (!iterator)
+    // list sorted yet?
+    if(!slist->head || !slist->head->next)
         return;
 
-    while(iterator->next)
-    {
-        if (compare(slist_item(iterator),slist_item(iterator->next)) == ITEM_LARGER_THAN)
-        {
-            sorted = false;
-            slist_node_swap(slist,iterator,iterator->next);
+    slist_init(&sorted);
 
+    while(slist->head)
+    {
+        iterator = slist->head;
+        largest = iterator;
+
+        while(iterator)
+        {
+            if(compare(slist_item(iterator),slist_item(largest)) != ITEM_LESS_THAN)
+                largest = iterator;
+
+            iterator = iterator->next;
         }
 
-        iterator = iterator->next;
+
+        slist_erase(slist,largest);
+        slist_push_front(&sorted,largest);
     }
 
-
-
-
+    slist_swap(&sorted,slist);
 }
