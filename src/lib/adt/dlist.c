@@ -207,6 +207,20 @@ void dlist_reverse (dlist_t * dlist)
 
 void dlist_unique(dlist_t* dlist, item_compare_t compare)
 {
+    dlist_node_t *iterator = dlist->head;
+
+    if(!iterator) return;
+
+    while(iterator->next)
+    {
+        if (compare(dlist_item(iterator),dlist_item(iterator->next)) == ITEM_EQUALS_TO)
+        {
+            dlist_erase(dlist,iterator->next);
+            continue;
+        }
+
+        iterator = iterator->next;
+    }
 
 }
 
@@ -220,8 +234,7 @@ void dlist_sort(dlist_t* dlist, item_compare_t compare)
 
     while(dlist->head)
     {
-        iterator = dlist->head;
-        largest = iterator;
+        largest = iterator = dlist->head;
 
         while(iterator)
         {
@@ -230,7 +243,6 @@ void dlist_sort(dlist_t* dlist, item_compare_t compare)
 
             iterator = iterator->next;
         }
-
 
         dlist_erase(dlist,largest);
         dlist_push_front(&sorted,largest);

@@ -43,6 +43,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
+#include <time.h>
 
 UNITTEST_TESTSUITE_INIT();
 
@@ -410,9 +411,12 @@ UNITTEST_TESTCASE_BEGIN(remove)
 UNITTEST_TESTCASE_END()
 
 UNITTEST_TESTCASE_BEGIN(sort)
+
     int tmp,tmp2;
-    list_node_t(int) intnodes [10];
+    list_node_t(int) intnodes [20];
     list_node_t *iterator;
+
+    srand(time(NULL));
 
 
     for (tmp2 = 0; tmp2 <= sizeof(intnodes)/sizeof(*intnodes); tmp2++)
@@ -439,13 +443,48 @@ UNITTEST_TESTCASE_BEGIN(sort)
             UNITTEST_ASSERT("List is not sorted", intcompare(list_item(iterator),list_item(list_next(&mylist,iterator))) != ITEM_LARGER_THAN );
             iterator = list_next(&mylist,iterator);
         }
-
-
-
-
-
     }
 
+UNITTEST_TESTCASE_END()
+
+
+UNITTEST_TESTCASE_BEGIN(unique)
+
+    int tmp,tmp2;
+    list_node_t(int) intnodes [20];
+    list_node_t *iterator;
+
+    for (tmp2 = 0; tmp2 <= sizeof(intnodes)/sizeof(*intnodes); tmp2++)
+    {
+       list_init(&mylist);
+
+       for(tmp = 0; tmp < tmp2; tmp++)
+       {
+           *(int*)list_item(&intnodes[tmp]) = rand()%10;
+           list_push_front(&mylist,&intnodes[tmp]);
+       }
+
+       UNITTEST_PRINTF("Unsorted ");
+       print_list(&mylist);
+       list_sort(&mylist,intcompare);
+       UNITTEST_PRINTF("Sorted ");
+       print_list(&mylist);
+       list_unique(&mylist,intcompare);
+       UNITTEST_PRINTF("Unique ");
+       print_list(&mylist);
+
+       while (!list_empty(&mylist))
+       {
+           iterator = list_begin(&mylist);
+           list_pop_front(&mylist);
+
+           if (!list_empty(&mylist))
+           {
+               UNITTEST_ASSERT("Succeeding node is equal",intcompare(list_item(iterator),list_item(list_begin(&mylist))) != ITEM_EQUALS_TO);
+           }
+
+       }
+    }
 
 UNITTEST_TESTCASE_END()
 
@@ -543,7 +582,7 @@ UNITTEST_BENCHMARK_BEGIN(erase)
 
     size_t tmp;
 
-int cnt;
+    int cnt;
     list_init(&mylist);
 
     for(tmp=0; tmp < SIZE; tmp++)
@@ -562,6 +601,43 @@ int cnt;
 
 UNITTEST_BENCHMARK_END()
 
+
+UNITTEST_BENCHMARK_BEGIN(sort)
+
+    int tmp;
+
+    list_init(&mylist);
+
+    for(tmp = 0; tmp < SIZE; tmp++)
+    {
+        intnodes[tmp].item = rand()%10;
+        list_push_front(&mylist,&intnodes[tmp]);
+    }
+
+    list_sort(&mylist,intcompare);
+
+UNITTEST_BENCHMARK_END()
+
+
+UNITTEST_BENCHMARK_BEGIN(sort_and_unique)
+
+    int tmp;
+
+    list_init(&mylist);
+
+    for(tmp = 0; tmp < SIZE; tmp++)
+    {
+        intnodes[tmp].item = rand()%10;
+        list_push_front(&mylist,&intnodes[tmp]);
+    }
+
+    list_sort(&mylist,intcompare);
+    list_unique(&mylist,intcompare);
+
+UNITTEST_BENCHMARK_END()
+
+#define BENCHMARK_REPETITONS 10000
+
 UNITTEST_TESTSUITE_BEGIN_EXP(unittest_list_type)
 
     UNITTEST_ADD_TESTCASE(init);
@@ -574,14 +650,17 @@ UNITTEST_TESTSUITE_BEGIN_EXP(unittest_list_type)
     UNITTEST_ADD_TESTCASE(find_and_erase);
     UNITTEST_ADD_TESTCASE(remove);
     UNITTEST_ADD_TESTCASE(sort);
+    UNITTEST_ADD_TESTCASE(unique);
 
-    UNITTEST_ADD_BENCHMARK(push_front_pop_back,10000);
-    UNITTEST_ADD_BENCHMARK(push_back_pop_front,10000);
-    UNITTEST_ADD_BENCHMARK(push_front_pop_front,10000);
-    UNITTEST_ADD_BENCHMARK(push_back_pop_back,10000);
-    UNITTEST_ADD_BENCHMARK(remove,10000);
-    UNITTEST_ADD_BENCHMARK(find,10000);
-    UNITTEST_ADD_BENCHMARK(erase,10000);
 
+    UNITTEST_ADD_BENCHMARK(push_front_pop_back,BENCHMARK_REPETITONS);
+    UNITTEST_ADD_BENCHMARK(push_back_pop_front,BENCHMARK_REPETITONS);
+    UNITTEST_ADD_BENCHMARK(push_front_pop_front,BENCHMARK_REPETITONS);
+    UNITTEST_ADD_BENCHMARK(push_back_pop_back,BENCHMARK_REPETITONS);
+    UNITTEST_ADD_BENCHMARK(remove,BENCHMARK_REPETITONS);
+    UNITTEST_ADD_BENCHMARK(find,BENCHMARK_REPETITONS);
+    UNITTEST_ADD_BENCHMARK(erase,BENCHMARK_REPETITONS);
+    UNITTEST_ADD_BENCHMARK(sort,BENCHMARK_REPETITONS);
+    UNITTEST_ADD_BENCHMARK(sort_and_unique,BENCHMARK_REPETITONS);
 
 UNITTEST_TESTSUITE_END()

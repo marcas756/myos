@@ -245,50 +245,26 @@ void slist_remove(slist_t* slist, item_compare_t compare, item_t* item)
 
 /*
 Remove duplicate values
-The version with no parameters (1), removes all but the first element from every consecutive group of equal elements in the container.
+Removes all but the first element from every consecutive group of equal elements in the container.
 
 Notice that an element is only removed from the list container if it compares equal to the element immediately preceding it. Thus, this function is especially useful for sorted lists.
 */
 void slist_unique(slist_t* slist, item_compare_t compare)
 {
+    slist_node_t *iterator = slist->head;
 
-}
+    if(!iterator) return;
 
-/*
- Swaps to nodes in a list
- Behaviour is undefined, if one or both nodes are not member of the list.
-*/
-void slist_swap_nodes(slist_t* slist, void* node1, void* node2)
-{
-    slist_node_t *prev1,*prev2,*tmp;
-
-    if (node1 == node2) return;
-
-    prev1 = slist_prev(slist,node1); //!!!
-    prev2 = slist_prev(slist,node2); //!!!
-
-    tmp = ((slist_node_t*)node2)->next;
-    ((slist_node_t*)node2)->next = ((slist_node_t*)node1)->next;
-    ((slist_node_t*)node1)->next = tmp;
-
-    if(prev1 && prev2)
+    while(iterator->next)
     {
-        prev1->next = node2;
-        prev2->next = node1;
-        return;
-    }
+        if (compare(slist_item(iterator),slist_item(iterator->next)) == ITEM_EQUALS_TO)
+        {
+            slist_erase(slist,iterator->next);
+            continue;
+        }
 
-    if(!prev1)
-    {
-        slist->head = node2;
-        prev2->next = node1;
+        iterator = iterator->next;
     }
-    else // !prev2
-    {
-        slist->head = node1;
-        prev1->next = node2;
-    }
-
 }
 
 
@@ -298,7 +274,7 @@ Sorts the elements in the list, altering their position within the container.
 
 The sorting is performed by applying an algorithm that uses either operator< (in version (1)) or comp (in version (2)) to compare elements. This comparison shall produce a strict weak ordering of the elements (i.e., a consistent transitive comparison, without considering its reflexiveness).
 
-The resulting order of equivalent elements is IN-stable: i.e., equivalent elements preserve the relative order they had before the call.
+The resulting order of equivalent elements is  stable: i.e., equivalent elements preserve the relative order they had before the call.
  */
 void slist_sort(slist_t* slist, item_compare_t compare)
 {
@@ -310,8 +286,7 @@ void slist_sort(slist_t* slist, item_compare_t compare)
 
     while(slist->head)
     {
-        iterator = slist->head;
-        largest = iterator;
+        largest = iterator = slist->head;
 
         while(iterator)
         {
