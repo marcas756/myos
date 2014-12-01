@@ -301,5 +301,5 @@ void slist_sort(slist_t* slist, item_compare_t compare)
         slist_push_front(&sorted,largest);
     }
 
-    slist_swap(&sorted,slist);
+    *slist = sorted;
 }

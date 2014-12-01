@@ -15,6 +15,16 @@ set_target_properties(unittest_dlist PROPERTIES COMPILE_DEFINITIONS "UNITTEST_DL
 target_link_libraries(unittest_dlist adt)
 run_test(unittest_dlist)
 
+add_executable(unittest_xlist unittest_list.c)
+set_target_properties(unittest_xlist PROPERTIES COMPILE_DEFINITIONS "UNITTEST_XLIST")
+target_link_libraries(unittest_xlist adt)
+run_test(unittest_xlist)
+
 add_executable(unittest_itempool unittest_itempool.c)
 target_link_libraries(unittest_itempool adt)
 run_test(unittest_itempool)
+
+add_executable(unittest_xlist_dev unittest_xlist_dev.c)
+target_link_libraries(unittest_xlist_dev adt)
+run_test(unittest_xlist_dev)
+

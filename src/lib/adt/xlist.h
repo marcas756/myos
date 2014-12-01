@@ -34,6 +34,27 @@
     \details
 
 
+                               +--------+
+                               | dlist  |
+                               | +----+ |
+                 .-------------+-|Head| |
+                 |             | +----+ |
+                 |             | |Tail|-+------------.
+                 |             | +----+ |            |
+                 |             +--------+            |
+                 |                                   |
+                 v                                   v
+   +----+      +----+      +----+      +----+      +----+      +----+
+   |Null|<-----|0^B |<---->|A^C |<---->|B^D |<---->|C^0 |----->|Null|
+   +----+      +----+      +----+      +----+      +----+      +----+
+               |    |      |    |      |    |      |    |
+               |Item|      |Item|      |Item|      |Item|
+               |    |      |    |      |    |      |    |
+               +----+      +----+      +----+      +----+
+               (begin)                             (end)
+                 A           B           C           D
+
+
 */
 
 #ifndef XLIST_H_
@@ -41,6 +62,7 @@
 
 #include <stdlib.h>
 #include <stdbool.h>
+#include <stdint.h>
 #include "item.h"
 
 typedef struct xlist_node_t xlist_node_t;
@@ -62,14 +84,8 @@ typedef struct {
     xlist_node_t *tail;
 }xlist_t;
 
-#define xlist_link(predecessor,successor) \
-    ((predecessor)^(successor))
-
-#define xlist_successor(nodeptr,predecessor) \
-    ((nodeptr)->nextprev^(predecessor))
-
-#define xlist_predecessor(nodeptr,successor) \
-    ((nodeptr)->nextprev^(successor))
+#define xlist_xor(predecessor,successor) \
+        ((xlist_node_t*)(((uintptr_t)(predecessor))^((uintptr_t)(successor))))
 
 #define xlist_node_typedef(type) \
     typedef struct{ \
@@ -86,46 +102,53 @@ typedef struct {
         (xlistptr)->tail = NULL; \
     }while(0)
 
+xlist_node_t* xlist_prev(xlist_t* xlist, xlist_node_t* node);
+xlist_node_t* xlist_next(xlist_t* xlist, xlist_node_t* node);
 
-#define dlist_next(dlistptr,nodeptr) \
-    (((dlist_node_t*)(nodeptr))->next)
-
-#define dlist_prev(dlistptr,nodeptr) \
-    (((dlist_node_t*)(nodeptr))->prev)
-
-#define dlist_item(nodeptr) \
-    ((item_t*)(((dlist_node_t*)(nodeptr))+1))
+#define xlist_item(nodeptr) \
+    ((item_t*)(((xlist_node_t*)(nodeptr))+1))
 
 
-#define dlist_begin(dlistptr) \
-    (((dlist_t*)(dlistptr))->head)
+#define xlist_begin(xlistptr) \
+    (((xlist_t*)(xlistptr))->head)
 
-#define dlist_end(dlistptr) \
-    (((dlist_t*)(dlistptr))->tail)
+#define xlist_end(xlistptr) \
+    (((xlist_t*)(xlistptr))->tail)
 
-#define dlist_empty(dlistptr) \
-    (!(dlistptr)->head)
+#define xlist_empty(xlistptr) \
+    (!(xlistptr)->head)
 
-size_t dlist_size(dlist_t *dlist);
+size_t xlist_size(xlist_t *xlist);
 
-#define dlist_front(dlistptr) \
-    ((void*)(dlist_begin(dlistptr)+1))
 
-#define dlist_back(dlistptr) \
-    ((void*)(dlist_end(dlistptr)+1))
+#define xlist_front(xlistptr) \
+    ((void*)(xlist_begin(xlistptr)+1))
 
-void dlist_push_front(dlist_t* dlist, void* node);
-void dlist_pop_front(dlist_t* dlist);
-void dlist_push_back(dlist_t* dlist, void* node);
-void dlist_pop_back(dlist_t* dlist);
-void dlist_insert_after(dlist_t* dlist, void* position, void* node);
-void dlist_insert_before(dlist_t* dlist, void* position, void* node);
-void dlist_clear(dlist_t* dlist);
-void dlist_erase(dlist_t *dlist, void *node);
-void dlist_remove(dlist_t* dlist, item_compare_t compare, item_t* item);
-void dlist_unique(dlist_t* dlist, item_compare_t compare);
-void dlist_reverse (dlist_t * dlist);
-void dlist_sort(dlist_t* dlist, item_compare_t compare);
-dlist_node_t* dlist_find(dlist_t* dlist, void* node);
-void dlist_swap(dlist_t *list1, dlist_t *list2);
+#define xlist_back(xlistptr) \
+    ((void*)(xlist_end(xlistptr)+1))
+
+void xlist_push_front(xlist_t* xlist, void* node);
+void xlist_pop_front(xlist_t* xlist);
+
+void xlist_push_back(xlist_t* xlist, void* node);
+void xlist_pop_back(xlist_t* xlist);
+
+void xlist_insert_after(xlist_t* xlist, void* position, void* node);
+void xlist_insert_before(xlist_t* xlist, void* position, void* node);
+
+
+#define  xlist_clear(xlistptr) xlist_init(xlistptr)
+
+
+void xlist_erase(xlist_t *xlist, void *node);
+void xlist_remove(xlist_t* xlist, item_compare_t compare, item_t* item);
+
+void xlist_unique(xlist_t* xlist, item_compare_t compare);
+void xlist_reverse (xlist_t * xlist);
+void xlist_sort(xlist_t* xlist, item_compare_t compare);
+
+xlist_node_t* xlist_find(xlist_t* xlist, void* node);
+
+void xlist_swap(xlist_t *list1, xlist_t *list2);
+
 #endif /* DLIST_H_ */

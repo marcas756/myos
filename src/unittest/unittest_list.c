@@ -52,6 +52,8 @@ UNITTEST_TESTSUITE_INIT();
     #include"unittest_slist.h"
 #elif UNITTEST_DLIST
     #include"unittest_dlist.h"
+#elif UNITTEST_XLIST
+    #include"unittest_xlist.h"
 #else
    #error "Error: No list type defined"
 #endif
@@ -467,10 +469,10 @@ UNITTEST_TESTCASE_BEGIN(unique)
        UNITTEST_PRINTF("Unsorted ");
        print_list(&mylist);
        list_sort(&mylist,intcompare);
-       UNITTEST_PRINTF("Sorted ");
+       UNITTEST_PRINTF("Sorted   ");
        print_list(&mylist);
        list_unique(&mylist,intcompare);
-       UNITTEST_PRINTF("Unique ");
+       UNITTEST_PRINTF("Unique   ");
        print_list(&mylist);
 
        while (!list_empty(&mylist))
@@ -636,7 +638,7 @@ UNITTEST_BENCHMARK_BEGIN(sort_and_unique)
 
 UNITTEST_BENCHMARK_END()
 
-#define BENCHMARK_REPETITONS 10000
+#define BENCHMARK_REPETITONS 100
 
 UNITTEST_TESTSUITE_BEGIN_EXP(unittest_list_type)
 

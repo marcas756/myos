@@ -248,6 +248,6 @@ void dlist_sort(dlist_t* dlist, item_compare_t compare)
         dlist_push_front(&sorted,largest);
     }
 
-    dlist_swap(&sorted,dlist);
+    *dlist = sorted;
 
 }

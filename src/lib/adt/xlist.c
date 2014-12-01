@@ -32,6 +32,9 @@
     \brief
 
     \details
+
+
+
 */
 
 #include "xlist.h"
@@ -39,184 +42,310 @@
 xlist_node_t* xlist_find(xlist_t* xlist, void* node)
 {
     xlist_node_t *iterator = xlist->head;
-    xlist_node_t *predecessor = NULL;
+    xlist_node_t *prev = NULL;
+    xlist_node_t *next;
+
 
     while(iterator)
     {
-        xlist_node_t *tmp = iterator;
-        if (iterator == node) break;
-        iterator = xlist_successor(iterator,predecessor);
-        predecessor = tmp;
+        if (iterator == node) return iterator;
+        next = xlist_xor(prev,iterator->nextprev);
+        prev = iterator;
+        iterator = next;
     }
 
     return iterator;
 }
 
+
+xlist_node_t* xlist_next(xlist_t* xlist, xlist_node_t* node)
+{
+    xlist_node_t *iterator = xlist->head;
+    xlist_node_t *prev = NULL;
+    xlist_node_t *next;
+
+
+    while(iterator)
+    {
+        next = xlist_xor(prev,iterator->nextprev);
+
+        if (iterator == node) return next;
+
+        prev = iterator;
+        iterator = next;
+    }
+
+    return NULL;
+}
+
+xlist_node_t* xlist_prev(xlist_t* xlist, xlist_node_t* node)
+{
+    xlist_node_t *iterator = xlist->head;
+    xlist_node_t *prev = NULL;
+    xlist_node_t *next;
+
+
+    while(iterator)
+    {
+        if (iterator == node) return prev;
+        next = xlist_xor(prev,iterator->nextprev);
+        prev = iterator;
+        iterator = next;
+    }
+
+    return NULL;
+}
+
 void xlist_push_front(xlist_t* xlist, void* node)
 {
-    if (xlist->head)
+    if(xlist->head)
     {
-        xlist_node_t *successor = xlist_link(xlist->head->nextprev)
-        xlist->head->nextprev =
+        xlist->head->nextprev = xlist_xor(xlist->head->nextprev,node);
+        ((xlist_node_t*)node)->nextprev = xlist_xor(NULL,xlist->head);
+        xlist->head = node;
+    }
+    else
+    {
+        ((xlist_node_t*)node)->nextprev = xlist_xor(NULL,NULL);
+        xlist->head = xlist->tail = node;
+    }
+}
+
+
+void xlist_push_back(xlist_t* xlist, void* node)
+{
+    if(xlist->tail)
+    {
+        xlist->tail->nextprev = xlist_xor(xlist->tail->nextprev,node);
+        ((xlist_node_t*)node)->nextprev = xlist_xor(NULL,xlist->tail);
+        xlist->tail = node;
+    }
+    else
+    {
+        ((xlist_node_t*)node)->nextprev = xlist_xor(NULL,NULL);
+        xlist->head = xlist->tail = node;
+    }
+}
+
+void xlist_pop_front(xlist_t* xlist)
+{
+    if (!xlist->head) return;
+
+    xlist_node_t *tmp = xlist_xor(NULL,xlist->head->nextprev);
+
+    if (tmp)
+    {
+        tmp->nextprev = xlist_xor(xlist->head,tmp->nextprev);
+        xlist->head = tmp;
 
     }
     else
     {
-
-    }
-}
-/*
-void dlist_push_back(dlist_t* dlist, void* node)
-{
-    ((dlist_node_t*)node)->next = NULL;
-
-    if((((dlist_node_t*)node)->prev = dlist->tail))
-        dlist->tail->next = node;
-    else
-        dlist->head = node;
-
-    dlist->tail = node;
-}
-
-void dlist_pop_front(dlist_t* dlist)
-{
-    if (dlist->head)
-    {
-        dlist->head = dlist->head->next;
-
-        if(dlist->head)
-            dlist->head->prev = NULL;
-        else
-            dlist->tail = NULL;
+        xlist->head = xlist->tail = NULL;
     }
 }
 
-void dlist_pop_back(dlist_t* dlist)
+void xlist_pop_back(xlist_t* xlist)
 {
-    if (dlist->tail)
+    if (!xlist->tail) return;
+
+    xlist_node_t *tmp = xlist_xor(NULL,xlist->tail->nextprev);
+
+    if (tmp)
     {
-        dlist->tail = dlist->tail->prev;
+        tmp->nextprev = xlist_xor(xlist->tail,tmp->nextprev);
+        xlist->tail = tmp;
 
-        if(dlist->tail)
-            dlist->tail->next = NULL;
-        else
-            dlist->head = NULL;
-    }
-}
-
-
-void dlist_insert_after(dlist_t* dlist, void* position, void* node)
-{
-    if(((dlist_node_t*)position)->next)
-    {
-        ((dlist_node_t*)node)->prev = position;
-        ((dlist_node_t*)node)->next = ((dlist_node_t*)position)->next;
-        ((dlist_node_t*)position)->next = node;
     }
     else
     {
-        dlist_push_back(dlist,node);
+        xlist->head = xlist->tail = NULL;
     }
 }
 
-void dlist_insert_before(dlist_t* dlist, void* position, void* node)
+
+void xlist_insert_after(xlist_t* xlist, void* position, void* node)
 {
-    if(((dlist_node_t*)position)->prev)
+    xlist_node_t* next = xlist_next(xlist,position);
+
+    if(next)
     {
-        ((dlist_node_t*)node)->next = position;
-        ((dlist_node_t*)node)->prev = ((dlist_node_t*)position)->prev;
-        ((dlist_node_t*)position)->prev = node;
+        ((xlist_node_t*)node)->nextprev = xlist_xor(position,next);
+        next->nextprev = xlist_xor(next->nextprev,position);
+        next->nextprev = xlist_xor(next->nextprev,node);
+        ((xlist_node_t*)position)->nextprev = xlist_xor(((xlist_node_t*)position)->nextprev,next);
+        ((xlist_node_t*)position)->nextprev =xlist_xor(((xlist_node_t*)position)->nextprev,node);
     }
     else
     {
-        dlist_push_front(dlist,node);
+        xlist_push_back(xlist,node);
     }
+
 }
 
-size_t dlist_size(dlist_t *dlist)
+void xlist_insert_before(xlist_t* xlist, void* position, void* node)
 {
-    dlist_node_t *iterator = dlist->head;
+    xlist_node_t* prev = xlist_prev(xlist,position);
+
+    if(prev)
+    {
+        ((xlist_node_t*)node)->nextprev = xlist_xor(position,prev);
+        prev->nextprev = xlist_xor(prev->nextprev,position);
+        prev->nextprev = xlist_xor(prev->nextprev,node);
+        ((xlist_node_t*)position)->nextprev = xlist_xor(((xlist_node_t*)position)->nextprev,prev);
+        ((xlist_node_t*)position)->nextprev =xlist_xor(((xlist_node_t*)position)->nextprev,node);
+    }
+    else
+    {
+        xlist_push_front(xlist,node);
+    }
+
+}
+
+
+size_t xlist_size(xlist_t *xlist)
+{
+    xlist_node_t *iterator = xlist->head;
+    xlist_node_t *prev = NULL;
+    xlist_node_t *next;
     size_t size = 0;
 
     while(iterator)
     {
         size++;
-        iterator = iterator->next;
+        next = xlist_xor(prev,iterator->nextprev);
+        prev = iterator;
+        iterator = next;
     }
 
     return size;
 }
 
-void dlist_erase(dlist_t *dlist, void *node)
+
+void xlist_erase(xlist_t *xlist, void *node)
 {
+    xlist_node_t *prev,*next;
 
-    if (node == dlist->head)
+
+    if (node == xlist->head)
     {
-        dlist_pop_front(dlist);
+        xlist_pop_front(xlist);
         return;
     }
 
-    if (node == dlist->tail)
+    if (node == xlist->tail)
     {
-        dlist_pop_back(dlist);
+        xlist_pop_back(xlist);
         return;
     }
 
-    ((dlist_node_t*)node)->next->prev = ((dlist_node_t*)node)->prev;
-    ((dlist_node_t*)node)->prev->next = ((dlist_node_t*)node)->next;
+    prev = xlist_prev(xlist,node);
+    next = xlist_xor(((xlist_node_t*)node)->nextprev,prev);
+
+    prev->nextprev = xlist_xor(prev->nextprev,node);
+    prev->nextprev = xlist_xor(prev->nextprev,next);
+
+    next->nextprev = xlist_xor(next->nextprev,node);
+    next->nextprev = xlist_xor(next->nextprev,prev);
 }
 
-void dlist_remove(dlist_t* dlist, item_compare_t compare, item_t* item)
+
+void xlist_remove(xlist_t* xlist, item_compare_t compare, item_t* item)
 {
-    dlist_node_t *iterator = dlist->head;
+    xlist_node_t *iterator = xlist->head;
+    xlist_node_t *prev = NULL;
+    xlist_node_t *next;
+
 
     while(iterator)
     {
-        if(compare(item,dlist_item(iterator)) == ITEM_EQUALS_TO)
-            dlist_erase(dlist,iterator);
+        if(compare(item,xlist_item(iterator)) == ITEM_EQUALS_TO)
+        {
+            xlist_erase(xlist,iterator);
+            iterator = xlist->head;
+            prev = NULL;
+            continue;
+        }
 
-        iterator = iterator->next;
+        next = xlist_xor(prev,iterator->nextprev);
+        prev = iterator;
+        iterator = next;
+
+
     }
 }
 
-void dlist_swap(dlist_t *list1, dlist_t *list2)
+
+void xlist_swap(xlist_t *list1, xlist_t *list2)
 {
-    dlist_t tmp = *list1;
+    xlist_t tmp = *list1;
     *list1 = *list2;
     *list2 = tmp;
 }
 
 
-void dlist_clear(dlist_t* dlist)
+
+void xlist_reverse (xlist_t * xlist)
 {
-    dlist_init(dlist);
-}
+    xlist_t tmp;
+    xlist_node_t* iterator;
 
-void dlist_reverse (dlist_t * dlist)
-{
-    dlist_t tmp;
-    dlist_node_t* iterator;
+    xlist_init(&tmp);
 
-    dlist_init(&tmp);
-
-    while(dlist->head)
+    while(xlist->head)
     {
-        iterator = dlist->head;
-        dlist_pop_front(dlist);
-        dlist_push_front(&tmp,iterator);
+        iterator = xlist->head;
+        xlist_pop_front(xlist);
+        xlist_push_front(&tmp,iterator);
     }
 
-    slist_swap(dlist,&tmp);
+    xlist_swap(xlist,&tmp);
 }
 
 
-void dlist_unique(dlist_t* dlist, item_compare_t compare)
+void xlist_unique(xlist_t* xlist, item_compare_t compare)
 {
 
+    xlist_node_t *iterator = xlist->head;
+
+     if(!iterator) return;
+
+     while(xlist_next(xlist,iterator))
+     {
+         if (compare(xlist_item(iterator),xlist_item(xlist_next(xlist,iterator))) == ITEM_EQUALS_TO)
+         {
+             xlist_erase(xlist,xlist_next(xlist,iterator));
+             continue;
+         }
+
+         iterator = xlist_next(xlist,iterator);
+     }
 }
 
-void dlist_sort(dlist_t* dlist, item_compare_t compare)
+void xlist_sort(xlist_t* xlist, item_compare_t compare)
 {
+    xlist_node_t *iterator;
+    xlist_node_t *largest;
+    xlist_t sorted;
 
+    xlist_init(&sorted);
+
+    while(xlist->head)
+    {
+        largest = iterator = xlist->head;
+
+        while(iterator)
+        {
+            if(compare(xlist_item(iterator),xlist_item(largest)) != ITEM_LESS_THAN)
+                largest = iterator;
+
+            iterator = xlist_next(xlist,iterator);
+        }
+
+        xlist_erase(xlist,largest);
+        xlist_push_front(&sorted,largest);
+    }
+
+    *xlist = sorted;
 }
-*/
+
