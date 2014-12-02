@@ -325,7 +325,7 @@ void xlist_unique(xlist_t* xlist, item_compare_t compare)
 void xlist_sort(xlist_t* xlist, item_compare_t compare)
 {
     xlist_node_t *iterator;
-    xlist_node_t *largest;
+    xlist_node_t *largest,*next,*prev,*largest_prev;
     xlist_t sorted;
 
     xlist_init(&sorted);
@@ -333,16 +333,42 @@ void xlist_sort(xlist_t* xlist, item_compare_t compare)
     while(xlist->head)
     {
         largest = iterator = xlist->head;
+        prev = NULL;
 
         while(iterator)
         {
             if(compare(xlist_item(iterator),xlist_item(largest)) != ITEM_LESS_THAN)
+            {
                 largest = iterator;
+                largest_prev = prev;
+            }
 
-            iterator = xlist_next(xlist,iterator);
+            next = xlist_xor(prev,iterator->nextprev);
+            prev = iterator;
+            iterator = next;
         }
 
-        xlist_erase(xlist,largest);
+        // manually erase largest node
+        if (largest == xlist->head)
+        {
+            xlist_pop_front(xlist);
+        }
+        else  if (largest == xlist->tail)
+        {
+            xlist_pop_back(xlist);
+        }
+        else
+        {
+            next = xlist_xor(((xlist_node_t*)largest)->nextprev,largest_prev);
+
+            largest_prev->nextprev = xlist_xor(largest_prev->nextprev,largest);
+            largest_prev->nextprev = xlist_xor(largest_prev->nextprev,next);
+
+            next->nextprev = xlist_xor(next->nextprev,largest);
+            next->nextprev = xlist_xor(next->nextprev,largest_prev);
+        }
+
+        //xlist_erase(xlist,largest);
         xlist_push_front(&sorted,largest);
     }
 
