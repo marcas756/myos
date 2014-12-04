@@ -69,6 +69,6 @@ typedef xlist_t list_t;
 #define list_reverse(listptr)                       xlist_reverse(listptr)
 #define list_sort(listptr,compfptr)                 xlist_sort(listptr,compfptr)
 #define list_find(listptr,nodeptr)                  xlist_find(listptr,nodeptr)
-#define list_swap(listptr1,listptr2)                xlist_swap(listptr1,listptr2);
+#define list_swap(listptr1,listptr2)                xlist_swap(listptr1,listptr2)
 
 #endif /* UNITTEST_XLIST_H_ */

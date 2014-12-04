@@ -32,9 +32,6 @@
     \brief
 
     \details
-
-
-
 */
 
 #include "xlist.h"
@@ -171,10 +168,8 @@ void xlist_insert_after(xlist_t* xlist, void* position, void* node)
     if(next)
     {
         ((xlist_node_t*)node)->nextprev = xlist_xor(position,next);
-        next->nextprev = xlist_xor(next->nextprev,position);
-        next->nextprev = xlist_xor(next->nextprev,node);
-        ((xlist_node_t*)position)->nextprev = xlist_xor(((xlist_node_t*)position)->nextprev,next);
-        ((xlist_node_t*)position)->nextprev =xlist_xor(((xlist_node_t*)position)->nextprev,node);
+        next->nextprev = xlist_xor(xlist_xor(next->nextprev,position),node);
+        ((xlist_node_t*)position)->nextprev =xlist_xor(xlist_xor(((xlist_node_t*)position)->nextprev,next),node);
     }
     else
     {
@@ -190,10 +185,8 @@ void xlist_insert_before(xlist_t* xlist, void* position, void* node)
     if(prev)
     {
         ((xlist_node_t*)node)->nextprev = xlist_xor(position,prev);
-        prev->nextprev = xlist_xor(prev->nextprev,position);
-        prev->nextprev = xlist_xor(prev->nextprev,node);
-        ((xlist_node_t*)position)->nextprev = xlist_xor(((xlist_node_t*)position)->nextprev,prev);
-        ((xlist_node_t*)position)->nextprev =xlist_xor(((xlist_node_t*)position)->nextprev,node);
+        prev->nextprev = xlist_xor(xlist_xor(prev->nextprev,position),node);
+        ((xlist_node_t*)position)->nextprev =xlist_xor(xlist_xor(((xlist_node_t*)position)->nextprev,prev),node);
     }
     else
     {
@@ -241,12 +234,8 @@ void xlist_erase(xlist_t *xlist, void *node)
 
     prev = xlist_prev(xlist,node);
     next = xlist_xor(((xlist_node_t*)node)->nextprev,prev);
-
-    prev->nextprev = xlist_xor(prev->nextprev,node);
-    prev->nextprev = xlist_xor(prev->nextprev,next);
-
-    next->nextprev = xlist_xor(next->nextprev,node);
-    next->nextprev = xlist_xor(next->nextprev,prev);
+    prev->nextprev = xlist_xor(xlist_xor(prev->nextprev,node),next);
+    next->nextprev = xlist_xor(xlist_xor(next->nextprev,node),prev);
 }
 
 
@@ -276,14 +265,6 @@ void xlist_remove(xlist_t* xlist, item_compare_t compare, item_t* item)
 }
 
 
-void xlist_swap(xlist_t *list1, xlist_t *list2)
-{
-    xlist_t tmp = *list1;
-    *list1 = *list2;
-    *list2 = tmp;
-}
-
-
 
 void xlist_reverse (xlist_t * xlist)
 {
@@ -299,7 +280,7 @@ void xlist_reverse (xlist_t * xlist)
         xlist_push_front(&tmp,iterator);
     }
 
-    xlist_swap(xlist,&tmp);
+    *xlist = tmp;
 }
 
 
@@ -361,14 +342,10 @@ void xlist_sort(xlist_t* xlist, item_compare_t compare)
         {
             next = xlist_xor(((xlist_node_t*)largest)->nextprev,largest_prev);
 
-            largest_prev->nextprev = xlist_xor(largest_prev->nextprev,largest);
-            largest_prev->nextprev = xlist_xor(largest_prev->nextprev,next);
-
-            next->nextprev = xlist_xor(next->nextprev,largest);
-            next->nextprev = xlist_xor(next->nextprev,largest_prev);
+            largest_prev->nextprev = xlist_xor(xlist_xor(largest_prev->nextprev,largest),next);
+            next->nextprev = xlist_xor(xlist_xor(next->nextprev,largest),largest_prev);
         }
 
-        //xlist_erase(xlist,largest);
         xlist_push_front(&sorted,largest);
     }
 
