@@ -1,5 +1,5 @@
 /*! \copyright
-    Copyright (c) 2014, marcas756@gmail.com.
+    Copyright (c) 2013, marcas756@gmail.com.
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -27,26 +27,53 @@
     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 /*!
-    \file   event.h
+	\file	unittest_pt.c
 
     \brief
 
     \details
 */
-#ifndef EVENT_H_
-#define EVENT_H_
 
-#include <stdint.h>
+#define UNITTEST_CONF_VERBOSE
 
-typedef uint16_t event_id_t; //!< Event type definition
+#include "unittest.h"
+#include "pt.h"
+#include <stdbool.h>
 
-typedef struct {
-    void* target;           //!< Target the event is meant for
-    void* source;           //!< Source that raised the event. Thus the target is able to send an response event back to the source.
-    void* data;             //!< Additional data associated with the event
-    event_id_t event_id;    //!< Event id number to enable source/target to distinguish different events
-}event_t;
+UNITTEST_TESTSUITE_INIT();
+
+PT_THREAD(pt_wait_while(pt_t* pt, bool cond))
+{
+    PT_BEGIN(pt);
+    PT_WAIT_WHILE(pt,cond);
+    PT_END(pt);
+}
+
+
+UNITTEST_TESTCASE_BEGIN(pt_contitionals)
+
+    pt_t pt1;
+    int tmp;
+    char retval;
+
+    PT_INIT(&pt1);
+
+    for (tmp = 0; tmp < 10; tmp++)
+    {
+        retval = PT_SCHEDULE(pt_wait_while(&pt1,true));
 
 
 
-#endif /* EVENT_H_ */
+    }
+
+
+
+
+UNITTEST_TESTCASE_END()
+
+
+UNITTEST_TESTSUITE_BEGIN(pt)
+
+
+
+UNITTEST_TESTSUITE_END()

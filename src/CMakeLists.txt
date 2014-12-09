@@ -10,7 +10,11 @@ macro(run_test test_target)
   add_dependencies(test ${test_target}_runtest)
 endmacro()
 
-include_directories ("${PROJECT_SOURCE_DIR}/lib/adt")
+include_directories (
+    "${PROJECT_SOURCE_DIR}/lib/adt"
+    "${PROJECT_SOURCE_DIR}/core"
+)
+
 
 add_subdirectory("${PROJECT_SOURCE_DIR}/lib")
 add_subdirectory("${PROJECT_SOURCE_DIR}/unittest")

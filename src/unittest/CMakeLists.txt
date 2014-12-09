@@ -28,3 +28,6 @@ add_executable(unittest_xlist_dev unittest_xlist_dev.c)
 target_link_libraries(unittest_xlist_dev adt)
 run_test(unittest_xlist_dev)
 
+add_executable(unittest_pt unittest_pt.c)
+run_test(unittest_pt)
+
