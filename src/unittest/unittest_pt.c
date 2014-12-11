@@ -42,6 +42,8 @@
 
 UNITTEST_TESTSUITE_INIT();
 
+#define TRIALS  10
+
 PT_THREAD(pt_wait_while(pt_t* pt, bool cond))
 {
     PT_BEGIN(pt);
@@ -49,8 +51,31 @@ PT_THREAD(pt_wait_while(pt_t* pt, bool cond))
     PT_END(pt);
 }
 
+PT_THREAD(pt_wait_until(pt_t* pt, bool cond))
+{
+    PT_BEGIN(pt);
+    PT_WAIT_UNTIL(pt,cond);
+    PT_END(pt);
+}
 
-UNITTEST_TESTCASE_BEGIN(pt_contitionals)
+
+PT_THREAD(pt_yield(pt_t* pt))
+{
+    PT_BEGIN(pt);
+    PT_YIELD(pt);
+    PT_YIELD(pt);
+    PT_YIELD(pt);
+    PT_END(pt);
+}
+
+PT_THREAD(pt_yield_until(pt_t* pt, bool cond))
+{
+    PT_BEGIN(pt);
+    PT_YIELD_UNTIL(pt,cond);
+    PT_END(pt);
+}
+
+UNITTEST_TESTCASE_BEGIN(pt_conditionals)
 
     pt_t pt1;
     int tmp;
@@ -58,15 +83,99 @@ UNITTEST_TESTCASE_BEGIN(pt_contitionals)
 
     PT_INIT(&pt1);
 
-    for (tmp = 0; tmp < 10; tmp++)
+    UNITTEST_PRINTF("lc value for zombie : 0x%X\n",LC_DEFAULT);
+
+    /* WAIT WHILE -------------------------------------------------------------------------------------------------------- */
+
+    for (tmp = 0; tmp < TRIALS; tmp++)
+        UNITTEST_ASSERT("protothread has to block",PT_SCHEDULE(pt_wait_while(&pt1,true)) == PT_BLOCKED);
+
+    UNITTEST_ASSERT("protothread has to be dead",PT_SCHEDULE(pt_wait_while(&pt1,false)) == PT_DEAD);
+
+    for (tmp = 0; tmp < TRIALS; tmp++)
     {
-        retval = PT_SCHEDULE(pt_wait_while(&pt1,true));
+        UNITTEST_ASSERT("protothread has to be zombie",PT_SCHEDULE(pt_wait_while(&pt1,false)) == PT_ZOMBIE);
+        UNITTEST_ASSERT("protothread has to be zombie",PT_SCHEDULE(pt_wait_while(&pt1,true)) == PT_ZOMBIE);
+    }
 
+    PT_INIT(&pt1);
 
+    UNITTEST_ASSERT("protothread has to be dead",PT_SCHEDULE(pt_wait_while(&pt1,false)) == PT_DEAD);
 
+    for (tmp = 0; tmp < TRIALS; tmp++)
+    {
+        UNITTEST_ASSERT("protothread has to be zombie",PT_SCHEDULE(pt_wait_while(&pt1,false)) == PT_ZOMBIE);
+        UNITTEST_ASSERT("protothread has to be zombie",PT_SCHEDULE(pt_wait_while(&pt1,true)) == PT_ZOMBIE);
+    }
+
+    /* WAIT UNTIL -------------------------------------------------------------------------------------------------------- */
+
+    PT_INIT(&pt1);
+
+    for (tmp = 0; tmp < TRIALS; tmp++)
+        UNITTEST_ASSERT("protothread has to block",PT_SCHEDULE(pt_wait_until(&pt1,false)) == PT_BLOCKED);
+
+    UNITTEST_ASSERT("protothread has to be dead",PT_SCHEDULE(pt_wait_until(&pt1,true)) == PT_DEAD);
+
+    for (tmp = 0; tmp < TRIALS; tmp++)
+    {
+        UNITTEST_ASSERT("protothread has to be zombie",PT_SCHEDULE(pt_wait_until(&pt1,false)) == PT_ZOMBIE);
+        UNITTEST_ASSERT("protothread has to be zombie",PT_SCHEDULE(pt_wait_until(&pt1,true)) == PT_ZOMBIE);
+    }
+
+    PT_INIT(&pt1);
+
+    UNITTEST_ASSERT("protothread has to be dead",PT_SCHEDULE(pt_wait_until(&pt1,true)) == PT_DEAD);
+
+    for (tmp = 0; tmp < TRIALS; tmp++)
+    {
+        UNITTEST_ASSERT("protothread has to be zombie",PT_SCHEDULE(pt_wait_until(&pt1,false)) == PT_ZOMBIE);
+        UNITTEST_ASSERT("protothread has to be zombie",PT_SCHEDULE(pt_wait_until(&pt1,true)) == PT_ZOMBIE);
     }
 
 
+    /* YIELD -------------------------------------------------------------------------------------------------------- */
+
+    PT_INIT(&pt1);
+
+    UNITTEST_ASSERT("protothread has to block",PT_SCHEDULE(pt_yield(&pt1)) == PT_BLOCKED); /* 1st yield */
+    UNITTEST_ASSERT("protothread has to block",PT_SCHEDULE(pt_yield(&pt1)) == PT_BLOCKED); /* 2nd yield */
+    UNITTEST_ASSERT("protothread has to block",PT_SCHEDULE(pt_yield(&pt1)) == PT_BLOCKED); /* 3rd yield */
+    UNITTEST_ASSERT("protothread has to be dead",PT_SCHEDULE(pt_yield(&pt1)) == PT_DEAD);
+
+    for (tmp = 0; tmp < TRIALS; tmp++)
+        UNITTEST_ASSERT("protothread has to be zombie",PT_SCHEDULE(pt_yield(&pt1)) == PT_ZOMBIE);
+
+    /* YIELD UNTIL -------------------------------------------------------------------------------------------------------- */
+
+    PT_INIT(&pt1);
+
+    for (tmp = 0; tmp < TRIALS; tmp++)
+        UNITTEST_ASSERT("protothread has to block",PT_SCHEDULE(pt_yield_until(&pt1,false)) == PT_BLOCKED);
+
+    UNITTEST_ASSERT("protothread has to be dead",PT_SCHEDULE(pt_yield_until(&pt1,true)) == PT_DEAD);
+
+    for (tmp = 0; tmp < TRIALS; tmp++)
+    {
+        UNITTEST_ASSERT("protothread has to be zombie",PT_SCHEDULE(pt_wait_until(&pt1,false)) == PT_ZOMBIE);
+        UNITTEST_ASSERT("protothread has to be zombie",PT_SCHEDULE(pt_wait_until(&pt1,true)) == PT_ZOMBIE);
+    }
+
+    PT_INIT(&pt1);
+
+    /* also has to block first time if condition is met */
+    UNITTEST_ASSERT("protothread has to block ",PT_SCHEDULE(pt_yield_until(&pt1,true)) == PT_BLOCKED);
+
+    for (tmp = 0; tmp < TRIALS; tmp++)
+        UNITTEST_ASSERT("protothread has to block ",PT_SCHEDULE(pt_yield_until(&pt1,false)) == PT_BLOCKED);
+
+    UNITTEST_ASSERT("protothread has to be dead ",PT_SCHEDULE(pt_yield_until(&pt1,true)) == PT_DEAD);
+
+    for (tmp = 0; tmp < TRIALS; tmp++)
+    {
+        UNITTEST_ASSERT("protothread has to be zombie",PT_SCHEDULE(pt_yield_until(&pt1,false)) == PT_ZOMBIE);
+        UNITTEST_ASSERT("protothread has to be zombie",PT_SCHEDULE(pt_yield_until(&pt1,true)) == PT_ZOMBIE);
+    }
 
 
 UNITTEST_TESTCASE_END()
@@ -74,6 +183,6 @@ UNITTEST_TESTCASE_END()
 
 UNITTEST_TESTSUITE_BEGIN(pt)
 
-
+UNITTEST_ADD_TESTCASE(pt_conditionals);
 
 UNITTEST_TESTSUITE_END()

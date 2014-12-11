@@ -54,7 +54,8 @@
 
 typedef uint16_t lc_t;
 #define LC_INIT(s) s = 0;
-#define LC_INIT_DEFAULT(s) s = (~((lc_t)(0)))
+#define LC_DEFAULT ((lc_t)(~((lc_t)(0))))
+#define LC_SET_DEFAULT(s) s = LC_DEFAULT;
 #define LC_RESUME(s) switch(s) { case 0:
 #define LC_SET(s) s = __LINE__; case __LINE__:
 #define LC_SET_YIELD(s,retval) s = __LINE__; return retval; case __LINE__:
@@ -64,10 +65,9 @@ typedef struct{
   lc_t lc;
 }pt_t;
 
-#define PT_BLOCKED 0
-#define PT_DEAD   1
-#define PT_ZOMBIE  2
-
+#define PT_BLOCKED  0
+#define PT_DEAD     1
+#define PT_ZOMBIE   2
 
 /**
  * Initialize a protothread.
@@ -82,8 +82,6 @@ typedef struct{
  * \hideinitializer
  */
 #define PT_INIT(pt)   LC_INIT((pt)->lc)
-
-#define PT_SET_ZOMBIE(pt) LC_INIT_DEFAULT((pt)->lc)
 
 /**
  * Declaration of a protothread.
@@ -123,7 +121,7 @@ typedef struct{
  *
  * \hideinitializer
  */
-#define PT_END(pt) LC_SET_YIELD((pt)->lc,PT_DEAD); LC_END((pt)->lc); return PT_ZOMBIE; }
+#define PT_END(pt) LC_SET_YIELD((pt)->lc,PT_DEAD); LC_END((pt)->lc); } return PT_ZOMBIE;
 
 
 
@@ -228,7 +226,7 @@ typedef struct{
  */
 #define PT_EXIT(pt)             \
   do {                          \
-    PT_SET_ZOMBIE(pt);          \
+    LC_SET_DEFAULT((pt)->lc)   \
     return PT_DEAD;             \
   } while(0)
 
