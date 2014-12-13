@@ -156,8 +156,7 @@ typedef struct{
  *
  * \hideinitializer
  */
-#define PT_WAIT_WHILE(pt, cond)  PT_WAIT_UNTIL((pt), !(cond))
-
+#define PT_WAIT_WHILE(pt, cond)  PT_WAIT_UNTIL((pt),!(cond))
 
 
 /**
@@ -226,7 +225,7 @@ typedef struct{
  */
 #define PT_EXIT(pt)             \
   do {                          \
-    LC_SET_DEFAULT((pt)->lc)   \
+    LC_SET_DEFAULT((pt)->lc)    \
     return PT_DEAD;             \
   } while(0)
 
@@ -256,7 +255,7 @@ typedef struct{
  */
 #define PT_YIELD(pt)                            \
     do {                                        \
-    LC_SET_YIELD((pt)->lc, PT_BLOCKED);         \
+        LC_SET_YIELD((pt)->lc, PT_BLOCKED);     \
     } while(0)
 
 /**

@@ -43,7 +43,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
-#include <time.h>
+
 
 UNITTEST_TESTSUITE_INIT();
 
@@ -415,7 +415,7 @@ UNITTEST_TESTCASE_END()
 UNITTEST_TESTCASE_BEGIN(sort)
 
     int tmp,tmp2;
-    list_node_t(int) intnodes [20];
+    list_node_t(int) intnodes [10];
     list_node_t *iterator;
 
     srand(time(NULL));
@@ -453,7 +453,7 @@ UNITTEST_TESTCASE_END()
 UNITTEST_TESTCASE_BEGIN(unique)
 
     int tmp,tmp2;
-    list_node_t(int) intnodes [20];
+    list_node_t(int) intnodes [10];
     list_node_t *iterator;
 
     for (tmp2 = 0; tmp2 <= sizeof(intnodes)/sizeof(*intnodes); tmp2++)

@@ -38,6 +38,7 @@
 #ifndef UNITTEST_H_
 #define UNITTEST_H_
 #include <stdlib.h>
+#include <time.h>
 
 #ifdef UNITTEST_CONF_VERBOSE
 
@@ -79,10 +80,9 @@
 #define UNITTEST_BENCHMARK_BEGIN(name) \
     static void unittest_benchmark_##name(size_t benchmark_repetitions){ \
         UNITTEST_PRINTF_TIMESTAMP(); \
-        UNITTEST_PRINTF("%s%s",benchmark_begin_text,#name); \
+        UNITTEST_PRINTF("%s%s\n",benchmark_begin_text,#name); \
         float start_time = (float)clock()/CLOCKS_PER_SEC; \
         while(benchmark_repetitions--){
-
 
 
 #define UNITTEST_BENCHMARK_END() \
