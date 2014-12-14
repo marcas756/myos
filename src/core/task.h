@@ -41,7 +41,7 @@
 #include "pt.h"
 #include "event.h"
 
-#if (OZCONF_TASK_LIST_TYPE == DLIST)
+#if (OZCONF_TASK_LIST_TYPE == OZCONF_DLIST)
     #include "dlist.h"
     typedef dlist_node_t task_list_node_t;
     typedef dlist_t task_list_t;
@@ -50,7 +50,7 @@
     #define task_list_next(nodeptr)                         dlist_next(&task_list,nodeptr)
     #define task_list_erase(nodeptr)                        dlist_erase(&task_list,nodeptr)
     #define task_list_push_front(nodeptr)                   dlist_push_front(&task_list,nodeptr)
-#elif (OZCONF_TASK_LIST_TYPE == XLIST)
+#elif (OZCONF_TASK_LIST_TYPE == OZCONF_XLIST)
     #include "xlist.h"
     typedef xlist_node_t task_list_node_t;
     typedef xlist_t task_list_t;
@@ -59,7 +59,7 @@
     #define task_list_next(nodeptr)                         xlist_next(&task_list,nodeptr)
     #define task_list_erase(nodeptr)                        xlist_erase(&task_list,nodeptr)
     #define task_list_push_front(nodeptr)                   xlist_push_front(&task_list,nodeptr)
-#else /* SLIST */
+#else /* SLIST - DEFAULT */
     #include "slist.h"
     typedef slist_node_t task_list_node_t;
     typedef slist_t task_list_t;
