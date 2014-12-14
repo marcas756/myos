@@ -51,15 +51,25 @@ void scheduler_run()
         switch(event->event_id)
         {
             default:
-                task = (task_t*)task_list_find(event->target);
-                if(task) task->task_thread(&task->pt,event);
+                if(!(task = (task_t*)task_list_find(event->target))) break;
+                if((task->state = task->thread(&task->pt,event)) != TASK_BLOCKED)
+                {
+                    /* Task ended or is zombie, nothing to do for this task anymore */
+                    task_list_erase(task);
+                }
                 break;
         };
     }
-    else /* BROADCAST */
+    else  /* BROADCAST */
     {
-        for(task = task_list_begin(); task; task = task_list_next(task))
-            task->task_thread(&task->pt,event);
+        for(task = (task_t*)task_list_begin(); task; task = (task_t*)task_list_next(task))
+        {
+            if((task->state = task->thread(&task->pt,event)) != TASK_BLOCKED)
+            {
+                /* Task ended or is zombie, nothing to do for this task anymore */
+                task_list_erase(task);
+            }
+        }
     }
 
     event_dequeue();

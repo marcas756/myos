@@ -39,6 +39,7 @@
 
 RINGBUFFER_T(event_queue) event_queue;
 
+
 bool event_enqueue(void *target, void *source, event_id_t event_id, void *data)
 {
     event_t* event;

@@ -62,6 +62,8 @@ typedef struct{
   lc_t lc;
 }pt_t;
 
+typedef char pt_state_t;
+
 #define PT_BLOCKED  0
 #define PT_DEAD     1
 #define PT_ZOMBIE   2
@@ -91,7 +93,7 @@ typedef struct{
  *
  * \hideinitializer
  */
-#define PT_THREAD(name_args) char name_args
+#define PT_THREAD(name_args) pt_state_t name_args
 
 /**
  * Declare the start of a protothread inside the C function

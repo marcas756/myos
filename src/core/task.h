@@ -21,7 +21,7 @@
     DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
     DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE
     GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY #define list_front(listptr)                         slist_front(listptr)OF LIABILITY,
     WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
     NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
@@ -48,6 +48,8 @@
     #define task_list_find(nodeptr)                         dlist_find(&task_list,nodeptr)
     #define task_list_begin()                               dlist_begin(&task_list)
     #define task_list_next(nodeptr)                         dlist_next(&task_list,nodeptr)
+    #define task_list_erase(nodeptr)                        dlist_erase(&task_list,nodeptr)
+    #define task_list_push_front(nodeptr)                   dlist_push_front(&task_list,nodeptr)
 #elif (OZCONF_TASK_LIST_TYPE == XLIST)
     #include "xlist.h"
     typedef xlist_node_t task_list_node_t;
@@ -55,6 +57,8 @@
     #define task_list_find(nodeptr)                         xlist_find(&task_list,nodeptr)
     #define task_list_begin()                               xlist_begin(&task_list)
     #define task_list_next(nodeptr)                         xlist_next(&task_list,nodeptr)
+    #define task_list_erase(nodeptr)                        xlist_erase(&task_list,nodeptr)
+    #define task_list_push_front(nodeptr)                   xlist_push_front(&task_list,nodeptr)
 #else /* SLIST */
     #include "slist.h"
     typedef slist_node_t task_list_node_t;
@@ -62,19 +66,35 @@
     #define task_list_find(nodeptr)                         slist_find(&task_list,nodeptr)
     #define task_list_begin()                               slist_begin(&task_list)
     #define task_list_next(nodeptr)                         slist_next(&task_list,nodeptr)
+    #define task_list_erase(nodeptr)                        slist_erase(&task_list,nodeptr)
+    #define task_list_push_front(nodeptr)                   slist_push_front(&task_list,nodeptr)
 #endif
 
 
-#define TASK_THREAD_ARGS pt_t *pt, event_t *event
+//#define TASK_THREAD_ARGS
 
-typedef char (*task_thread_t)(TASK_THREAD_ARGS);
+typedef pt_state_t task_state_t;
+
+typedef task_state_t (*task_thread_t)(pt_t *pt,event_t *event);
 
 typedef struct {
     task_list_node_t link;
     pt_t pt;
-    task_thread_t task_thread;
+    task_thread_t thread;
+    task_state_t  state;
 } task_t;
 
+#define TASK_BLOCKED    PT_BLOCKED
+#define TASK_DEAD       PT_DEAD
+#define TASK_ZOMBIE     PT_ZOMBIE
+
+
 extern task_list_t task_list;
+
+#define task_running(taskptr) task_list_find(taskptr)
+
+
+
+
 
 #endif /* TASK_H_ */

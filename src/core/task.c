@@ -38,3 +38,15 @@
 
 task_list_t task_list = {0};
 
+void task_start(task_t *task, task_thread_t thread, void *data)
+{
+    event_t event; /* temporary event only required for starting */
+    event_init(&event,task,NULL,EVENT_TASK_START,data);
+    task->thread = thread;
+    PT_INIT(&task->pt);
+    task->state = thread(&task->pt,&event);
+
+    if (task->state == TASK_BLOCKED)
+        task_list_push_front(task);
+}
+

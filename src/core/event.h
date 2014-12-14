@@ -57,7 +57,8 @@
 
 
 enum {
-    EVENT_OZ_BROADCAST      = 0x7F,
+    EVENT_TASK_START,
+    EVENT_TASK_STOP,
     EVENT_APP_BASE          = 0x80
 };
 
@@ -72,7 +73,18 @@ typedef struct {
 RINGBUFFER_TYPEDEF(event_queue, event_t, EVENT_QUEUE_SIZE);
 extern RINGBUFFER_T(event_queue) event_queue;
 
+#define event_init(eventptr,targetptr,sourceptr,event_id_val,dataptr) \
+    do {                                        \
+        (eventptr)->target=(targetptr);         \
+        (eventptr)->source=(sourceptr);         \
+        (eventptr)->event_id=(event_id_val);    \
+        (eventptr)->dataptr=(data);             \
+    }while(0)
+
+
 bool event_enqueue(void *target, void *source, event_id_t event_id, void *data);
+
+
 
 #define event_check()   (RINGBUFFER_COUNT(event_queue))
 #define event_receive() RINGBUFFER_TAIL_PTR(event_queue)
