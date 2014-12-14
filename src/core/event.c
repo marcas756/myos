@@ -55,5 +55,7 @@ bool event_enqueue(void *target, void *source, event_id_t event_id, void *data)
     event->data = data;
 
     RINGBUFFER_PUSH(event_queue);
+
+    return true;
 }
 
