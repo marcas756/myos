@@ -31,3 +31,7 @@ run_test(unittest_xlist_dev)
 add_executable(unittest_pt unittest_pt.c)
 run_test(unittest_pt)
 
+add_executable(unittest_task_dev unittest_task_dev.c)
+target_link_libraries(unittest_task_dev adt)
+run_test(unittest_task_dev)
+

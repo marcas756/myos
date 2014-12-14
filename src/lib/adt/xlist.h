@@ -89,7 +89,7 @@ typedef struct {
 
 #define xlist_node_typedef(type) \
     typedef struct{ \
-        xlist_node_t* nextprev; \
+        xlist_node_t link; \
         type item; \
     }type##_xlist_node_t;
 

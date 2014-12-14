@@ -75,7 +75,7 @@ typedef struct {
 
 #define slist_node_typedef(type) \
     typedef struct{ \
-        slist_node_t *next; \
+        slist_node_t link; \
         type item; \
     }type##_slist_node_t;
 
@@ -165,7 +165,7 @@ Inserts a new element at the beginning of the list, right before its current fir
 This effectively increases the container size by one.
 */
 #define slist_push_front(slistptr,nodeptr) \
-	do{(nodeptr)->next = (slistptr)->head;(slistptr)->head = (slist_node_t*)(nodeptr);}while(0)
+	do{((slist_node_t*)(nodeptr))->next = (slistptr)->head;(slistptr)->head = (slist_node_t*)(nodeptr);}while(0)
 
 /*
 Delete first element

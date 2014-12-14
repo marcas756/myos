@@ -27,51 +27,32 @@
     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 /*!
-    \file   event.h
+    \file   event.c
 
     \brief
 
     \details
 */
-#ifndef EVENT_H_
-#define EVENT_H_
 
-#include <stdint.h>
-#include <stdbool.h>
-
-#include "oz_conf.h"
-#include "ringbuffer.h"
+#include "event.h"
 
 
-#ifdef OZCONF_EVENT_QUEUE_SIZE
-    #define EVENT_QUEUE_SIZE OZCONF_EVENT_QUEUE_SIZE
-#else
-    #define EVENT_QUEUE_SIZE 8
-#endif
+RINGBUFFER_T(event_queue) event_queue;
 
-#ifdef OZCONF_EVENT_ID_TYPE
-    typedef OZCONF_EVENT_ID_TYPE event_id_t;
-#else
-    typedef uint8_t event_id_t;
-#endif
+bool event_enqueue(void *target, void *source, event_id_t event_id, void *data)
+{
+    event_t* event;
 
-typedef struct {
-    void* target;           //!< Target the event is meant for
-    void* source;           //!< Source that raised the event. Thus the target is able to send an response event back to the source.
-    void* data;             //!< Additional data associated with the event
-    event_id_t event_id;    //!< Event id number to enable source/target to distinguish different events
-}event_t;
+    if (RINGBUFFER_FULL(event_queue))
+        return false;
 
-RINGBUFFER_TYPEDEF(event_queue, event_t, EVENT_QUEUE_SIZE);
-extern RINGBUFFER_T(event_queue) event_queue;
+    event = RINGBUFFER_TAIL_PTR(event_queue);
 
-bool event_enqueue(void *target, void *source, event_id_t event_id, void *data);
+    event->target = target;
+    event->source = source;
+    event->event_id = event_id;
+    event->data = data;
 
-#define event_check()   (RINGBUFFER_COUNT(event_queue))
-#define event_receive() RINGBUFFER_TAIL_PTR(event_queue)
-#define event_dequeue() RINGBUFFER_POP(event_queue)
+    RINGBUFFER_PUSH(event_queue);
+}
 
-
-
-
-#endif /* EVENT_H_ */

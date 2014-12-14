@@ -1,5 +1,5 @@
 /*! \copyright
-    Copyright (c) 2013, marcas756@gmail.com.
+    Copyright (c) 2014, marcas756@gmail.com.
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -93,7 +93,7 @@ UNITTEST_TESTCASE_BEGIN(pt_conditionals)
     UNITTEST_ASSERT("protothread has to be dead",PT_SCHEDULE(pt_void(&pt1)) == PT_DEAD);
     UNITTEST_ASSERT("protothread has to be zombie",PT_SCHEDULE(pt_void(&pt1)) == PT_ZOMBIE);
 
-    /* WAIT WHILE -------------------------------------------------------------------------------------------------------- */
+    /* WAIT WHILE -------------------------------------------------------------------------------------------------- */
 
     PT_INIT(&pt1);
 
@@ -257,25 +257,25 @@ UNITTEST_TESTCASE_BEGIN(pt_computation)
 
 
     for(tmp = 0; tmp < 5; tmp++)
-       {
-           PT_INIT(&prime_data[tmp].pt);
-           prime_data[tmp].number = nonprimes[tmp];
-       }
+    {
+       PT_INIT(&prime_data[tmp].pt);
+       prime_data[tmp].number = nonprimes[tmp];
+    }
 
-       do
-       {
-           someone_blocked = false;
-
-           for(tmp = 0; tmp < 5; tmp++)
-           {
-               if (PT_SCHEDULE(pt_prime(&prime_data[tmp].pt,&prime_data[tmp])) == PT_BLOCKED)
-                   someone_blocked = true;
-           }
-
-       } while (someone_blocked);
+    do
+    {
+       someone_blocked = false;
 
        for(tmp = 0; tmp < 5; tmp++)
-           UNITTEST_ASSERT("Wrong result",prime_data[tmp].isPrime == false);
+       {
+           if (PT_SCHEDULE(pt_prime(&prime_data[tmp].pt,&prime_data[tmp])) == PT_BLOCKED)
+               someone_blocked = true;
+       }
+
+    } while (someone_blocked);
+
+    for(tmp = 0; tmp < 5; tmp++)
+       UNITTEST_ASSERT("Wrong result",prime_data[tmp].isPrime == false);
 
 UNITTEST_TESTCASE_END()
 
