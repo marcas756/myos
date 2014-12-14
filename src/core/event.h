@@ -55,6 +55,13 @@
     typedef uint8_t event_id_t;
 #endif
 
+
+enum {
+    EVENT_OZ_BROADCAST      = 0x7F,
+    EVENT_APP_BASE          = 0x80
+};
+
+
 typedef struct {
     void* target;           //!< Target the event is meant for
     void* source;           //!< Source that raised the event. Thus the target is able to send an response event back to the source.

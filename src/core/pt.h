@@ -41,9 +41,6 @@
     \details
             Based on Contiki 2.7 protothread implementation.
 
-
-
-
 */
 
 

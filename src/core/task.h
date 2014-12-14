@@ -45,17 +45,23 @@
     #include "dlist.h"
     typedef dlist_node_t task_list_node_t;
     typedef dlist_t task_list_t;
-    #define task_list_find(listptr,nodeptr)                  dlist_find(listptr,nodeptr)
+    #define task_list_find(nodeptr)                         dlist_find(&task_list,nodeptr)
+    #define task_list_begin()                               dlist_begin(&task_list)
+    #define task_list_next(nodeptr)                         dlist_next(&task_list,nodeptr)
 #elif (OZCONF_TASK_LIST_TYPE == XLIST)
     #include "xlist.h"
     typedef xlist_node_t task_list_node_t;
     typedef xlist_t task_list_t;
-    #define task_list_find(listptr,nodeptr)                  xlist_find(listptr,nodeptr)
+    #define task_list_find(nodeptr)                         xlist_find(&task_list,nodeptr)
+    #define task_list_begin()                               xlist_begin(&task_list)
+    #define task_list_next(nodeptr)                         xlist_next(&task_list,nodeptr)
 #else /* SLIST */
     #include "slist.h"
     typedef slist_node_t task_list_node_t;
     typedef slist_t task_list_t;
-    #define task_list_find(listptr,nodeptr)                  slist_find(listptr,nodeptr)
+    #define task_list_find(nodeptr)                         slist_find(&task_list,nodeptr)
+    #define task_list_begin()                               slist_begin(&task_list)
+    #define task_list_next(nodeptr)                         slist_next(&task_list,nodeptr)
 #endif
 
 

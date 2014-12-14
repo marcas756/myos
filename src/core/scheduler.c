@@ -35,8 +35,6 @@
 */
 
 #include "scheduler.h"
-#include "event.h"
-
 
 void scheduler_run()
 {
@@ -47,11 +45,21 @@ void scheduler_run()
         return;
 
     event = event_receive();
-    task = (task_t*)task_list_find(&task_list,event->target);
 
-    if(task)
+    if (event->target)  /* UNICAST */
     {
-
+        switch(event->event_id)
+        {
+            default:
+                task = (task_t*)task_list_find(event->target);
+                if(task) task->task_thread(&task->pt,event);
+                break;
+        };
+    }
+    else /* BROADCAST */
+    {
+        for(task = task_list_begin(); task; task = task_list_next(task))
+            task->task_thread(&task->pt,event);
     }
 
     event_dequeue();
