@@ -36,7 +36,7 @@
 
 
 #define UNITTEST_CONF_VERBOSE
-#define UNITTEST_CONF_TIMESTAMPS
+/* #define UNITTEST_CONF_TIMESTAMPS */
 #define UNITTEST_CONF_BENCHMARK
 
 #include "unittest.h"
@@ -61,13 +61,16 @@ UNITTEST_TESTSUITE_INIT();
 #define UNITTEST_TESTSUITE_BEGIN_EXP(x) \
     UNITTEST_TESTSUITE_BEGIN(x)
 
-#define SIZE 200
+#define SIZE 10
 #define RANDOM_SEED 12345
 #define GARBAGE 0xAA
 
 list_t mylist;
 list_node_typedef(int);
 list_node_t(int) intnodes [SIZE];
+
+list_node_typedef(char);
+
 
 void print_list(list_t *list)
 {
@@ -248,12 +251,11 @@ UNITTEST_TESTCASE_BEGIN(iterator)
 
 UNITTEST_TESTCASE_END()
 
+
 UNITTEST_TESTCASE_BEGIN(front_back_item)
 
-    list_init(&mylist);
-    list_node_typedef(char);
     list_node_t(char) autonodes [3];
-
+    list_init(&mylist);
 
     autonodes[0].item = 11;
     autonodes[1].item = 22;
@@ -274,7 +276,6 @@ UNITTEST_TESTCASE_END()
 
 UNITTEST_TESTCASE_BEGIN(find_and_erase)
 
-    list_node_typedef(char);
     list_node_t(int) autonodes [3];
     int tmp;
     list_node_t *tmpnode;
@@ -638,7 +639,7 @@ UNITTEST_BENCHMARK_BEGIN(sort_and_unique)
 
 UNITTEST_BENCHMARK_END()
 
-#define BENCHMARK_REPETITONS 10000
+#define BENCHMARK_REPETITONS 100
 
 UNITTEST_TESTSUITE_BEGIN_EXP(unittest_list_type)
 

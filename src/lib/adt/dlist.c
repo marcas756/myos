@@ -174,9 +174,11 @@ void dlist_remove(dlist_t* dlist, item_compare_t compare, item_t* item)
     }
 }
 
+
 void dlist_swap(dlist_t *list1, dlist_t *list2)
 {
-    dlist_t tmp = *list1;
+    dlist_t tmp;
+    tmp = *list1;
     *list1 = *list2;
     *list2 = tmp;
 }

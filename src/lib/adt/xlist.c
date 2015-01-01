@@ -126,9 +126,11 @@ void xlist_push_back(xlist_t* xlist, void* node)
 
 void xlist_pop_front(xlist_t* xlist)
 {
+    xlist_node_t *tmp;
+
     if (!xlist->head) return;
 
-    xlist_node_t *tmp = xlist_xor(NULL,xlist->head->nextprev);
+    tmp = xlist_xor(NULL,xlist->head->nextprev);
 
     if (tmp)
     {
@@ -144,9 +146,11 @@ void xlist_pop_front(xlist_t* xlist)
 
 void xlist_pop_back(xlist_t* xlist)
 {
+    xlist_node_t *tmp;
+
     if (!xlist->tail) return;
 
-    xlist_node_t *tmp = xlist_xor(NULL,xlist->tail->nextprev);
+     tmp = xlist_xor(NULL,xlist->tail->nextprev);
 
     if (tmp)
     {

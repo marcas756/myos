@@ -50,6 +50,7 @@ RINGBUFFER_TYPEDEF(ringbuffer,int,SIZE);
 RINGBUFFER_T(ringbuffer) test;
 
 
+
 UNITTEST_TESTCASE_BEGIN(ringbuffer_init)
 
     int tmp;
@@ -101,11 +102,12 @@ UNITTEST_TESTCASE_BEGIN(ringbuffer_fill_value)
 
 UNITTEST_TESTCASE_END()
 
+BUFFER_TYPEDEF(reverse,int,SIZE);
+
 UNITTEST_TESTCASE_BEGIN(ringbuffer_deflate_value)
 
     int tmp = 0;
 
-    BUFFER_TYPEDEF(reverse,int,SIZE);
     BUFFER_T(reverse) reverse;
 
     srand(RANDOM_SEED+1);
@@ -155,7 +157,6 @@ UNITTEST_TESTCASE_BEGIN(ringbuffer_deflate_ptr)
 
     int tmp = 0;
 
-    BUFFER_TYPEDEF(reverse,int,SIZE);
     BUFFER_T(reverse) reverse;
 
     srand(RANDOM_SEED+2);
@@ -204,7 +205,6 @@ UNITTEST_TESTCASE_BEGIN(ringbuffer_deflate_read)
 
     int tmp = 0;
 
-    BUFFER_TYPEDEF(reverse,int,SIZE);
     BUFFER_T(reverse) reverse;
 
     srand(RANDOM_SEED+2);
@@ -229,10 +229,11 @@ UNITTEST_TESTCASE_BEGIN(ringbuffer_deflate_read)
 
 UNITTEST_TESTCASE_END()
 
+BUFFER_TYPEDEF(packet,uint8_t,SIZE);
+RINGBUFFER_TYPEDEF(packetqueue,BUFFER_T(packet),SIZE);
+
 UNITTEST_TESTCASE_BEGIN(packet_test)
 
-    BUFFER_TYPEDEF(packet,uint8_t,SIZE);
-    RINGBUFFER_TYPEDEF(packetqueue,BUFFER_T(packet),SIZE);
 
 
     RINGBUFFER_T(packetqueue) input;

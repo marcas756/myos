@@ -88,7 +88,6 @@ typedef struct {
 #define TASK_DEAD       PT_DEAD
 #define TASK_ZOMBIE     PT_ZOMBIE
 
-
 extern task_list_t task_list;
 
 #define task_running(taskptr) task_list_find(taskptr)

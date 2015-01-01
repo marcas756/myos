@@ -93,7 +93,7 @@
 #ifndef DLIST_H_
 #define DLIST_H_
 
-#include <stdlib.h>
+#include <stddef.h>
 #include <stdbool.h>
 #include "item.h"
 

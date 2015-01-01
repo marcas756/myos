@@ -50,7 +50,7 @@
 #ifndef SLIST_H_
 #define SLIST_H_
 
-#include <stdlib.h>
+#include <stddef.h>
 #include <stdbool.h>
 #include "item.h"
 

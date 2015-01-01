@@ -39,7 +39,7 @@
 #include "item.h"
 #include <stdint.h>
 #include <stddef.h>
-#include "string.h"
+#include <string.h>
 
 #define ITEMPOOL_ITEM_FREE 0
 #define ITEMPOOL_ITEM_USED 1

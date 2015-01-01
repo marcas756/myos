@@ -60,7 +60,7 @@
 #ifndef XLIST_H_
 #define XLIST_H_
 
-#include <stdlib.h>
+#include <stddef.h>
 #include <stdbool.h>
 #include <stdint.h>
 #include "item.h"

@@ -79,14 +79,15 @@
 
 #define UNITTEST_BENCHMARK_BEGIN(name) \
     static void unittest_benchmark_##name(size_t benchmark_repetitions){ \
+        clock_t start_time; \
         UNITTEST_PRINTF_TIMESTAMP(); \
         UNITTEST_PRINTF("%s%s\n",benchmark_begin_text,#name); \
-        float start_time = (float)clock()/CLOCKS_PER_SEC; \
+        start_time = clock(); \
         while(benchmark_repetitions--){
 
 
 #define UNITTEST_BENCHMARK_END() \
-        }UNITTEST_PRINTF(" [%.6f]\n",(float)clock()/CLOCKS_PER_SEC-start_time);}
+        }UNITTEST_PRINTF(" [%d]\n",clock()-start_time);}
 
 
 

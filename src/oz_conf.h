@@ -41,7 +41,7 @@
 #define OZCONF_DLIST    1
 #define OZCONF_XLIST    2
 
-#define OZCONF_TASK_LIST_TYPE       SLIST
+#define OZCONF_TASK_LIST_TYPE       OZCONF_DLIST
 #define OZCONF_EVENT_QUEUE_SIZE     16
 #define OZCONF_EVENT_ID_TYPE        uint16_t
 
