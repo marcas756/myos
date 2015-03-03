@@ -221,10 +221,39 @@ Removes from the container all the elements that compare equal to val. This call
 Unlike member function list::erase, which erases elements by their position (using an iterator), this function (list::remove) removes elements by their value.
 */
 void slist_remove(slist_t* slist, item_compare_t compare, item_t* item);
+
+/*
+Remove duplicate values
+Removes all but the first element from every consecutive group of equal elements in the container.
+
+Notice that an element is only removed from the list container if it compares equal to the element immediately preceding it. Thus, this function is especially useful for sorted lists.
+*/
 void slist_unique(slist_t* slist, item_compare_t compare);
+
+/*
+Reverse the order of elements
+Reverses the order of the elements in the list container.
+*/
 void slist_reverse (slist_t * slist);
+
+/*
+Sort elements in container
+Sorts the elements in the list, altering their position within the container.
+
+The sorting is performed by applying an algorithm that uses either operator< (in version (1)) or comp (in version (2)) to compare elements. This comparison shall produce a strict weak ordering of the elements (i.e., a consistent transitive comparison, without considering its reflexiveness).
+
+The resulting order of equivalent elements is  stable: i.e., equivalent elements preserve the relative order they had before the call.
+ */
 void slist_sort(slist_t* slist, item_compare_t compare);
+
 slist_node_t* slist_find(slist_t *slist, void *node);
+
+/*
+Swap content
+Exchanges the content of the container by the content of x, which is another list of the same type. Sizes may differ.
+
+After the call to this member function, the elements in this container are those which were in x before the call, and the elements of x are those which were in this. All iterators, references and pointers remain valid for the swapped objects.
+*/
 void slist_swap(slist_t *list1, slist_t *list2);
 
 #endif /* SLIST_H_ */
