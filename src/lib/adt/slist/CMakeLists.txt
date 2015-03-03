@@ -1,4 +1,3 @@
-
 add_library(slist OBJECT
     slist_end.c
     slist_erase.c
