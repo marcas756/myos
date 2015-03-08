@@ -15,6 +15,7 @@ include_directories (
     "${PROJECT_SOURCE_DIR}/lib/adt"
     "${PROJECT_SOURCE_DIR}/lib/adt/slist"
     "${PROJECT_SOURCE_DIR}/lib/adt/xlist"
+    "${PROJECT_SOURCE_DIR}/lib/adt/dlist"
     "${PROJECT_SOURCE_DIR}/core"
 )
 

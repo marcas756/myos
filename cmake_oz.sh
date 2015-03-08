@@ -1,6 +1,6 @@
 #!/bin/bash
 
-rm ./build -r
+rm ./build -rf
 mkdir -p build/Release
 mkdir -p build/Debug
 mkdir -p build/C64

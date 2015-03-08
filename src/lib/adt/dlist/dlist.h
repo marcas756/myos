@@ -133,6 +133,7 @@ typedef struct {
         (dlistptr)->tail = NULL; \
     }while(0)
 
+#define dlist_clear(dlistptr) dlist_init(dlistptr)
 
 #define dlist_next(dlistptr,nodeptr) \
     (((dlist_node_t*)(nodeptr))->next)
@@ -167,7 +168,6 @@ void dlist_push_back(dlist_t* dlist, void* node);
 void dlist_pop_back(dlist_t* dlist);
 void dlist_insert_after(dlist_t* dlist, void* position, void* node);
 void dlist_insert_before(dlist_t* dlist, void* position, void* node);
-void dlist_clear(dlist_t* dlist);
 void dlist_erase(dlist_t *dlist, void *node);
 void dlist_remove(dlist_t* dlist, item_compare_t compare, item_t* item);
 void dlist_unique(dlist_t* dlist, item_compare_t compare);
