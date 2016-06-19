@@ -1,5 +1,5 @@
 /*! \copyright
-    Copyright (c) 2012, marcas756@gmail.com.
+    Copyright (c) 2015, marcas756@gmail.com.
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -27,36 +27,34 @@
     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 /*!
-    \file   debug.h
+    \file   slist_unique.c
 
     \brief
 
     \details
 */
 
-#ifndef DEBUG_H
-#define DEBUG_H
+#include "slist.h"
 
 
+void slist_unique(slist_t* slist, item_compare_t compare)
+{
+    slist_node_t *iterator = slist->head;
 
-/* Debugging output function (printf or any other var args function) */
-#ifdef DEBUG
-    extern void debug_printf_function ( const char * format, ... );
-    #define DEBUG_PRINTF(args) (debug_printf_function args)
-#else
-    #define DEBUG_PRINTF(args)
-#endif /* DEBUG */
+    if(!iterator)
+    {
+        return;
+    }
 
-/* Following DEBUG check allows to write more complex debug sections beyond DBG("Debugmessage: %d",var). */
-/* But try to avoid more complex debug sections, for the readability of the code and run time issues (real time)! */
-#ifdef DEBUG
+    while(iterator->next)
+    {
+        if (compare(slist_item(iterator),slist_item(iterator->next)) == ITEM_EQUALS_TO)
+        {
+            slist_erase(slist,iterator->next);
+            continue;
+        }
 
-/* application modules */
-#define DEBUG_TASK              1
-#define DEBUG_SLIST             1
+        iterator = iterator->next;
+    }
+}
 
-/* ...... */
-
-#endif /* DEBUG */
-
-#endif /* DEBUG_H */

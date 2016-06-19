@@ -1,5 +1,5 @@
 /*! \copyright
-    Copyright (c) 2012, marcas756@gmail.com.
+    Copyright (c) 2013, marcas756@gmail.com.
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -27,36 +27,66 @@
     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 /*!
-    \file   debug.h
+	\file	unittest_task.c
 
     \brief
 
     \details
 */
 
-#ifndef DEBUG_H
-#define DEBUG_H
+#define UNITTEST_CONF_VERBOSE
+
+#include "unittest.h"
+#include "task.h"
+#include <string.h>
+
+UNITTEST_TESTSUITE_INIT
+
+TASK_THREAD(task_init_test_thread)
+{
+    return 0xAC;
+}
+
+
+UNITTEST_TESTCASE(task_init)
+{
+    task_t task = {0};
+    task_list_node_t link = {0};
+
+    task_init(&task);
+
+    UNITTEST_ASSERT("Invalid task data",task.data == NULL);
+    UNITTEST_ASSERT("Invalid task state",task.state == TASK_STATE_TERMINATED);
+    UNITTEST_ASSERT("Invalid task link",!memcmp(&task.link,&link,sizeof(task.link)));
+    UNITTEST_ASSERT("Invalid task thread",task.thread == NULL);
+    UNITTEST_ASSERT("Invalid task pollreq",task.pollreq == 0);
+    UNITTEST_ASSERT("Invalid task pt",task.pt.lc == 0);
+}
 
 
 
-/* Debugging output function (printf or any other var args function) */
-#ifdef DEBUG
-    extern void debug_printf_function ( const char * format, ... );
-    #define DEBUG_PRINTF(args) (debug_printf_function args)
-#else
-    #define DEBUG_PRINTF(args)
-#endif /* DEBUG */
+UNITTEST_TESTCASE(task_event_init)
+{
+    event_t event = {0};
+    task_t target;
+    int data = 0;
 
-/* Following DEBUG check allows to write more complex debug sections beyond DBG("Debugmessage: %d",var). */
-/* But try to avoid more complex debug sections, for the readability of the code and run time issues (real time)! */
-#ifdef DEBUG
+    task_event_init(&event,&target,1234,&data);
 
-/* application modules */
-#define DEBUG_TASK              1
-#define DEBUG_SLIST             1
+    UNITTEST_ASSERT("Invalid target",event.target == &target);
+    UNITTEST_ASSERT("Invalid id",event.id == 1234);
+    UNITTEST_ASSERT("Invalid data",event.data == &data);
+}
 
-/* ...... */
 
-#endif /* DEBUG */
 
-#endif /* DEBUG_H */
+
+UNITTEST_TESTSUITE(task)
+{
+    UNITTEST_TESTSUITE_BEGIN();
+
+    UNITTEST_EXEC_TESTCASE(task_init);
+    UNITTEST_EXEC_TESTCASE(task_event_init);
+
+    UNITTEST_TESTSUITE_END();
+}

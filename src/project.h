@@ -1,5 +1,5 @@
 /*! \copyright
-    Copyright (c) 2012, marcas756@gmail.com.
+    Copyright (c) 2014, marcas756@gmail.com.
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -27,36 +27,52 @@
     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 /*!
-    \file   debug.h
+    \file   project.h
 
     \brief
 
     \details
 */
 
-#ifndef DEBUG_H
-#define DEBUG_H
+#ifndef PROJECT_H_
+#define PROJECT_H_
 
+#include "debug.h"
 
-
-/* Debugging output function (printf or any other var args function) */
-#ifdef DEBUG
-    extern void debug_printf_function ( const char * format, ... );
-    #define DEBUG_PRINTF(args) (debug_printf_function args)
+#ifdef UNITTEST_WHITEBOX
+    #define STATIC
 #else
-    #define DEBUG_PRINTF(args)
-#endif /* DEBUG */
+    #define STATIC static
+#endif
 
-/* Following DEBUG check allows to write more complex debug sections beyond DBG("Debugmessage: %d",var). */
-/* But try to avoid more complex debug sections, for the readability of the code and run time issues (real time)! */
-#ifdef DEBUG
+#ifdef MAESTRA_INSTRUM
 
-/* application modules */
-#define DEBUG_TASK              1
-#define DEBUG_SLIST             1
+#include <string.h>
 
-/* ...... */
+#define __FILENAME__ (strrchr(__FILE__, '/') ? strrchr(__FILE__, '/') + 1 : __FILE__)
 
-#endif /* DEBUG */
+#if (__STDC_VERSION__ >= 199901L)
+    #define __FUNCTION__ __func__
+#else
+    #define __FUNCTION__ "unknown"
+#endif
 
-#endif /* DEBUG_H */
+#define INSTRUM_HEADER "maestra_instrum.h"
+#include "unittest/maestra/maestra.h"
+
+#endif /* MAESTRA_INSTRUM */
+
+
+
+
+#define LIST_TYPE_SLIST    0
+#define LIST_TYPE_DLIST    1
+#define LIST_TYPE_XLIST    2
+
+#define TASK_LIST_TYPE                      LIST_TYPE_SLIST
+#define TASK_EVENT_QUEUE_SIZE               16
+#define OZCONF_TASK_EVENT_ID_TYPE           uint16_t
+
+
+
+#endif /*PROJECT_H_ */

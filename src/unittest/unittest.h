@@ -1,5 +1,5 @@
 /*! \copyright
-    Copyright (c) 2013, marcas756@gmail.com.
+    Copyright (c) 2013 marcas756@gmail.com.
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -28,9 +28,9 @@
 */
 
 /*!
-    \file   unittest.h
+    \file       unittest.h
 
-    \brief
+    \brief      Provides preprocessor macros to write unit tests
 
     \details
 */
@@ -38,85 +38,101 @@
 #ifndef UNITTEST_H_
 #define UNITTEST_H_
 #include <stdlib.h>
-#include <time.h>
 
-#ifdef UNITTEST_CONF_VERBOSE
+#define UNITTEST_VERBOSE 1
 
-    /* Define your output function here */
-    #include <stdio.h>
+#if UNITTEST_VERBOSE
 
+    extern void unittest_printf_function ( const char * format, ... );
+    #define UNITTEST_PRINTF(args) (unittest_printf_function args)
 
-    #define UNITTEST_PRINTF(...) printf(__VA_ARGS__)
+    #define uttcf  "<UTTCF>"
+    #define uttcb  "<UTTCB>"
+    #define uttsb  "<UTTSB>"
+    #define uttce  "<UTTCE>"
+    #define uttse  "<UTTSE>"
 
-    /* strings required due to old or not string optimizing compilers */
-    #define UNITTEST_TESTSUITE_INIT() const char* file_text = __FILE__;\
-        const char* assert_text = ": Unittest failed in line ";\
-        const char* testcase_begin_text = "Performing testcase "; \
-        const char* benchmark_begin_text = "Benchmarking ";
+    #define UNITTEST_TESTSUITE_INIT                                                                 \
+                                                                                                    \
+        static void unittest_printf_sss(const char *s1, const char *s2, const char *s3)             \
+        {                                                                                           \
+            UNITTEST_PRINTF(("%s %s %s\n",s1,s2,s3));                                               \
+        }                                                                                           \
+                                                                                                    \
+        static void unittest_printf_sssd(const char *s1, const char *s2, const char *s3, int d)     \
+        {                                                                                           \
+            UNITTEST_PRINTF(("%s %s %s %d\n",s1,s2,s3,d));                                          \
+        }                                                                                           \
 
+#else /* UNITTEST_VERBOSE */
 
-#ifdef UNITTEST_CONF_TIMESTAMPS
-    #include <time.h>
-    #define UNITTEST_PRINTF_TIMESTAMP() UNITTEST_PRINTF("%6.2f: ",(float)clock()/CLOCKS_PER_SEC);
-#else
-    #define UNITTEST_PRINTF_TIMESTAMP()
-#endif
+    #define UNITTEST_TESTSUITE_INIT
+    #define UNITTEST_PRINTF(args)
 
-#else /* UNITTEST_CONF_VERBOSE */
+#endif /* UNITTEST_VERBOSE */
 
-    #define UNITTEST_TESTSUITE_INIT()
-    #define UNITTEST_PRINTF(...)
-    #define UNITTEST_PRINTF_TIMESTAMP()
+#if UNITTEST_VERBOSE
 
-#endif /* UNITTEST_CONF_VERBOSE */
+    #define UNITTEST_TESTCASE(name) \
+        static void unittest_##name(const char *tsname, const char *tcname, int *uttcerrcnt)
 
-#define UNITTEST_TESTCASE_BEGIN(name) \
-    static void unittest_##name(){ \
-    UNITTEST_PRINTF_TIMESTAMP(); \
-    UNITTEST_PRINTF("%s%s\n",testcase_begin_text,#name);{
-
-#define UNITTEST_TESTCASE_END() }}
-
-#define UNITTEST_BENCHMARK_BEGIN(name) \
-    static void unittest_benchmark_##name(size_t benchmark_repetitions){ \
-        clock_t start_time; \
-        UNITTEST_PRINTF_TIMESTAMP(); \
-        UNITTEST_PRINTF("%s%s\n",benchmark_begin_text,#name); \
-        start_time = clock(); \
-        while(benchmark_repetitions--){
-
-
-#define UNITTEST_BENCHMARK_END() \
-        }UNITTEST_PRINTF(" [%d]\n",clock()-start_time);}
-
-
+    #define UNITTEST_EXEC_TESTCASE(name)                                \
+        do{                                                             \
+            int uttcerrcnt  = 0;                                        \
+            const char* uttcname = #name;                               \
+            unittest_printf_sss(uttcb,uttsname,uttcname);               \
+            unittest_##name(uttsname,#name,&uttcerrcnt);                \
+            unittest_printf_sssd(uttce,uttsname,uttcname,uttcerrcnt);   \
+            uttserrcnt+=uttcerrcnt;                                     \
+        }while(0)
 
 /* message is not compiled into code, thus it can be used as "in code" information (like remarks) */
 #define UNITTEST_ASSERT(message,test) \
-        do{if(!(test)){UNITTEST_PRINTF("%s%s%d\n",file_text,assert_text,__LINE__); exit(__LINE__);}}while(0)
+        do{if(!(test)){unittest_printf_sssd(uttcf,tsname,tcname,__LINE__);(*uttcerrcnt)++;}}while(0)
 
-#define UNITTEST_ADD_TESTCASE(name) unittest_##name()
-#define UNITTEST_ADD_BENCHMARK(name,repetitions) unittest_benchmark_##name(repetitions)
+#else /* !UNITTEST_VERBOSE */
+    #define UNITTEST_TESTCASE(name) \
+        static void unittest_##name(int *uttcerrcnt)
+
+    #define UNITTEST_EXEC_TESTCASE(name)    \
+        do{                                 \
+            int uttcerrcnt = 0;             \
+            unittest_##name(&uttcerrcnt);   \
+            uttserrcnt+=uttcerrcnt;    \
+        }while(0)
+
+#define UNITTEST_ASSERT(message,test) \
+        do{if(!(test)){(*uttcerrcnt)++;}}while(0)
+#endif /* UNITTEST_VERBOSE */
 
 
-#ifdef UNITTEST_CONF_VERBOSE
+#if UNITTEST_VERBOSE
 
-    #define UNITTEST_TESTSUITE_BEGIN(name) \
-        int main(){ \
-            const char* testsuite_name = #name; \
-            UNITTEST_PRINTF_TIMESTAMP(); \
-            UNITTEST_PRINTF("Entering testsuite %s ...\n", #name);
+    #define UNITTEST_TESTSUITE(name)        \
+        const char*  uttsname = #name;      \
+        int uttserrcnt = 0;                 \
+        int main()
 
-    #define UNITTEST_TESTSUITE_END() \
-        UNITTEST_PRINTF_TIMESTAMP(); \
-        UNITTEST_PRINTF("%s seems to be error free\n",testsuite_name);\
-        return EXIT_SUCCESS;}
+    #define UNITTEST_TESTSUITE_BEGIN()                           \
+        {                                                        \
+            UNITTEST_PRINTF(("%s %s \"%s\" \"%s\" \"%s\"\n",     \
+            uttsb,uttsname,__FILE__,__DATE__,__TIME__));
 
-#else /* UNITTEST_CONF_VERBOSE */
 
-    #define UNITTEST_TESTSUITE_BEGIN(name) int main(){
-    #define UNITTEST_TESTSUITE_END() return EXIT_SUCCESS;}
+    #define UNITTEST_TESTSUITE_END()                                      \
+            UNITTEST_PRINTF(("%s %s %d\n",uttse,uttsname,uttserrcnt));    \
+        }                                                                 \
+        return uttserrcnt
 
-#endif /* UNITTEST_CONF_VERBOSE */
+#else /* UNITTEST_VERBOSE */
+
+    #define UNITTEST_TESTSUITE(name)    \
+            int uttserrcnt = 0;         \
+            int main()
+
+    #define UNITTEST_TESTSUITE_BEGIN()
+    #define UNITTEST_TESTSUITE_END() return uttserrcnt
+
+#endif /* UNITTEST_VERBOSE */
 
 #endif /* UNITTEST_H_ */

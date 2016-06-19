@@ -52,21 +52,23 @@
 typedef uint16_t lc_t;
 #define LC_INIT(s) s = 0;
 #define LC_DEFAULT ((lc_t)(~((lc_t)(0))))
-#define LC_SET_DEFAULT(s) s = LC_DEFAULT;
+#define LC_SET_DEFAULT(s) s = LC_DEFAULT
 #define LC_RESUME(s) switch(s) { case 0:
 #define LC_SET(s) s = __LINE__; case __LINE__:
 #define LC_SET_YIELD(s,retval) s = __LINE__; return retval; case __LINE__:
-#define LC_END(s) default: break;}
+#define LC_END(s) default:;}
+
 
 typedef struct{
   lc_t lc;
 }pt_t;
 
-typedef char pt_state_t;
+typedef unsigned char pt_state_t;
 
-#define PT_BLOCKED  0
-#define PT_DEAD     1
-#define PT_ZOMBIE   2
+#define PT_STATE_TERMINATED     0
+#define PT_STATE_WAITING        1
+
+
 
 /**
  * Initialize a protothread.
@@ -108,7 +110,7 @@ typedef char pt_state_t;
  *
  * \hideinitializer
  */
-#define PT_BEGIN(pt) { LC_RESUME((pt)->lc)
+#define PT_BEGIN(pt) LC_RESUME((pt)->lc)
 
 /**
  * Declare the end of a protothread.
@@ -120,7 +122,7 @@ typedef char pt_state_t;
  *
  * \hideinitializer
  */
-#define PT_END(pt) LC_SET_YIELD((pt)->lc,PT_DEAD); LC_END((pt)->lc); } return PT_ZOMBIE;
+#define PT_END(pt) LC_SET_DEFAULT((pt)->lc); LC_END((pt)->lc); return PT_STATE_TERMINATED
 
 
 
@@ -140,7 +142,7 @@ typedef char pt_state_t;
   do {                                  \
     LC_SET((pt)->lc);                   \
     if(!(condition)) {                  \
-      return PT_BLOCKED;                \
+      return PT_STATE_WAITING;          \
     }                                   \
   } while(0)
 
@@ -174,7 +176,7 @@ typedef char pt_state_t;
  *
  * \hideinitializer
  */
-#define PT_WAIT_THREAD(pt, thread) PT_WAIT_WHILE((pt), PT_SCHEDULE(thread) < PT_DEAD)
+#define PT_WAIT_THREAD(pt, thread) PT_WAIT_WHILE((pt), PT_SCHEDULE(thread) > PT_STATE_TERMINATED)
 
 /**
  * Spawn a child protothread and wait until it exits.
@@ -205,10 +207,10 @@ typedef char pt_state_t;
  *
  * \hideinitializer
  */
-#define PT_RESTART(pt)      \
+#define PT_RESTART(pt)          \
   do {                      \
     PT_INIT(pt);            \
-    return PT_BLOCKED;      \
+    return PT_STATE_WAITING;      \
   } while(0)
 
 /**
@@ -225,7 +227,7 @@ typedef char pt_state_t;
 #define PT_EXIT(pt)             \
   do {                          \
     LC_SET_DEFAULT((pt)->lc)    \
-    return PT_DEAD;             \
+    return PT_STATE_TERMINATED;             \
   } while(0)
 
 /**
@@ -254,7 +256,7 @@ typedef char pt_state_t;
  */
 #define PT_YIELD(pt)                            \
     do {                                        \
-        LC_SET_YIELD((pt)->lc, PT_BLOCKED);     \
+        LC_SET_YIELD((pt)->lc, PT_STATE_WAITING);     \
     } while(0)
 
 /**
@@ -269,9 +271,9 @@ typedef char pt_state_t;
  * \hideinitializer
  */
 
-#define PT_YIELD_UNTIL(pt, cond)                \
-    do {                                        \
-        LC_SET_YIELD((pt)->lc, PT_BLOCKED);     \
+#define PT_YIELD_UNTIL(pt, cond)                    \
+    do {                                            \
+        LC_SET_YIELD((pt)->lc, PT_STATE_WAITING);   \
     } while(!(cond))
 
 

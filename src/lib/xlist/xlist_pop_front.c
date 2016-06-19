@@ -1,5 +1,5 @@
 /*! \copyright
-    Copyright (c) 2012, marcas756@gmail.com.
+    Copyright (c) 2013, marcas756@gmail.com.
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -27,36 +27,33 @@
     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 /*!
-    \file   debug.h
+    \file   xlist_pop_front.c
 
     \brief
 
     \details
 */
 
-#ifndef DEBUG_H
-#define DEBUG_H
+#include "xlist.h"
 
+void xlist_pop_front(xlist_t* xlist)
+{
+    xlist_node_t *tmp;
 
+    if (!xlist->head)
+    {
+        return;
+    }
 
-/* Debugging output function (printf or any other var args function) */
-#ifdef DEBUG
-    extern void debug_printf_function ( const char * format, ... );
-    #define DEBUG_PRINTF(args) (debug_printf_function args)
-#else
-    #define DEBUG_PRINTF(args)
-#endif /* DEBUG */
+    tmp = xlist_xor(NULL,xlist->head->nextprev);
 
-/* Following DEBUG check allows to write more complex debug sections beyond DBG("Debugmessage: %d",var). */
-/* But try to avoid more complex debug sections, for the readability of the code and run time issues (real time)! */
-#ifdef DEBUG
-
-/* application modules */
-#define DEBUG_TASK              1
-#define DEBUG_SLIST             1
-
-/* ...... */
-
-#endif /* DEBUG */
-
-#endif /* DEBUG_H */
+    if (tmp)
+    {
+        tmp->nextprev = xlist_xor(xlist->head,tmp->nextprev);
+        xlist->head = tmp;
+    }
+    else
+    {
+        xlist->head = xlist->tail = NULL;
+    }
+}

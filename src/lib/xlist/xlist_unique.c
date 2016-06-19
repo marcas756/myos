@@ -1,5 +1,5 @@
 /*! \copyright
-    Copyright (c) 2012, marcas756@gmail.com.
+    Copyright (c) 2013, marcas756@gmail.com.
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -27,36 +27,33 @@
     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 /*!
-    \file   debug.h
+    \file   xlist_unique.c
 
     \brief
 
     \details
 */
 
-#ifndef DEBUG_H
-#define DEBUG_H
+#include "xlist.h"
 
+void xlist_unique(xlist_t* xlist, item_compare_t compare)
+{
 
+    xlist_node_t *iterator = xlist->head;
 
-/* Debugging output function (printf or any other var args function) */
-#ifdef DEBUG
-    extern void debug_printf_function ( const char * format, ... );
-    #define DEBUG_PRINTF(args) (debug_printf_function args)
-#else
-    #define DEBUG_PRINTF(args)
-#endif /* DEBUG */
+     if(!iterator)
+     {
+         return;
+     }
 
-/* Following DEBUG check allows to write more complex debug sections beyond DBG("Debugmessage: %d",var). */
-/* But try to avoid more complex debug sections, for the readability of the code and run time issues (real time)! */
-#ifdef DEBUG
+     while(xlist_next(xlist,iterator))
+     {
+         if (compare(xlist_item(iterator),xlist_item(xlist_next(xlist,iterator))) == ITEM_EQUALS_TO)
+         {
+             xlist_erase(xlist,xlist_next(xlist,iterator));
+             continue;
+         }
 
-/* application modules */
-#define DEBUG_TASK              1
-#define DEBUG_SLIST             1
-
-/* ...... */
-
-#endif /* DEBUG */
-
-#endif /* DEBUG_H */
+         iterator = xlist_next(xlist,iterator);
+     }
+}

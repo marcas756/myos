@@ -1,5 +1,5 @@
 /*! \copyright
-    Copyright (c) 2012, marcas756@gmail.com.
+    Copyright (c) 2015, marcas756@gmail.com.
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -27,36 +27,28 @@
     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 /*!
-    \file   debug.h
+    \file   slist_end.c
 
     \brief
 
     \details
 */
 
-#ifndef DEBUG_H
-#define DEBUG_H
+#include "slist.h"
 
 
 
-/* Debugging output function (printf or any other var args function) */
-#ifdef DEBUG
-    extern void debug_printf_function ( const char * format, ... );
-    #define DEBUG_PRINTF(args) (debug_printf_function args)
-#else
-    #define DEBUG_PRINTF(args)
-#endif /* DEBUG */
+slist_node_t* slist_end(slist_t *slist)
+{
+    slist_node_t *iterator = slist->head;
 
-/* Following DEBUG check allows to write more complex debug sections beyond DBG("Debugmessage: %d",var). */
-/* But try to avoid more complex debug sections, for the readability of the code and run time issues (real time)! */
-#ifdef DEBUG
+    if(!iterator)
+    {
+        return NULL;
+    }
 
-/* application modules */
-#define DEBUG_TASK              1
-#define DEBUG_SLIST             1
+   while(iterator->next)
+       iterator = iterator->next;
 
-/* ...... */
-
-#endif /* DEBUG */
-
-#endif /* DEBUG_H */
+   return iterator;
+}

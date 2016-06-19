@@ -1,5 +1,5 @@
 /*! \copyright
-    Copyright (c) 2012, marcas756@gmail.com.
+    Copyright (c) 2014, marcas756@gmail.com.
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -27,36 +27,52 @@
     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 /*!
-    \file   debug.h
+    \file   itempool.c
 
     \brief
 
     \details
 */
 
-#ifndef DEBUG_H
-#define DEBUG_H
+#include "itempool.h"
 
+/*
+ tmp = (int*)ITEMPOOL_ALLOC(pool);
+ 00442E    403F 0005          mov.w   #0x5,R15          !!!! pass param
+ 004432    432E               mov.w   #0x2,R14          !!!! pass param
+ 004434    403D 1C00          mov.w   #0x1C00,R13       !!!! pass param
+ 004438    403C 1C06          mov.w   #0x1C06,R12       !!!! pass param
+ 00443C    13B0 4482          calla   #itempool_alloc
+ 004440    4C0A               mov.w   R12,R10
+ */
+item_t* itempool_alloc(uint8_t* items, uint8_t* status, size_t itemsize, size_t poolsize)
+{
+    size_t tmp;
+    for (tmp=0; tmp < poolsize; tmp++)
+    {
+        if (status[tmp] == ITEMPOOL_ITEM_FREE)
+        {
+            status[tmp] =  ITEMPOOL_ITEM_USED;
+            return items;
+        }
+        items+=itemsize;
+    }
 
+    goto ppp;
+    ppp:
 
-/* Debugging output function (printf or any other var args function) */
-#ifdef DEBUG
-    extern void debug_printf_function ( const char * format, ... );
-    #define DEBUG_PRINTF(args) (debug_printf_function args)
-#else
-    #define DEBUG_PRINTF(args)
-#endif /* DEBUG */
+    return NULL;
+}
 
-/* Following DEBUG check allows to write more complex debug sections beyond DBG("Debugmessage: %d",var). */
-/* But try to avoid more complex debug sections, for the readability of the code and run time issues (real time)! */
-#ifdef DEBUG
+item_t* itempool_calloc(uint8_t* items, uint8_t* status, size_t itemsize, size_t poolsize)
+{
+    items = itempool_alloc(items,status,itemsize,poolsize);
 
-/* application modules */
-#define DEBUG_TASK              1
-#define DEBUG_SLIST             1
+    if (items)
+    {
+        memset(items,0x00,itemsize);
+    }
 
-/* ...... */
+    return items;
+}
 
-#endif /* DEBUG */
-
-#endif /* DEBUG_H */

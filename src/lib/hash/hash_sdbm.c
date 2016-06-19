@@ -1,5 +1,5 @@
 /*! \copyright
-    Copyright (c) 2012, marcas756@gmail.com.
+    Copyright (c) 2016, marcas756@gmail.com.
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -27,36 +27,37 @@
     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 /*!
-    \file   debug.h
+    \file   hash_sdbm.c
 
     \brief
 
-    \details
+    \details    This algorithm was created for sdbm (a public-domain reimplementation of ndbm) database library.
+                It was found to do well in scrambling bits, causing better distribution of the keys and fewer splits.
+                It also happens to be a good general hashing function with good distribution. the actual function is
+
+                hash(i) = hash(i - 1) * 65599 + str[i];
+
+                What is included below is the faster version used in gawk. [there is even a faster, duff-device version]
+                The magic constant 65599 was picked out of thin air while experimenting with different constants,
+                and turns out to be a prime. this is one of the algorithms used in berkeley db (see sleepycat) and elsewhere.
+
+                http://www.cse.yorku.ca/~oz/hash.html
 */
 
-#ifndef DEBUG_H
-#define DEBUG_H
 
+#include "project.h"
 
+#include "hash.h"
 
-/* Debugging output function (printf or any other var args function) */
-#ifdef DEBUG
-    extern void debug_printf_function ( const char * format, ... );
-    #define DEBUG_PRINTF(args) (debug_printf_function args)
-#else
-    #define DEBUG_PRINTF(args)
-#endif /* DEBUG */
+uint32_t hash_sdbm(uint32_t seed, void *data, size_t size)
+{
+    uint8_t *iterator = data;
 
-/* Following DEBUG check allows to write more complex debug sections beyond DBG("Debugmessage: %d",var). */
-/* But try to avoid more complex debug sections, for the readability of the code and run time issues (real time)! */
-#ifdef DEBUG
+    while(size--)
+    {
+        seed = *iterator + (seed << 6) + (seed << 16) - seed;
+        iterator++;
+    }
 
-/* application modules */
-#define DEBUG_TASK              1
-#define DEBUG_SLIST             1
-
-/* ...... */
-
-#endif /* DEBUG */
-
-#endif /* DEBUG_H */
+    return seed;
+}

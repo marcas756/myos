@@ -1,5 +1,5 @@
 /*! \copyright
-    Copyright (c) 2012, marcas756@gmail.com.
+    Copyright (c) 2015, marcas756@gmail.com.
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -27,36 +27,41 @@
     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 /*!
-    \file   debug.h
+    \file   dlist_sort.c
 
     \brief
 
     \details
 */
 
-#ifndef DEBUG_H
-#define DEBUG_H
+#include "dlist.h"
 
+void dlist_sort(dlist_t* dlist, item_compare_t compare)
+{
+    dlist_node_t *iterator;
+    dlist_node_t *largest;
+    dlist_t sorted;
 
+    dlist_init(&sorted);
 
-/* Debugging output function (printf or any other var args function) */
-#ifdef DEBUG
-    extern void debug_printf_function ( const char * format, ... );
-    #define DEBUG_PRINTF(args) (debug_printf_function args)
-#else
-    #define DEBUG_PRINTF(args)
-#endif /* DEBUG */
+    while(dlist->head)
+    {
+        largest = iterator = dlist->head;
 
-/* Following DEBUG check allows to write more complex debug sections beyond DBG("Debugmessage: %d",var). */
-/* But try to avoid more complex debug sections, for the readability of the code and run time issues (real time)! */
-#ifdef DEBUG
+        while(iterator)
+        {
+            if(compare(dlist_item(iterator),dlist_item(largest)) != ITEM_LESS_THAN)
+            {
+                largest = iterator;
+            }
 
-/* application modules */
-#define DEBUG_TASK              1
-#define DEBUG_SLIST             1
+            iterator = iterator->next;
+        }
 
-/* ...... */
+        dlist_erase(dlist,largest);
+        dlist_push_front(&sorted,largest);
+    }
 
-#endif /* DEBUG */
+    *dlist = sorted;
 
-#endif /* DEBUG_H */
+}
