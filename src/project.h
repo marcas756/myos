@@ -71,7 +71,7 @@
 
 #define TASK_LIST_TYPE                      LIST_TYPE_SLIST
 #define TASK_EVENT_QUEUE_SIZE               16
-#define OZCONF_TASK_EVENT_ID_TYPE           uint16_t
+
 
 
 

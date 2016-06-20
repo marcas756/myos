@@ -1,7 +1,6 @@
 cmake_minimum_required(VERSION 2.8.8)
 project(Oz C)
 
-# set_directory_properties(PROPERTIES COMPILE_DEFINITIONS_DEBUG DEBUG=1)
 
 set_property(DIRECTORY APPEND PROPERTY
   COMPILE_DEFINITIONS $<$<CONFIG:Debug>:DEBUG=1>
