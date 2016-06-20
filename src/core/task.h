@@ -19,7 +19,7 @@
 
 #define TASK_THREAD_ARGS        task_t *task, event_id_t event, void *data
 #define TASK_THREAD(name)       PT_THREAD(name(TASK_THREAD_ARGS))
-#define task_state_t            pt_state_t
+typedef  pt_state_t task_state_t;
 
 /*!
     \brief  Mapping of protothread states to task states

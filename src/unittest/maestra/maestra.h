@@ -43,7 +43,7 @@
 #define MAESTRA_BREAK /*Instrumentation of break requested*/
 #define MAESTRA_CONTINUE /*Instrumentation of continue requested*/
 #define MAESTRA_GOTO /*Instrumentation of goto requested*/
-#define MAESTRA_STATIC /*Instrumentation of static requested*/
+/*#define MAESTRA_STATIC*/ /*Instrumentation of static requested*/
 
 /*Define desired instrumentation for (Recursive) MC/DC*/
 #define MAESTRA_ANDOR /*Instrumentation of and and or requested*/

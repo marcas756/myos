@@ -63,7 +63,7 @@ STATIC void task_invoke(task_t *task ,event_id_t event_id, void *data)
 
     /* Invoke task */
     task_current = task;
-    task->thread(task,event_id,data);
+    task->state = task->thread(task,event_id,data);
     task_current = NULL;
 
     /* Remove task from task list if it has terminated */
@@ -71,6 +71,8 @@ STATIC void task_invoke(task_t *task ,event_id_t event_id, void *data)
     {
         task_list_erase(task);
     }
+
+    return;
 }
 
 

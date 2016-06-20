@@ -20,3 +20,9 @@ add_library(slist OBJECT ${SLIST_SOURCES} )
 
 add_library(slist_instrum OBJECT ${SLIST_SOURCES} )
 set_target_properties(slist_instrum  PROPERTIES COMPILE_DEFINITIONS "MAESTRA_INSTRUM")
+
+add_library(slist_exposed OBJECT ${SLIST_SOURCES} )
+set_target_properties(slist_exposed  PROPERTIES COMPILE_DEFINITIONS "UNITTEST_EXPOSE")
+
+add_library(slist_instrum_exposed OBJECT ${SLIST_SOURCES} )
+set_target_properties(slist_instrum_exposed  PROPERTIES COMPILE_DEFINITIONS "MAESTRA_INSTRUM;UNITTEST_EXPOSE")

@@ -1,5 +1,5 @@
 /*! \copyright
-    Copyright (c) 2015, marcas756@gmail.com.
+    Copyright (c) 2013, marcas756@gmail.com.
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -27,29 +27,69 @@
     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 /*!
-    \file   slist_find.c
+	\file	unittest_task.c
 
     \brief
 
     \details
 */
 
-#include "slist.h"
+#define UNITTEST_CONF_VERBOSE
+
+#include "unittest.h"
+#include "task.h"
+#include <string.h>
+
+UNITTEST_TESTSUITE_INIT
 
 
-slist_node_t* slist_find(slist_t *slist, void *node)
+TASK_THREAD(task_stub)
 {
-    slist_node_t *iterator = slist->head;
+    return *(task_state_t*)data;
+}
 
-    while(iterator)
-    {
-        if (iterator == node)
-        {
-            return iterator;
-        }
+extern void task_invoke(task_t *task ,event_id_t event_id, void *data);
+extern task_list_t task_list;
+UNITTEST_TESTCASE(task_invoke)
+{
+    task_t task;
+    event_id_t event_id = 123;
+    task_state_t data = PT_STATE_WAITING;
 
-        iterator = iterator->next;
-    }
+    task.thread = task_stub;
+    task.data = &data;
+    task_list_push_front(&task);
 
-    return iterator;
+
+    UNITTEST_ASSERT("Task must be in task list", task_list_find(&task));
+    UNITTEST_ASSERT("Task must be in task list", task_list_size() == 1);
+
+    task.state = PT_STATE_TERMINATED;
+
+    task_invoke(&task,event_id,&data);
+
+    UNITTEST_ASSERT("Task must be in task list", task_list_find(&task));
+    UNITTEST_ASSERT("Task must be in task list", task_list_size() == 1);
+
+    task.state = PT_STATE_WAITING;
+    data = PT_STATE_TERMINATED;
+
+    task_invoke(&task,event_id,&data);
+
+    UNITTEST_ASSERT("Task must not be in task list", !task_list_find(&task));
+    UNITTEST_ASSERT("Task must not be in task list", task_list_size() == 0);
+
+}
+
+
+
+
+UNITTEST_TESTSUITE(task)
+{
+    UNITTEST_TESTSUITE_BEGIN();
+
+    UNITTEST_EXEC_TESTCASE(task_invoke);
+
+
+    UNITTEST_TESTSUITE_END();
 }

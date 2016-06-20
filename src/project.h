@@ -39,11 +39,7 @@
 
 #include "debug.h"
 
-#ifdef UNITTEST_WHITEBOX
-    #define STATIC
-#else
-    #define STATIC static
-#endif
+
 
 #ifdef MAESTRA_INSTRUM
 
@@ -62,7 +58,11 @@
 
 #endif /* MAESTRA_INSTRUM */
 
-
+#ifdef UNITTEST_EXPOSE
+    #define STATIC
+#else
+    #define STATIC static
+#endif
 
 
 #define LIST_TYPE_SLIST    0
