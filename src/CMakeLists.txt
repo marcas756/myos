@@ -56,30 +56,30 @@ add_library(oz_instrum ${OZ_SOURCES} ${OZ_OBJECTS_INSTRUM} $<TARGET_OBJECTS:maes
 set_target_properties(oz_instrum  PROPERTIES COMPILE_DEFINITIONS "MAESTRA_INSTRUM")
 
 
-SET (OZ_OBJECTS_EXPOSED
-    $<TARGET_OBJECTS:slist_exposed>
+SET (OZ_OBJECTS_ANTISTATIC
+    $<TARGET_OBJECTS:slist_antistatic>
     #$<TARGET_OBJECTS:xlist>
     #$<TARGET_OBJECTS:dlist>
     #$<TARGET_OBJECTS:hash>
     #$<TARGET_OBJECTS:lib>
-    $<TARGET_OBJECTS:core_exposed>
+    $<TARGET_OBJECTS:core_antistatic>
     )
 
-add_library(oz_exposed ${OZ_SOURCES} ${OZ_OBJECTS_EXPOSED})
-set_target_properties(oz_exposed  PROPERTIES COMPILE_DEFINITIONS "UNITTEST_EXPOSE")
+add_library(oz_antistatic ${OZ_SOURCES} ${OZ_OBJECTS_ANTISTATIC})
+set_target_properties(oz_antistatic  PROPERTIES COMPILE_DEFINITIONS "ANTISTATIC")
 
-SET (OZ_OBJECTS_INSTRUM_EXPOSED
-    $<TARGET_OBJECTS:slist_instrum_exposed>
+SET (OZ_OBJECTS_INSTRUM_ANTISTATIC
+    $<TARGET_OBJECTS:slist_instrum_antistatic>
     #$<TARGET_OBJECTS:xlist_instrum>
     #$<TARGET_OBJECTS:dlist_instrum>
     #$<TARGET_OBJECTS:hash_instrum>
     #$<TARGET_OBJECTS:lib_instrum>
-    $<TARGET_OBJECTS:core_instrum_exposed>
+    $<TARGET_OBJECTS:core_instrum_antistatic>
     )
     
 
-add_library(oz_instrum_exposed ${OZ_SOURCES} ${OZ_OBJECTS_INSTRUM_EXPOSED} $<TARGET_OBJECTS:maestra>)
-set_target_properties(oz_instrum_exposed  PROPERTIES COMPILE_DEFINITIONS "MAESTRA_INSTRUM;UNITTEST_EXPOSE")
+add_library(oz_instrum_antistatic ${OZ_SOURCES} ${OZ_OBJECTS_INSTRUM_ANTISTATIC} $<TARGET_OBJECTS:maestra>)
+set_target_properties(oz_instrum_antistatic  PROPERTIES COMPILE_DEFINITIONS "MAESTRA_INSTRUM;ANTISTATIC")
 
 
 

@@ -78,7 +78,6 @@ UNITTEST_TESTCASE(task_invoke)
 
     UNITTEST_ASSERT("Task must not be in task list", !task_list_find(&task));
     UNITTEST_ASSERT("Task must not be in task list", task_list_size() == 0);
-
 }
 
 

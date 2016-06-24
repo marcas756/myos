@@ -13,13 +13,13 @@ add_library(core_instrum OBJECT
 set_target_properties(core_instrum  PROPERTIES COMPILE_DEFINITIONS "MAESTRA_INSTRUM")
 
 
-add_library(core_exposed OBJECT 
+add_library(core_antistatic OBJECT 
     ${CORE_SOURCES}
     )
-set_target_properties(core_exposed  PROPERTIES COMPILE_DEFINITIONS  "UNITTEST_EXPOSE")
+set_target_properties(core_antistatic  PROPERTIES COMPILE_DEFINITIONS  "ANTISTATIC")
     
     
-add_library(core_instrum_exposed OBJECT
+add_library(core_instrum_antistatic OBJECT
     ${CORE_SOURCES}
     )
-set_target_properties(core_instrum_exposed  PROPERTIES COMPILE_DEFINITIONS "MAESTRA_INSTRUM;UNITTEST_EXPOSE")
+set_target_properties(core_instrum_antistatic  PROPERTIES COMPILE_DEFINITIONS "MAESTRA_INSTRUM;ANTISTATIC")

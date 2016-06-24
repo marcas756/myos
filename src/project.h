@@ -39,8 +39,6 @@
 
 #include "debug.h"
 
-
-
 #ifdef MAESTRA_INSTRUM
 
 #include <string.h>
@@ -58,7 +56,8 @@
 
 #endif /* MAESTRA_INSTRUM */
 
-#ifdef UNITTEST_EXPOSE
+#undef STATIC
+#ifdef ANTISTATIC /*UNITTEST_EXPOSE*/
     #define STATIC
 #else
     #define STATIC static

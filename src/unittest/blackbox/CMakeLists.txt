@@ -11,8 +11,6 @@ set_target_properties(utbb_slist PROPERTIES COMPILE_DEFINITIONS "UTBB_SLIST")
 target_link_libraries(utbb_slist oz unittest)
 run_test(utbb_slist)
 
-
-
 add_executable(utbb_slist_instrum utbb_list.c)
 set_target_properties(utbb_slist_instrum PROPERTIES COMPILE_DEFINITIONS "UTBB_SLIST")
 target_link_libraries(utbb_slist_instrum oz_instrum unittest)
@@ -64,5 +62,24 @@ add_executable(utbb_hash_instrum utbb_hash.c)
 target_link_libraries(utbb_hash_instrum oz_instrum unittest)
 run_test(utbb_hash_instrum) 
 
-
+add_custom_target(utbb)
+add_dependencies(utbb 
+    utbb_hash 
+    utbb_ringbuffer
+    utbb_buffer 
+    utbb_slist
+    utbb_dlist
+    utbb_xlist
+    utbb_itempool
+    utbb_task
+    )
+    
+add_custom_target(utbb_instrum)
+add_dependencies(utbb_instrum 
+    utbb_hash_instrum  
+    utbb_slist_instrum 
+    utbb_dlist_instrum 
+    utbb_xlist_instrum 
+    utbb_itempool_instrum 
+    )
 
