@@ -1,5 +1,5 @@
 /*! \copyright
-    Copyright (c) 2015, marcas756@gmail.com.
+    Copyright (c) 2016, marcas756@gmail.com.
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -27,26 +27,39 @@
     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 /*!
-    \file   slist_end.c
+	\file	unittest_hash.c
 
     \brief
 
     \details
 */
 
-#include "slist.h"
+#define UNITTEST_CONF_VERBOSE
 
-slist_node_t* slist_end(slist_t *slist)
+#include "unittest.h"
+#include <timestamp.h>
+
+
+UNITTEST_TESTSUITE_INIT
+
+
+
+UNITTEST_TESTCASE(timer)
 {
-    slist_node_t *iterator = slist->head;
+    int tmp;
 
-    if(!iterator)
+    while(1)
     {
-        return NULL;
+        timer_block_span(TICKS_PER_SEC);
+        UNITTEST_PRINTF(("%d\n",clock()/TICKS_PER_SEC));
     }
+}
 
-   while(iterator->next)
-       iterator = iterator->next;
+UNITTEST_TESTSUITE(timer)
+{
+    UNITTEST_TESTSUITE_BEGIN();
 
-   return iterator;
+    UNITTEST_EXEC_TESTCASE(timer);
+
+    UNITTEST_TESTSUITE_END();
 }

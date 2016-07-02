@@ -62,6 +62,14 @@ add_executable(utbb_hash_instrum utbb_hash.c)
 target_link_libraries(utbb_hash_instrum oz_instrum unittest)
 run_test(utbb_hash_instrum) 
 
+add_executable(utbb_timer utbb_timer.c)
+target_link_libraries(utbb_timer oz unittest)
+run_test(utbb_timer) 
+
+add_executable(utbb_timer_instrum utbb_timer.c)
+target_link_libraries(utbb_timer_instrum oz_instrum unittest)
+run_test(utbb_timer_instrum)
+
 add_custom_target(utbb)
 add_dependencies(utbb 
     utbb_hash 
@@ -72,6 +80,7 @@ add_dependencies(utbb
     utbb_xlist
     utbb_itempool
     utbb_task
+    utbb_timer
     )
     
 add_custom_target(utbb_instrum)
@@ -81,5 +90,6 @@ add_dependencies(utbb_instrum
     utbb_dlist_instrum 
     utbb_xlist_instrum 
     utbb_itempool_instrum 
+    utbb_timer_instrum
     )
 

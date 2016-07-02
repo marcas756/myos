@@ -21,6 +21,7 @@ include_directories (
     "${PROJECT_SOURCE_DIR}"
     "${PROJECT_SOURCE_DIR}/lib"
     "${PROJECT_SOURCE_DIR}/core"
+    "${PROJECT_SOURCE_DIR}/arch/hosted"
 )
 
 

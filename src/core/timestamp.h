@@ -1,5 +1,5 @@
 /*! \copyright
-    Copyright (c) 2015, marcas756@gmail.com.
+    Copyright (c) 2016, marcas756@gmail.com.
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -27,26 +27,34 @@
     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 /*!
-    \file   slist_end.c
+    \file   timestamp.h
 
     \brief
 
     \details
+
 */
+#ifndef TIMESTAMP_H_
+#define TIMESTAMP_H_
 
-#include "slist.h"
+#include "project.h"
 
-slist_node_t* slist_end(slist_t *slist)
-{
-    slist_node_t *iterator = slist->head;
+#include "timestamp_arch.h"
 
-    if(!iterator)
-    {
-        return NULL;
-    }
+typedef timestamp_t timespan_t;
 
-   while(iterator->next)
-       iterator = iterator->next;
+#define timestamp_passed(timestamp) \
+    (timestamp_now()>(timestamp))
 
-   return iterator;
-}
+#define timestamp_block_until(timestamp) \
+    do{}while(!timestamp_passed(timestamp))
+
+#define timestamp_block_for(timespan)                       \
+    do{                                                     \
+        timestamp_t future = timestamp_now()+(timespan);    \
+        timestamp_block_until(future);                      \
+    }while(0)
+
+
+#endif /* TIMESTAMP_H_ */
+
