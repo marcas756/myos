@@ -37,6 +37,8 @@
 
 #include "unittest.h"
 #include "ringbuffer.h"
+#include "buffer.h"
+#include <string.h>
 
 UNITTEST_TESTSUITE_INIT
 
@@ -60,24 +62,24 @@ UNITTEST_TESTCASE(ringbuffer_init)
     memset(&garbage_size,GARBAGE,sizeof(garbage_size));
 
 
-    UNITTEST_ASSERT("Did not expect empty ringbuffer", !RINGBUFFER_EMPTY(&test));
-    UNITTEST_ASSERT("Expected garbage in item counter", RINGBUFFER_COUNT(&test) == garbage_size);
-    UNITTEST_ASSERT("Expected garbage in head counter", RINGBUFFER_HEAD(&test) == garbage_size);
-    UNITTEST_ASSERT("Expected garbage in tail counter", RINGBUFFER_TAIL(&test) == garbage_size);
+    UNITTEST_ASSERT("Did not expect empty ringbuffer", !RINGBUFFER_EMPTY(test));
+    UNITTEST_ASSERT("Expected garbage in item counter", RINGBUFFER_COUNT(test) == garbage_size);
+    UNITTEST_ASSERT("Expected garbage in head counter", RINGBUFFER_HEAD(test) == garbage_size);
+    UNITTEST_ASSERT("Expected garbage in tail counter", RINGBUFFER_TAIL(test) == garbage_size);
 
-    for(tmp=0; tmp < RINGBUFFER_SIZEOF(&test); tmp++)
-        UNITTEST_ASSERT("Expected garbage ringbuffer", RINGBUFFER_RAW(&test)[tmp] == GARBAGE);
+    for(tmp=0; tmp < RINGBUFFER_SIZEOF(test); tmp++)
+        UNITTEST_ASSERT("Expected garbage ringbuffer", RINGBUFFER_RAW(test)[tmp] == GARBAGE);
 
 
-    RINGBUFFER_INIT(&test);
+    RINGBUFFER_INIT(test);
 
-    UNITTEST_ASSERT("Expected empty ringbuffer", RINGBUFFER_EMPTY(&test));
-    UNITTEST_ASSERT("Expected 0 in item counter", RINGBUFFER_COUNT(&test) == 0);
-    UNITTEST_ASSERT("Expected 0 in head counter", RINGBUFFER_HEAD(&test) == 0);
-    UNITTEST_ASSERT("Expected 0 in tail counter", RINGBUFFER_TAIL(&test) == 0);
+    UNITTEST_ASSERT("Expected empty ringbuffer", RINGBUFFER_EMPTY(test));
+    UNITTEST_ASSERT("Expected 0 in item counter", RINGBUFFER_COUNT(test) == 0);
+    UNITTEST_ASSERT("Expected 0 in head counter", RINGBUFFER_HEAD(test) == 0);
+    UNITTEST_ASSERT("Expected 0 in tail counter", RINGBUFFER_TAIL(test) == 0);
 
-    for(tmp=0; tmp < RINGBUFFER_SIZEOF(&test); tmp++)
-        UNITTEST_ASSERT("Expected garbage ringbuffer", RINGBUFFER_RAW(&test)[tmp] == GARBAGE);
+    for(tmp=0; tmp < RINGBUFFER_SIZEOF(test); tmp++)
+        UNITTEST_ASSERT("Expected garbage ringbuffer", RINGBUFFER_RAW(test)[tmp] == GARBAGE);
 
 
 }
@@ -89,17 +91,17 @@ UNITTEST_TESTCASE(ringbuffer_fill_value)
 
     srand(RANDOM_SEED+1);
 
-    while (!RINGBUFFER_FULL(&test))
+    while (!RINGBUFFER_FULL(test))
     {
-        RINGBUFFER_TAIL_VAL(&test)=rand();
-        RINGBUFFER_PUSH(&test);
-        UNITTEST_ASSERT("Did not expect empty ringbuffer", !RINGBUFFER_EMPTY(&test));
+        RINGBUFFER_TAIL_VAL(test)=rand();
+        RINGBUFFER_PUSH(test);
+        UNITTEST_ASSERT("Did not expect empty ringbuffer", !RINGBUFFER_EMPTY(test));
     }
 
-    UNITTEST_ASSERT("Ringbuffer seems not to be full", RINGBUFFER_COUNT(&test) == RINGBUFFER_SIZE(&test));
-    UNITTEST_ASSERT("Head has to be tail", RINGBUFFER_HEAD(&test) == RINGBUFFER_TAIL(&test));
-    UNITTEST_ASSERT("Head value has to be tail value", RINGBUFFER_HEAD_VAL(&test) == RINGBUFFER_TAIL_VAL(&test));
-    UNITTEST_ASSERT("Head pointer has to be tail pointer", RINGBUFFER_HEAD_PTR(&test) == RINGBUFFER_TAIL_PTR(&test));
+    UNITTEST_ASSERT("Ringbuffer seems not to be full", RINGBUFFER_COUNT(test) == RINGBUFFER_SIZE(test));
+    UNITTEST_ASSERT("Head has to be tail", RINGBUFFER_HEAD(test) == RINGBUFFER_TAIL(test));
+    UNITTEST_ASSERT("Head value has to be tail value", RINGBUFFER_HEAD_VAL(test) == RINGBUFFER_TAIL_VAL(test));
+    UNITTEST_ASSERT("Head pointer has to be tail pointer", RINGBUFFER_HEAD_PTR(test) == RINGBUFFER_TAIL_PTR(test));
 
 }
 
@@ -112,23 +114,23 @@ UNITTEST_TESTCASE(ringbuffer_deflate_value)
     BUFFER_T(reverse) reverse;
 
     srand(RANDOM_SEED+1);
-    BUFFER_INIT(&reverse);
+    BUFFER_INIT(reverse);
 
-    while(!BUFFER_FULL(&reverse))
-        BUFFER_APPEND(&reverse,rand());
+    while(!BUFFER_FULL(reverse))
+        BUFFER_APPEND(reverse,rand());
 
-    while (!RINGBUFFER_EMPTY(&test))
+    while (!RINGBUFFER_EMPTY(test))
     {
-        UNITTEST_ASSERT("Expected another value", RINGBUFFER_HEAD_VAL(&test) == BUFFER_ITEMS(&reverse)[tmp]);
-        RINGBUFFER_POP(&test);
+        UNITTEST_ASSERT("Expected another value", RINGBUFFER_HEAD_VAL(test) == BUFFER_ITEMS(reverse)[tmp]);
+        RINGBUFFER_POP(test);
         tmp++;
-        UNITTEST_ASSERT("Did not expect full ringbuffer", !RINGBUFFER_FULL(&test));
+        UNITTEST_ASSERT("Did not expect full ringbuffer", !RINGBUFFER_FULL(test));
     }
 
-    UNITTEST_ASSERT("Ringbuffer seems not to be empty", RINGBUFFER_COUNT(&test) == 0);
-    UNITTEST_ASSERT("Head has to be tail", RINGBUFFER_HEAD(&test) == RINGBUFFER_TAIL(&test));
-    UNITTEST_ASSERT("Head value has to be tail value", RINGBUFFER_HEAD_VAL(&test) == RINGBUFFER_TAIL_VAL(&test));
-    UNITTEST_ASSERT("Head pointer has to be tail pointer", RINGBUFFER_HEAD_PTR(&test) == RINGBUFFER_TAIL_PTR(&test));
+    UNITTEST_ASSERT("Ringbuffer seems not to be empty", RINGBUFFER_COUNT(test) == 0);
+    UNITTEST_ASSERT("Head has to be tail", RINGBUFFER_HEAD(test) == RINGBUFFER_TAIL(test));
+    UNITTEST_ASSERT("Head value has to be tail value", RINGBUFFER_HEAD_VAL(test) == RINGBUFFER_TAIL_VAL(test));
+    UNITTEST_ASSERT("Head pointer has to be tail pointer", RINGBUFFER_HEAD_PTR(test) == RINGBUFFER_TAIL_PTR(test));
 
 }
 
@@ -140,17 +142,17 @@ UNITTEST_TESTCASE(ringbuffer_fill_ptr)
 
     srand(RANDOM_SEED+2);
 
-    while (!RINGBUFFER_FULL(&test))
+    while (!RINGBUFFER_FULL(test))
     {
-        *RINGBUFFER_TAIL_PTR(&test)=rand();
-        RINGBUFFER_PUSH(&test);
-        UNITTEST_ASSERT("Did not expect empty ringbuffer", !RINGBUFFER_EMPTY(&test));
+        *RINGBUFFER_TAIL_PTR(test)=rand();
+        RINGBUFFER_PUSH(test);
+        UNITTEST_ASSERT("Did not expect empty ringbuffer", !RINGBUFFER_EMPTY(test));
     }
 
-    UNITTEST_ASSERT("Ringbuffer seems not to be full", RINGBUFFER_COUNT(&test) == RINGBUFFER_SIZE(&test));
-    UNITTEST_ASSERT("Head has to be tail", RINGBUFFER_HEAD(&test) == RINGBUFFER_TAIL(&test));
-    UNITTEST_ASSERT("Head value has to be tail value", RINGBUFFER_HEAD_VAL(&test) == RINGBUFFER_TAIL_VAL(&test));
-    UNITTEST_ASSERT("Head pointer has to be tail pointer", RINGBUFFER_HEAD_PTR(&test) == RINGBUFFER_TAIL_PTR(&test));
+    UNITTEST_ASSERT("Ringbuffer seems not to be full", RINGBUFFER_COUNT(test) == RINGBUFFER_SIZE(test));
+    UNITTEST_ASSERT("Head has to be tail", RINGBUFFER_HEAD(test) == RINGBUFFER_TAIL(test));
+    UNITTEST_ASSERT("Head value has to be tail value", RINGBUFFER_HEAD_VAL(test) == RINGBUFFER_TAIL_VAL(test));
+    UNITTEST_ASSERT("Head pointer has to be tail pointer", RINGBUFFER_HEAD_PTR(test) == RINGBUFFER_TAIL_PTR(test));
 
 }
 
@@ -161,23 +163,23 @@ UNITTEST_TESTCASE(ringbuffer_deflate_ptr)
     BUFFER_T(reverse) reverse;
 
     srand(RANDOM_SEED+2);
-    BUFFER_INIT(&reverse);
+    BUFFER_INIT(reverse);
 
-    while(!BUFFER_FULL(&reverse))
-        BUFFER_APPEND(&reverse,rand());
+    while(!BUFFER_FULL(reverse))
+        BUFFER_APPEND(reverse,rand());
 
-    while (!RINGBUFFER_EMPTY(&test))
+    while (!RINGBUFFER_EMPTY(test))
     {
-        UNITTEST_ASSERT("Expected another value", *RINGBUFFER_HEAD_PTR(&test) == BUFFER_ITEMS(&reverse)[tmp]);
-        RINGBUFFER_POP(&test);
+        UNITTEST_ASSERT("Expected another value", *RINGBUFFER_HEAD_PTR(test) == BUFFER_ITEMS(reverse)[tmp]);
+        RINGBUFFER_POP(test);
         tmp++;
-        UNITTEST_ASSERT("Did not expect full ringbuffer", !RINGBUFFER_FULL(&test));
+        UNITTEST_ASSERT("Did not expect full ringbuffer", !RINGBUFFER_FULL(test));
     }
 
-    UNITTEST_ASSERT("Ringbuffer seems not to be empty", RINGBUFFER_COUNT(&test) == 0);
-    UNITTEST_ASSERT("Head has to be tail", RINGBUFFER_HEAD(&test) == RINGBUFFER_TAIL(&test));
-    UNITTEST_ASSERT("Head value has to be tail value", RINGBUFFER_HEAD_VAL(&test) == RINGBUFFER_TAIL_VAL(&test));
-    UNITTEST_ASSERT("Head pointer has to be tail pointer", RINGBUFFER_HEAD_PTR(&test) == RINGBUFFER_TAIL_PTR(&test));
+    UNITTEST_ASSERT("Ringbuffer seems not to be empty", RINGBUFFER_COUNT(test) == 0);
+    UNITTEST_ASSERT("Head has to be tail", RINGBUFFER_HEAD(test) == RINGBUFFER_TAIL(test));
+    UNITTEST_ASSERT("Head value has to be tail value", RINGBUFFER_HEAD_VAL(test) == RINGBUFFER_TAIL_VAL(test));
+    UNITTEST_ASSERT("Head pointer has to be tail pointer", RINGBUFFER_HEAD_PTR(test) == RINGBUFFER_TAIL_PTR(test));
 
 }
 
@@ -189,16 +191,16 @@ UNITTEST_TESTCASE(ringbuffer_fill_write)
 
     srand(RANDOM_SEED+2);
 
-    while (!RINGBUFFER_FULL(&test))
+    while (!RINGBUFFER_FULL(test))
     {
-        RINGBUFFER_WRITE(&test,rand());
-        UNITTEST_ASSERT("Did not expect empty ringbuffer", !RINGBUFFER_EMPTY(&test));
+        RINGBUFFER_WRITE(test,rand());
+        UNITTEST_ASSERT("Did not expect empty ringbuffer", !RINGBUFFER_EMPTY(test));
     }
 
-    UNITTEST_ASSERT("Ringbuffer seems not to be full", RINGBUFFER_COUNT(&test) == RINGBUFFER_SIZE(&test));
-    UNITTEST_ASSERT("Head has to be tail", RINGBUFFER_HEAD(&test) == RINGBUFFER_TAIL(&test));
-    UNITTEST_ASSERT("Head value has to be tail value", RINGBUFFER_HEAD_VAL(&test) == RINGBUFFER_TAIL_VAL(&test));
-    UNITTEST_ASSERT("Head pointer has to be tail pointer", RINGBUFFER_HEAD_PTR(&test) == RINGBUFFER_TAIL_PTR(&test));
+    UNITTEST_ASSERT("Ringbuffer seems not to be full", RINGBUFFER_COUNT(test) == RINGBUFFER_SIZE(test));
+    UNITTEST_ASSERT("Head has to be tail", RINGBUFFER_HEAD(test) == RINGBUFFER_TAIL(test));
+    UNITTEST_ASSERT("Head value has to be tail value", RINGBUFFER_HEAD_VAL(test) == RINGBUFFER_TAIL_VAL(test));
+    UNITTEST_ASSERT("Head pointer has to be tail pointer", RINGBUFFER_HEAD_PTR(test) == RINGBUFFER_TAIL_PTR(test));
 
 }
 
@@ -209,24 +211,24 @@ UNITTEST_TESTCASE(ringbuffer_deflate_read)
     BUFFER_T(reverse) reverse;
 
     srand(RANDOM_SEED+2);
-    BUFFER_INIT(&reverse);
+    BUFFER_INIT(reverse);
 
-    while(!BUFFER_FULL(&reverse))
-        BUFFER_APPEND(&reverse,rand());
+    while(!BUFFER_FULL(reverse))
+        BUFFER_APPEND(reverse,rand());
 
-    while (!RINGBUFFER_EMPTY(&test))
+    while (!RINGBUFFER_EMPTY(test))
     {
         int read;
-        RINGBUFFER_READ(&test,read);
-        UNITTEST_ASSERT("Expected another value", read == BUFFER_ITEMS(&reverse)[tmp]);
+        RINGBUFFER_READ(test,read);
+        UNITTEST_ASSERT("Expected another value", read == BUFFER_ITEMS(reverse)[tmp]);
         tmp++;
-        UNITTEST_ASSERT("Did not expect full ringbuffer", !RINGBUFFER_FULL(&test));
+        UNITTEST_ASSERT("Did not expect full ringbuffer", !RINGBUFFER_FULL(test));
     }
 
-    UNITTEST_ASSERT("Ringbuffer seems not to be empty", RINGBUFFER_COUNT(&test) == 0);
-    UNITTEST_ASSERT("Head has to be tail", RINGBUFFER_HEAD(&test) == RINGBUFFER_TAIL(&test));
-    UNITTEST_ASSERT("Head value has to be tail value", RINGBUFFER_HEAD_VAL(&test) == RINGBUFFER_TAIL_VAL(&test));
-    UNITTEST_ASSERT("Head pointer has to be tail pointer", RINGBUFFER_HEAD_PTR(&test) == RINGBUFFER_TAIL_PTR(&test));
+    UNITTEST_ASSERT("Ringbuffer seems not to be empty", RINGBUFFER_COUNT(test) == 0);
+    UNITTEST_ASSERT("Head has to be tail", RINGBUFFER_HEAD(test) == RINGBUFFER_TAIL(test));
+    UNITTEST_ASSERT("Head value has to be tail value", RINGBUFFER_HEAD_VAL(test) == RINGBUFFER_TAIL_VAL(test));
+    UNITTEST_ASSERT("Head pointer has to be tail pointer", RINGBUFFER_HEAD_PTR(test) == RINGBUFFER_TAIL_PTR(test));
 }
 
 BUFFER_TYPEDEF(packet,uint8_t,SIZE);
@@ -237,44 +239,44 @@ UNITTEST_TESTCASE(packet_test)
 
     RINGBUFFER_T(packetqueue) input;
 
-    RINGBUFFER_INIT(&input);
+    RINGBUFFER_INIT(input);
 
     srand(RANDOM_SEED);
 
     /* Fill the buffer ringbuffer */
 
-    while (!RINGBUFFER_FULL(&input))
+    while (!RINGBUFFER_FULL(input))
     {
         BUFFER_T(packet)* tmppacket;
-        tmppacket = RINGBUFFER_TAIL_PTR(&input);
-        BUFFER_INIT(tmppacket);
+        tmppacket = RINGBUFFER_TAIL_PTR(input);
+        BUFFER_INIT(*tmppacket);
 
-        while(!BUFFER_FULL(tmppacket))
+        while(!BUFFER_FULL(*tmppacket))
         {
-            BUFFER_VAL(tmppacket) = RAND8();
-            BUFFER_NEXT(tmppacket);
+            BUFFER_VAL(*tmppacket) = RAND8();
+            BUFFER_NEXT(*tmppacket);
         }
 
-        RINGBUFFER_PUSH(&input);
+        RINGBUFFER_PUSH(input);
     }
 
     srand(RANDOM_SEED);
 
     /* Empty the buffer ringbuffer */
 
-    while (!RINGBUFFER_EMPTY(&input))
+    while (!RINGBUFFER_EMPTY(input))
     {
         size_t tmp;
 
         BUFFER_T(packet)* tmppacket;
-        tmppacket = RINGBUFFER_HEAD_PTR(&input);
+        tmppacket = RINGBUFFER_HEAD_PTR(input);
 
-        for (tmp = 0; tmp < BUFFER_COUNT(tmppacket); tmp++)
+        for (tmp = 0; tmp < BUFFER_COUNT(*tmppacket); tmp++)
         {
-            UNITTEST_ASSERT("Expected another value", BUFFER_ITEMS(tmppacket)[tmp] == RAND8());
+            UNITTEST_ASSERT("Expected another value", BUFFER_ITEMS(*tmppacket)[tmp] == RAND8());
         }
 
-        RINGBUFFER_POP(&input);
+        RINGBUFFER_POP(input);
     }
 
 }

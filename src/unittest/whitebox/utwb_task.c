@@ -43,43 +43,20 @@
 UNITTEST_TESTSUITE_INIT
 
 
-TASK_THREAD(task_stub)
-{
-    return *(task_state_t*)data;
-}
 
-extern void task_invoke(task_t *task ,event_id_t event_id, void *data);
-extern task_list_t task_list;
+
 UNITTEST_TESTCASE(task_invoke)
 {
-    task_t task;
-    event_id_t event_id = 123;
-    task_state_t data = PT_STATE_WAITING;
 
-    task.thread = task_stub;
-    task.data = &data;
-    task_list_push_front(&task);
-
-
-    UNITTEST_ASSERT("Task must be in task list", task_list_find(&task));
-    UNITTEST_ASSERT("Task must be in task list", task_list_size() == 1);
-
-    task.state = PT_STATE_TERMINATED;
-
-    task_invoke(&task,event_id,&data);
-
-    UNITTEST_ASSERT("Task must be in task list", task_list_find(&task));
-    UNITTEST_ASSERT("Task must be in task list", task_list_size() == 1);
-
-    task.state = PT_STATE_WAITING;
-    data = PT_STATE_TERMINATED;
-
-    task_invoke(&task,event_id,&data);
-
-    UNITTEST_ASSERT("Task must not be in task list", !task_list_find(&task));
-    UNITTEST_ASSERT("Task must not be in task list", task_list_size() == 0);
 }
 
+
+
+UNITTEST_TESTCASE(task_suspend)
+{
+
+
+}
 
 
 
@@ -88,6 +65,7 @@ UNITTEST_TESTSUITE(task)
     UNITTEST_TESTSUITE_BEGIN();
 
     UNITTEST_EXEC_TESTCASE(task_invoke);
+    UNITTEST_EXEC_TESTCASE(task_suspend);
 
 
     UNITTEST_TESTSUITE_END();

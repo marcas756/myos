@@ -35,8 +35,5 @@ timespan_t timer_left(timer_t *timer)
     return timer->stop - now;
 }
 
-void timer_block(timer_t *timer)
-{
 
-}
 

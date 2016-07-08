@@ -70,6 +70,9 @@
 
 #define TASK_LIST_TYPE                      LIST_TYPE_SLIST
 #define TASK_EVENT_QUEUE_SIZE               16
+#define TASK_INLINE_POLL                    1
+#define TASK_INLINE_POLLHANDLER             1
+#define TASK_INLINE_INVOKE                  1
 
 
 

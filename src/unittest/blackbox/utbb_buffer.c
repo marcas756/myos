@@ -38,6 +38,7 @@
 
 #include "unittest.h"
 #include "buffer.h"
+#include <string.h>
 
 UNITTEST_TESTSUITE_INIT
 
@@ -56,46 +57,35 @@ UNITTEST_TESTCASE(buffer_init)
 
     memset(&input,0xAA,sizeof(input)); /* Fill with some garbage */
 
-    UNITTEST_ASSERT("Did not expect empty buffer", BUFFER_COUNT(&input) != 0);
+    UNITTEST_ASSERT("Did not expect empty buffer", BUFFER_COUNT(input) != 0);
 
-    UNITTEST_ASSERT("Did not expect empty buffer", 0);
+    BUFFER_INIT(input);
+    UNITTEST_ASSERT("Wrong buffer size", BUFFER_SIZE(input) == SIZE);
+    UNITTEST_ASSERT("Initialized buffer has to be empty", BUFFER_COUNT(input) == 0);
 
-    BUFFER_INIT(&input);
-    UNITTEST_ASSERT("Wrong buffer size", BUFFER_SIZE(&input) == SIZE);
-    UNITTEST_ASSERT("Initialized buffer has to be empty", BUFFER_COUNT(&input) == 0);
+    for (tmp=0; tmp < BUFFER_SIZEOF(input); ++tmp)
+        UNITTEST_ASSERT("Expected garbage", BUFFER_RAW(input)[tmp] == GARBAGE);
 
-    for (tmp=0; tmp < BUFFER_SIZEOF(&input); ++tmp)
-        UNITTEST_ASSERT("Expected garbage", BUFFER_RAW(&input)[tmp] == GARBAGE);
-
-    memset(&input,0xAA,sizeof(input)); /* Fill with some garbage */
-
-    BUFFER_CLEAR(&input);
-
-    UNITTEST_ASSERT("Initialized buffer has to be empty", BUFFER_COUNT(&input) == 0);
-
-    for (tmp=0; tmp < BUFFER_SIZEOF(&input); ++tmp)
-            UNITTEST_ASSERT("Expected zero", BUFFER_RAW(&input)[tmp] == EMPTY);
-
-    UNITTEST_ASSERT("Did not expect empty buffer", 0);
 
 }
+
 
 UNITTEST_TESTCASE(buffer_fill_append)
 {
     size_t tmp;
 
-    BUFFER_INIT(&input);
+    BUFFER_INIT(input);
     srand(RANDOM_SEED);
 
-    while(!BUFFER_FULL(&input))
-        BUFFER_APPEND(&input,rand());
+    while(!BUFFER_FULL(input))
+        BUFFER_APPEND(input,rand());
 
-    UNITTEST_ASSERT("Item count differs from buffer size", BUFFER_COUNT(&input) == BUFFER_SIZE(&input));
+    UNITTEST_ASSERT("Item count differs from buffer size", BUFFER_COUNT(input) == BUFFER_SIZE(input));
 
     srand(RANDOM_SEED);
 
-    for (tmp = 0; tmp < BUFFER_SIZE(&input); ++tmp)
-        UNITTEST_ASSERT("Expected another item value", BUFFER_ITEMS(&input)[tmp] == rand());
+    for (tmp = 0; tmp < BUFFER_SIZE(input); ++tmp)
+        UNITTEST_ASSERT("Expected another item value", BUFFER_ITEMS(input)[tmp] == rand());
 
 
 }
@@ -104,21 +94,21 @@ UNITTEST_TESTCASE(buffer_fill_value)
 {
     size_t tmp;
 
-    BUFFER_INIT(&input);
+    BUFFER_INIT(input);
     srand(RANDOM_SEED);
 
-    while(!BUFFER_FULL(&input))
+    while(!BUFFER_FULL(input))
     {
-        BUFFER_VAL(&input)=rand();
-        BUFFER_NEXT(&input);
+        BUFFER_VAL(input)=rand();
+        BUFFER_NEXT(input);
     }
 
-    UNITTEST_ASSERT("Item count differs from buffer size", BUFFER_COUNT(&input) == BUFFER_SIZE(&input));
+    UNITTEST_ASSERT("Item count differs from buffer size", BUFFER_COUNT(input) == BUFFER_SIZE(input));
 
     srand(RANDOM_SEED);
 
-    for (tmp = 0; tmp < BUFFER_SIZE(&input); ++tmp)
-        UNITTEST_ASSERT("Expected another item value", BUFFER_ITEMS(&input)[tmp] == rand());
+    for (tmp = 0; tmp < BUFFER_SIZE(input); ++tmp)
+        UNITTEST_ASSERT("Expected another item value", BUFFER_ITEMS(input)[tmp] == rand());
 
 }
 
@@ -129,20 +119,20 @@ UNITTEST_TESTCASE(buffer_fill_pointer)
     size_t tmp;
 
     srand(RANDOM_SEED);
-    BUFFER_INIT(&input);
+    BUFFER_INIT(input);
 
-    while(!BUFFER_FULL(&input))
+    while(!BUFFER_FULL(input))
     {
-        *BUFFER_PTR(&input)=rand();
-        BUFFER_NEXT(&input);
+        *BUFFER_PTR(input)=rand();
+        BUFFER_NEXT(input);
     }
 
-    UNITTEST_ASSERT("Item count differs from buffer size", BUFFER_COUNT(&input) == BUFFER_SIZE(&input));
+    UNITTEST_ASSERT("Item count differs from buffer size", BUFFER_COUNT(input) == BUFFER_SIZE(input));
 
     srand(RANDOM_SEED);
 
-    for (tmp = 0; tmp < BUFFER_SIZE(&input); ++tmp)
-        UNITTEST_ASSERT("Expected another item value", BUFFER_ITEMS(&input)[tmp] == rand());
+    for (tmp = 0; tmp < BUFFER_SIZE(input); ++tmp)
+        UNITTEST_ASSERT("Expected another item value", BUFFER_ITEMS(input)[tmp] == rand());
 
 }
 

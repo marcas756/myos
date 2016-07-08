@@ -42,41 +42,20 @@
 
 UNITTEST_TESTSUITE_INIT
 
-TASK_THREAD(task_init_test_thread)
-{
-    return 0xAC;
-}
-
 
 UNITTEST_TESTCASE(task_init)
 {
-    task_t task = {0};
-    task_list_node_t link = {0};
 
-    task_init(&task);
-
-    UNITTEST_ASSERT("Invalid task data",task.data == NULL);
-    UNITTEST_ASSERT("Invalid task state",task.state == TASK_STATE_TERMINATED);
-    UNITTEST_ASSERT("Invalid task link",!memcmp(&task.link,&link,sizeof(task.link)));
-    UNITTEST_ASSERT("Invalid task thread",task.thread == NULL);
-    UNITTEST_ASSERT("Invalid task pollreq",task.pollreq == 0);
-    UNITTEST_ASSERT("Invalid task pt",task.pt.lc == 0);
 }
 
 
 
 UNITTEST_TESTCASE(task_event_init)
 {
-    event_t event = {0};
-    task_t target;
-    int data = 0;
 
-    task_event_init(&event,&target,1234,&data);
-
-    UNITTEST_ASSERT("Invalid target",event.target == &target);
-    UNITTEST_ASSERT("Invalid id",event.id == 1234);
-    UNITTEST_ASSERT("Invalid data",event.data == &data);
 }
+
+
 
 
 

@@ -46,13 +46,7 @@ UNITTEST_TESTSUITE_INIT
 
 UNITTEST_TESTCASE(timer)
 {
-    int tmp;
 
-    while(1)
-    {
-        timer_block_span(TICKS_PER_SEC);
-        UNITTEST_PRINTF(("%d\n",clock()/TICKS_PER_SEC));
-    }
 }
 
 UNITTEST_TESTSUITE(timer)
@@ -60,6 +54,8 @@ UNITTEST_TESTSUITE(timer)
     UNITTEST_TESTSUITE_BEGIN();
 
     UNITTEST_EXEC_TESTCASE(timer);
+
+
 
     UNITTEST_TESTSUITE_END();
 }

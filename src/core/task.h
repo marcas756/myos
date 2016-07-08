@@ -17,7 +17,7 @@
 #include "task_list.h"
 
 
-#define TASK_THREAD_ARGS        task_t *task, event_id_t event, void *data
+#define TASK_THREAD_ARGS        event_id_t event_id, void *data
 #define TASK_THREAD(name)       PT_THREAD(name(TASK_THREAD_ARGS))
 typedef  pt_state_t task_state_t;
 
@@ -32,6 +32,10 @@ typedef  pt_state_t task_state_t;
 
 
 typedef struct task_t task_t;
+
+extern task_t *task_current;
+extern bool task_pollreq;
+
 
 typedef enum {
     EVENT_TASK_START,
@@ -56,6 +60,7 @@ struct task_t{
     bool pollreq;
 };
 
+RINGBUFFER_TYPEDEF(task_event_queue, event_t, TASK_EVENT_QUEUE_SIZE);
 
 #define task_event_init(eventptr, targetptr, event_id, dataptr)                 \
         do {                                                                    \
@@ -65,7 +70,6 @@ struct task_t{
         } while(0)
 
 
-
 #define task_init(taskptr)                                      \
     do {                                                        \
         (taskptr)->state = TASK_STATE_TERMINATED;               \
@@ -73,28 +77,27 @@ struct task_t{
 
 
 
-/* Addressed event */
 
 
-#define TASK_BEGIN()    PT_BEGIN(&((task)->pt))
-#define TASK_END()      PT_END(&((task)->pt))
+#define TASK_BEGIN()    PT_BEGIN(&((task_current)->pt))
+#define TASK_END()      PT_END(&((task_current)->pt))
 
 #define TASK_SUSPEND()                                                  \
     do {                                                                \
         task_post(task_current, EVENT_TASK_RESUME, NULL);               \
-        TASK_WAIT_EVENT_UNTIL(event == EVENT_TASK_RESUME);              \
+        TASK_WAIT_EVENT_UNTIL(event_id == EVENT_TASK_RESUME);           \
     } while(0)
 
 
 
-#define TASK_WAIT_EVENT()               PT_YIELD(&((task)->pt))
-#define TASK_WAIT_EVENT_UNTIL(cond)     PT_YIELD_UNTIL(&((task)->pt),cond);
+#define TASK_WAIT_EVENT()               PT_YIELD(&((task_current)->pt))
+#define TASK_WAIT_EVENT_UNTIL(cond)     PT_YIELD_UNTIL(&((task_current)->pt),cond);
 
 
 bool task_post(task_t *target, event_id_t event_id, void *data);
 void task_poll(task_t *target);
-bool task_create(task_t *task, task_thread_fp thread, void *data);
-
+bool task_start(task_t *task, task_thread_fp thread, void *data);
+void task_scheduler_run ();
 
 
 #endif /* TASK_H_ */

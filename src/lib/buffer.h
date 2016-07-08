@@ -39,7 +39,7 @@
 
 #include <stdint.h>
 #include <stddef.h>
-#include <string.h>
+
 
 
 /*!
@@ -66,91 +66,75 @@
     Returns a pointer to the buffer items.
     Type of returned pointer is of buffer item type.
 */
-#define BUFFER_ITEMS(bufferptr) \
-    ((bufferptr)->items)
+#define BUFFER_ITEMS(buffer) \
+    ((buffer).items)
 
 /*!
     Returns an pointer to the buffer items.
-    Type of pointer is uint8_t (byte).
+    Type of pointer is void.
 */
-#define BUFFER_RAW(bufferptr) \
-	((uint8_t*)BUFFER_ITEMS(bufferptr))
+#define BUFFER_RAW(buffer) \
+	((uint8_t*)BUFFER_ITEMS(buffer))
 
 /*!
     Returns the size of the buffer in bytes.
 */
-#define BUFFER_SIZEOF(bufferptr) \
-    (sizeof(BUFFER_ITEMS(bufferptr)))
+#define BUFFER_SIZEOF(buffer) \
+    (sizeof(BUFFER_ITEMS(buffer)))
 
 
 /*!
      Returns the maximum number of items the buffer can hold.
 */
-#define BUFFER_SIZE(bufferptr) \
-    (BUFFER_SIZEOF(bufferptr)/sizeof(*BUFFER_ITEMS(bufferptr)))
+#define BUFFER_SIZE(buffer) \
+    (BUFFER_SIZEOF(buffer)/sizeof(BUFFER_ITEMS(buffer)[0]))
 
 /*!
     Returns the current number of items used in the buffer.
 */
-#define BUFFER_COUNT(bufferptr) \
-    ((bufferptr)->count)
+#define BUFFER_COUNT(buffer) \
+    ((buffer).count)
 
 /*!
     Initializes the buffer.
 */
-#define BUFFER_INIT(bufferptr) \
-    do{BUFFER_COUNT(bufferptr)=0;}while(0)
+#define BUFFER_INIT(buffer) \
+    do{BUFFER_COUNT(buffer)=0;}while(0)
 
-/*!
-    Initializes the buffer and sets all bytes in the buffer to 0.
-*/
-#define BUFFER_CLEAR(bufferptr)                                     \
-    do {                                                            \
-    	BUFFER_INIT(bufferptr);                                     \
-        memset(BUFFER_RAW(bufferptr),0,BUFFER_SIZEOF(bufferptr));   \
-    }                                                               \
-    while(0)
-
-/*!
-    Copies source buffer to destination buffer.
-    Source and destination buffer have to be of same type.
-*/
-#define BUFFER_COPY(destinationptr,sourceptr) \
-    do{*(destinationptr)=*(sourceptr);}while(0)
 
 /*!
     Checks if no further buffer items are available.
     Returns 1 if buffer is full, otherwise 0.
 */
-#define BUFFER_FULL(bufferptr) \
-    (BUFFER_COUNT(bufferptr)>=BUFFER_SIZE(bufferptr))
+#define BUFFER_FULL(buffer) \
+    (BUFFER_COUNT(buffer)>=BUFFER_SIZE(buffer))
 
 /*!
     Checks if the buffer has no items stored.
     Returns 1 if buffer is empty, otherwise 0.
 */
-#define BUFFER_EMPTY(bufferptr) \
-    (!BUFFER_COUNT(bufferptr))
+#define BUFFER_EMPTY(buffer) \
+    (!BUFFER_COUNT(buffer))
 /*!
     Moves to next free item in the buffer.
     It does not check for buffer overflow.
     In case of buffer overflow the behaviour is undefined.
     Use BUFFER_FULL to check if buffer is full before using this macro.
 */
-#define BUFFER_NEXT(bufferptr) \
-    (++BUFFER_COUNT(bufferptr))
+#define BUFFER_NEXT(buffer) \
+    (++BUFFER_COUNT(buffer))
 
 /*!
     Returns the current free item by value.
 */
-#define BUFFER_VAL(bufferptr) \
-    (BUFFER_ITEMS(bufferptr)[BUFFER_COUNT(bufferptr)])
+#define BUFFER_VAL(buffer) \
+    (BUFFER_ITEMS(buffer)[BUFFER_COUNT(buffer)])
 
 /*!
     Returns a pointer to the current free item.
 */
-#define BUFFER_PTR(bufferptr) \
-    (&BUFFER_VAL(bufferptr))
+#define BUFFER_PTR(buffer) \
+    (&BUFFER_VAL(buffer))
 
 /*!
     Append an item to the buffer by value.
@@ -159,8 +143,8 @@
     In case of buffer overflow the behaviour is undefined.
     Use BUFFER_FULL to check if buffer is full before using this macro.
 */
-#define BUFFER_APPEND(bufferptr,item) \
-	do {BUFFER_VAL(bufferptr) = item; BUFFER_NEXT(bufferptr);}while(0)
+#define BUFFER_APPEND(buffer,item) \
+	do{BUFFER_VAL(buffer) = item; BUFFER_NEXT(buffer);}while(0)
 
 
 #endif /* BUFFER_H_ */

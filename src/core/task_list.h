@@ -24,9 +24,6 @@
     #define task_list_erase(nodeptr)                        slist_erase(&task_list,nodeptr)
     #define task_list_push_front(nodeptr)                   slist_push_front(&task_list,nodeptr)
     #define task_list_size()                                slist_size(&task_list)
-
-
-
 #endif
 
 #endif /* TASK_LIST_H_ */
