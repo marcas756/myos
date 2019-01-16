@@ -1,0 +1,195 @@
+/*! \copyright
+    Copyright (c) 2013-2018, marcas756@gmail.com.
+    All rights reserved.
+
+    Redistribution and use in source and binary forms, with or without
+    modification, are permitted provided that the following conditions
+    are met:
+    1. Redistributions of source code must retain the above copyright
+       notice, this list of conditions and the following disclaimer.
+    2. Redistributions in binary form must reproduce the above copyright
+       notice, this list of conditions and the following disclaimer in the
+       documentation and/or other materials provided with the distribution.
+    3. The name of the author may not be used to endorse or promote
+       products derived from this software without specific prior
+       written permission.
+
+    THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS
+    OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+    WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+    ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY
+    DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+    DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE
+    GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+    WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+    NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+    SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*/
+
+/*! \addtogroup srcsyshdrs Inclusion of system headers */
+/*!@{*/
+/*!@}*//*srcsyshdrs*/
+
+/*! \addtogroup srcusrhdrs Inclusion of user-defined headers */
+/*!@{*/
+#include "slist.h"
+/*!@}*//*srcusrhdrs*/
+/*! \addtogroup srcmacros #define macros used only in this file */
+/*!@{*/
+
+/*!@}*//*srcmacros*/
+/*! \addtogroup srcfuncmacros #define function macros used only in this file */
+/*!@{*/
+
+/*!@}*//*srcfucnmacros*/
+/*! \addtogroup srctypedefs typedef definitions used only in this file */
+/*!@{*/
+/*!@}*//*srctypedefs*/
+
+/*! \addtogroup srcenums enum tag definitions used only in this file */
+/*!@{*/
+/*!@}*//*srcenums*/
+
+/*! \addtogroup srcstructs struct/union tag definitions used only in this file */
+/*!@{*/
+/*!@}*//*srcstructs*/
+
+/*! \addtogroup srcstatvars static variable declarations shared in this file */
+/*!@{*/
+/*!@}*//*srcstatvars*/
+
+/*! \addtogroup srcstatfuncs static function declarations*/
+/*!@{*/
+/*!@}*//*srcstatfuncs*/
+
+/*! \addtogroup srcvardefs variable definitions*/
+/*!@{*/
+/*!@}*//*srcvardefs*/
+
+/*! \addtogroup srcfuncdefs function definitions*/
+/*!@{*/
+
+slist_node_t* slist_find(slist_t *slist, void *node)
+{
+   slist_node_t* iterator;
+
+   slist_foreach(slist,iterator)
+   {
+       if ( iterator == node )
+       {
+           return node;
+       }
+   }
+
+   return 0;
+}
+
+slist_node_t* slist_back(slist_t* slist)
+{
+    slist_node_t *iterator = slist_end(slist);
+
+    while( slist_next(slist,iterator) != slist_end(slist) )
+    {
+        iterator = slist_next(slist,iterator);
+    }
+
+    return iterator;
+}
+
+
+void slist_pop_back(slist_t *slist)
+{
+    slist_node_t *iterator = slist_end(slist);
+
+    while( iterator->next->next != slist_end(slist) )
+    {
+        iterator = slist_next(slist,iterator);
+    }
+
+    iterator->next = slist_end(slist);
+}
+
+
+
+slist_node_t* slist_prev(slist_t *slist, void* node)
+{
+    slist_node_t *iterator = node;
+
+    while( slist_next(slist,iterator) != node )
+    {
+        iterator = slist_next(slist,iterator);
+    }
+
+    return iterator;
+}
+
+void slist_remove(slist_t* slist, bool (*equal) (void* node, void* value), void* value)
+{
+    slist_node_t *iterator;
+
+    slist_foreach(slist,iterator)
+    {
+        if( equal(iterator,value) == true )
+        {
+            slist_erase(slist,iterator); // second loop !
+        }
+    }
+}
+
+
+void slist_reverse (slist_t * slist)
+{
+    slist_t tmplist;
+    slist_node_t*node;
+
+    slist_init(&tmplist);
+
+    while( slist_empty(slist) == false )
+    {
+        node = slist_begin(slist);
+        slist_pop_front(slist);
+        slist_push_front(&tmplist,node);
+    }
+
+    *slist = tmplist;
+}
+
+
+
+
+size_t slist_size(slist_t *slist)
+{
+    slist_node_t *iterator;
+    size_t size = 0;
+
+    slist_foreach(slist,iterator)
+    {
+        size++;
+    }
+
+    return size;
+}
+
+
+void slist_sort(slist_t* slist, bool(*swap)(void* node1,void* node2))
+{
+
+
+
+}
+
+
+void slist_unique(slist_t* slist, bool(*equal)(void* node1, void* node2))
+{
+
+
+
+
+
+
+
+
+
+}
+/*!@}*//*srcfuncdefs*/
