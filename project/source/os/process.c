@@ -73,24 +73,6 @@ void process_module_init(void)
 }
 
 
-bool process_remove_from_list(process_t *process)
-{
-#if (PROCESS_CONF_RUNNING_FLAG == MYOSCONF_YES)
-    if( process->running )
-#else
-    if( plist_find(&process_running_list,process) != NULL )
-#endif
-   {
-      plist_erase(&process_running_list, process);
-#if (PROCESS_CONF_RUNNING_FLAG == MYOSCONF_YES)
-      process->running = false;
-#endif
-      return true;
-   }
-
-   return false;
-}
-
 
 bool process_post(process_t *to, process_event_id_t evtid, void* data)
 {
@@ -214,8 +196,8 @@ bool process_start(process_t *process, void* data)
 
       if ( PROCESS_THIS()->thread(PROCESS_THIS(),evt) == PT_STATE_TERMINATED )
       {
-       process_remove_from_list(PROCESS_THIS());
-      /* broadcast exit to all ? */
+         plist_erase(&process_running_list, PROCESS_THIS());
+         /* broadcast exit to all ? */
       }
 
       PROCESS_CONTEXT_END();
