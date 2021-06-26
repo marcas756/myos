@@ -1,5 +1,5 @@
 /*! \copyright
-    Copyright (c) 2014, marcas756@gmail.com.
+    Copyright (c) 2017, marcas756@gmail.com
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -27,54 +27,70 @@
     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 /*!
-    \file   project.h
+    \file       unittest_template.c
 
     \brief
 
-    \details
+    \details    A unit test is used in software development to test the
+                functional units of computer programs, i.e. to test the proper functionality.
+                The term unit test is also understood as an early test phase, where the innermost,
+                most detailed components of the software are tested.
 */
 
-#ifndef PROJECT_H_
-#define PROJECT_H_
-
-#include "debug.h"
-
-#ifdef MAESTRA_INSTRUM
-
-#include <string.h>
-
-#define __FILENAME__ (strrchr(__FILE__, '/') ? strrchr(__FILE__, '/') + 1 : __FILE__)
-
-#if (__STDC_VERSION__ >= 199901L)
-    #define __FUNCTION__ __func__
-#else
-    #define __FUNCTION__ "unknown"
-#endif
-
-#define INSTRUM_HEADER "maestra_instrum.h"
-#include "unittest/maestra/maestra.h"
-
-#endif /* MAESTRA_INSTRUM */
-
-#undef STATIC
-#ifdef ANTISTATIC /*UNITTEST_EXPOSE*/
-    #define STATIC
-#else
-    #define STATIC static
-#endif
 
 
-#define LIST_TYPE_SLIST    0
-#define LIST_TYPE_DLIST    1
-#define LIST_TYPE_XLIST    2
 
-#define TASK_LIST_TYPE                      LIST_TYPE_SLIST
-#define TASK_EVENT_QUEUE_SIZE               16
-#define TASK_INLINE_POLL                    1
-#define TASK_INLINE_POLLHANDLER             1
-#define TASK_INLINE_INVOKE                  1
+#include "unittest.h"
+#include "process.h"
+#include <stdio.h>
 
 
 
 
-#endif /*PROJECT_H_ */
+PROCESS_THREAD(process_async_events)
+{
+   int* data = PROCESS_DATA();
+
+   PROCESS_BEGIN();
+
+
+
+   PROCESS_END();
+}
+
+
+UNITTEST_TESTCASE(process_async_events)
+{
+    /* PRECONDITIONS */
+   process_module_init();
+
+   process_t p1;
+   process_t p2;
+
+   PROCESS_INIT(&p1,process_async_events);
+   PROCESS_INIT(&p2,process_async_events);
+
+
+
+    /* TEST */
+    UNITTEST_ASSERT("Failure text", 0 == 1); /* FAILURE */
+    UNITTEST_ASSERT("Failure text", 1 == 1); /* SUCCESS */
+
+    /* POSTCONDITIONS */
+}
+
+
+/* add additional unit test cases here */
+
+
+
+UNITTEST_TESTSUITE(/* add name for unit test suite here */)
+{
+    UNITTEST_TESTSUITE_BEGIN();
+
+    UNITTEST_EXEC_TESTCASE(process_async_events);
+
+    /* add additional unit test cases to be executed here */
+
+    UNITTEST_TESTSUITE_END();
+}

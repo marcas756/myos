@@ -9,11 +9,14 @@ set(CMAKE_C_FLAGS "-std=c99 -Wall -pedantic-errors")
 
 include_directories (
     ${PROJECT_SOURCE_DIR}
-    ${PROJECT_SOURCE_DIR}/src/lib 
+    ${PROJECT_SOURCE_DIR}/source
+    ${PROJECT_SOURCE_DIR}/source/lib 
+    ${PROJECT_SOURCE_DIR}/source/os 
+    ${PROJECT_SOURCE_DIR}/source/arch/hosted
     )
 
 
-add_subdirectory("${PROJECT_SOURCE_DIR}/src")
+add_subdirectory("${PROJECT_SOURCE_DIR}/source")
 add_subdirectory("${PROJECT_SOURCE_DIR}/unittest")
 
 

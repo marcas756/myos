@@ -35,7 +35,8 @@
  */
 #ifndef BITARRAY_H_
 #define BITARRAY_H_
-#include <stdint.h>
+#include <stdint.h> /* uint8_t */
+#include <string.h> /* memset */
 
 
 #define BITARRAY_RESET_STATE    0
@@ -51,7 +52,11 @@ typedef uint8_t bitarray_t;
     \param      size        Minimum number of bits required
 */
 #define BITARRAY(name,size) \
-    bitarray_t name##_bitarray[((size)+7)>>3] = {0}
+    bitarray_t name##_bitarray[((size)+7)>>3]
+
+#define BITARRAY_INIT(name) \
+    memset(name##_bitarray,0x00,sizeof(name##_bitarray))
+
 
 
 

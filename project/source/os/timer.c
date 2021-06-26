@@ -1,5 +1,5 @@
 /*! \copyright
-    Copyright (c) 2012, marcas756@gmail.com.
+    Copyright (c) 2016, marco@bacchi.at
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -27,36 +27,68 @@
     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 /*!
-    \file   debug.h
+    \file       timer.c
 
     \brief
 
     \details
 */
 
-#ifndef DEBUG_H
-#define DEBUG_H
+
+#include "timer.h"
+
+/*!
+    \brief      Starts a timer using a time span
+    \details    Timer will expire as soon as the time span elapsed.
+                If the timer is running yet, the timer gets reinitialized with
+                the new parameters provided. Any information about the previous timer setting
+                gets lost.
+
+
+    \param[in]      timer       Timer instance to set
+    \param[in]      span        Time span to wait to elapse
+*/
+void timer_start(timer_t *timer, timespan_t span)
+{
+   timer->span = span;
+   timer->start = timestamp_now();
+}
+
+
+void timer_reset(timer_t *timer)
+{
+   timer->start += timer->span;
+}
+
+void timer_restart(timer_t *timer)
+{
+    timer->start = timestamp_now();
+}
+
+/*!
+    \brief      Get the time left for the timer to expire
+    \details    Provides the time left until expiration of the timer.
+                It the timer expired yet, it will return 0 regardless of additional time elapsed
+                after expiration of the timer. This function does not provide any information
+                about the time after timers expiration.
+
+    \param[in]      timer       Timer instance
+    \returns    time left until expiration
+*/
+timespan_t timer_left(timer_t *timer)
+{
+    timestamp_t now = timestamp_now();
+    timestamp_t stop = timer->start + timer->span;
+
+    if( now > stop )
+    {
+        return 0;
+    }
+
+    return stop - now;
+}
 
 
 
-/* Debugging output function (printf or any other var args function) */
-#ifdef DEBUG
-    extern void debug_printf_function ( const char * format, ... );
-    #define DEBUG_PRINTF(args) (debug_printf_function args)
-#else
-    #define DEBUG_PRINTF(args)
-#endif /* DEBUG */
 
-/* Following DEBUG check allows to write more complex debug sections beyond DBG("Debugmessage: %d",var). */
-/* But try to avoid more complex debug sections, for the readability of the code and run time issues (real time)! */
-#ifdef DEBUG
 
-/* application modules */
-#define DEBUG_TASK              1
-#define DEBUG_SLIST             1
-
-/* ...... */
-
-#endif /* DEBUG */
-
-#endif /* DEBUG_H */

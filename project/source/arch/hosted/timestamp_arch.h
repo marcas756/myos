@@ -1,5 +1,5 @@
 /*! \copyright
-    Copyright (c) 2013, marco@bacchi.at
+    Copyright (c) 2016, marco@bacchi.at
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -27,76 +27,30 @@
     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 /*!
-    \file   unittest_list.c
+    \file       timestamp_arch.h
 
-    \brief
+    \brief      Architecture depending part of time stamp implementation
 
-    \details
+    \details    Provides the architecture dependent part of time stamp implementation
+                for architecture hosted.
+
+                Hosted means that the yai runs in an own process on top of a host
+                operating system.
+
 */
 
 
+#ifndef TIMESTAMP_ARCH_H_
+#define TIMESTAMP_ARCH_H_
+
+#include <time.h>
+
+#define TICKS_PER_SEC CLOCKS_PER_SEC
+
+typedef clock_t timestamp_t;
+
+#define timestamp_init()                do{}while(0)
+#define timestamp_now()                 clock()
 
 
-#include "unittest.h"
-#include <stdlib.h>
-#include <string.h>
-#include <stdbool.h>
-
-
-#ifdef UNITTEST_SLIST
-    #include"unittest_slist.h"
-#elif UNITTEST_DLIST
-    #include"unittest_dlist.h"
-#else
-    #include"unittest_slist.h"
-    #error "Unknown list type"
-#endif
-
-#define SIZE 3
-
-
-typedef struct {
-    LIST_NODE_TYPE;
-    int testint;
-}int_node_t;
-
-int_node_t intnodes [SIZE];
-
-
-
-
-UNITTEST_TESTCASE(init)
-{
-   list_t list;
-   list_init(&list);
-   UNITTEST_ASSERT("Expected empty list",list_empty(&list));
-   UNITTEST_ASSERT("Expected empty list",list_size(&list) == 0);
-}
-
-
-#define UNITTEST_TESTSUITE_EXP(x) \
-    UNITTEST_TESTSUITE(x)
-
-UNITTEST_TESTSUITE_EXP(unittest_list_type)
-{
-    UNITTEST_TESTSUITE_BEGIN();
-
-    UNITTEST_EXEC_TESTCASE(init);
-    /*
-    UNITTEST_EXEC_TESTCASE(push_front_pop_back);
-    UNITTEST_EXEC_TESTCASE(push_back_pop_front);
-    UNITTEST_EXEC_TESTCASE(push_front_pop_front);
-    UNITTEST_EXEC_TESTCASE(push_back_pop_back);
-
-
-    UNITTEST_EXEC_TESTCASE(iterator);
-    UNITTEST_EXEC_TESTCASE(front_back_item);
-    UNITTEST_EXEC_TESTCASE(find_and_erase);
-    UNITTEST_EXEC_TESTCASE(remove);
-    UNITTEST_EXEC_TESTCASE(sort);
-    UNITTEST_EXEC_TESTCASE(unique);
-    UNITTEST_EXEC_TESTCASE(double_iterator_erase_problem);
-    */
-
-    UNITTEST_TESTSUITE_END();
-}
+#endif /* TIMESTAMP_ARCH_H_ */

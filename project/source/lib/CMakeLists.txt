@@ -1,6 +1,6 @@
 SET (LIB_SOURCES 
 	slist.c
-	#dlist.c
+	dlist.c
 	#itempool.c
 	#hash_sdbm.c
 	

@@ -1,5 +1,5 @@
 /*! \copyright
-    Copyright (c) 2013-2018, marcas756@gmail.com.
+    Copyright (c) 2013-2018, marco@bacchi.at
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -28,7 +28,7 @@
 */
 /*!
     \file       slist.h
-    \authors    marcas756@gmail.com
+    \authors    marco@bacchi.at
 
     \brief      Circular singly linked list
 
@@ -57,47 +57,34 @@
 #ifndef SLIST_H_
 #define SLIST_H_
 
-/*! \addtogroup hdrsyshdrs Inclusion of system headers */
-/*!@{*/
 #include <stddef.h>
 #include <stdbool.h>
-/*!@}*//*hdrsyshdrs*/
-
-/*! \addtogroup hdrusrhdrs Inclusion of user-defined headers */
-/*!@{*/
-/*!@}*//*hdrusrhdrs*/
-
-/*! \addtogroup hdrmacros #define macros */
-/*!@{*/
 
 /*! Add SLIST_NODE_TYPE as first member of a structure to make it a list node */
-#define SLIST_NODE_TYPE slist_node_t slist_node;
-/*!@}*//*hdrmacros*/
+#define SLIST_NODE_TYPE slist_node_t slist_node
 
-/*! \addtogroup hdrfuncmacros #define function macros */
-/*!@{*/
-
-/*!
-    \brief      Initialize list
-    \details    An empty list only contains the list instance pointing to itself.
-                It is important not to forget to initialize the list, as otherwise there
-                will be undefined behavior with list functions and function like macros.
-
-    \param      slistptr   List to initialize
-*/
-#define slist_init(slistptr) \
-    do{(slistptr)->next = (slistptr);}while(0)
 
 /*!
     \brief      Get next list node
 
-    \param      slistptr   List
-    \param      nodeptr    Current node
+    \param      slist   List
+    \param      node    Current node
 
     \return     Successor of current node
 */
-#define slist_next(slistptr,nodeptr) \
-    (((slist_node_t*)(nodeptr))->next)
+#define slist_next(slist,node) \
+    (((slist_node_t*)(node))->next)
+
+/*!
+    \brief      Initialize list
+    \details    An empty list only contains the list instance pointing to itself.
+                It is important not to forget to initialize the list, otherwise there
+                may be undefined behavior with list functions and function like macros.
+
+    \param      slist  List to initialize
+*/
+#define slist_init(slist) \
+    do{slist_next(slist,slist) = (slist);}while(0)
 
 /*!
     \brief      Return iterator to beginning
@@ -108,8 +95,8 @@
 
     \return     Pointer to the first node or on the list itself.
 */
-#define slist_begin(slistptr) ((slistptr)->next)
-#define slist_front(slistptr) (slist_begin(slistptr))
+#define slist_begin(slist) ((slist)->next)
+#define slist_front(slist) (slist_begin(slist))
 
 
 
@@ -121,11 +108,11 @@
                 all the elements in the container. As the Successor of the last element is the list itself,
                 it returns the list itself.
 
-    \param      slistptr    List
+    \param      slist    List
 
     \return     Iterator referring to the past-the-end element
 */
-#define slist_end(slistptr) (slistptr)
+#define slist_end(slist) (slist)
 
 
 /*!
@@ -135,8 +122,8 @@
     \param      slistptr    List
     \param      iterator
 */
-#define slist_foreach(slistptr,iterator) \
-    for(iterator = slist_begin(slistptr); iterator != slist_end(slistptr); iterator=slist_next(slistptr,iterator))
+#define slist_foreach(slist,iterator) \
+    for(iterator = (void*)slist_begin(slist); ((slist_node_t*)iterator) != slist_end(slist); iterator=(void*)slist_next(slist,iterator))
 
 
 /*!
@@ -146,7 +133,7 @@
     \param      slistptr    List
     \returns    0 if it is not empty or 1 if it is empty
 */
-#define slist_empty(slistptr) ((slistptr)->next==(slistptr))
+#define slist_empty(slist) ((slist)->next==(slist))
 
 
 
@@ -154,31 +141,32 @@
     \brief      Insert element at beginning
     \details    Inserts a new node at the beginning of the list, right before its current first element.
     \param      slistptr    List
-    \Param      nodeptr     Node to add to the list
+    \param      nodeptr     Node to add to the list
 */
-#define slist_push_front(slistptr,nodeptr) \
+#define slist_push_front(slist,node_to_add) \
     do{ \
-        ((slist_node_t*)(nodeptr))->next = (slistptr)->next; \
-        (slistptr)->next=((slist_node_t*)(nodeptr)); \
+        ((slist_node_t*)(node_to_add))->next = (slist)->next; \
+        (slist)->next=((slist_node_t*)(node_to_add)); \
     }while(0);
 
 /*!
     \brief      Delete first node
     \details    Removes the first node of the list container.
  */
-#define slist_pop_front(slistptr) \
-    do{(slistptr)->next = (slistptr)->next->next;}while(0)
+#define slist_pop_front(slist) \
+    do{(slist)->next = (slist)->next->next;}while(0)
 
 /*!
     \brief      Insert element at end
-    \details    Inserts a new node at the end of the list, right after its current last node.
+    \details    Inserts a new node at the end of the list, right after the current back node.
     \param      slistptr    List
-    \Param      nodeptr     Node to add to the list
+    \param      nodeptr     Node to add to the list
 */
-#define slist_push_back(slistptr, nodeptr) \
+#define slist_push_back(slist, node_to_add) \
     do { \
-        ((slist_node_t*)(nodeptr))->next = slist_back(slistptr)->next; \
-        ((slist_node_t*)(nodeptr))->next->next = ((slist_node_t*)(nodeptr)); \
+        ((slist_node_t*)(node_to_add))->next = slist_back(slist); \
+        ((slist_node_t*)(node_to_add))->next->next = ((slist_node_t*)(node_to_add)); \
+        ((slist_node_t*)(node_to_add))->next = slist_end(slist);\
     }while(0)
 
 
@@ -201,13 +189,13 @@
 /*!
     \brief      Insert elements before position
     \details    The container is extended by inserting a new element before the element at the specified position.
-    \param      slistptr    List
-    \Param      nodeptr     Node to add to the list
+    \param      slist    			List
+    \Param      node_to_insert    	Node to add to the list
 */
-#define slist_insert_before(slistptr, posptr, nodeptr) \
+#define slist_insert_before(slist, existing_node, node_to_insert) \
     do{ \
-        slist_prev(slistptr,posptr)->next = (slist_node_t*)(nodeptr); \
-        ((slist_node_t*)(nodeptr))->next = posptr; \
+        slist_prev(slist,existing_node)->next = (slist_node_t*)(node_to_insert); \
+        ((slist_node_t*)node_to_insert))->next = existing_node; \
     }while(0)
 
 
@@ -233,20 +221,6 @@
         slist_prev(slistptr,nodeptr)->next = ((slist_node_t*)(nodeptr))->next; \
     }while(0)
 
-
-/*!@}*//*hdrfucnmacros*/
-
-/*! \addtogroup hdrtypedefs typedef definitions (type definitions for basic types such as int or char) */
-/*!@{*/
-/*!@}*//*hdrtypedefs*/
-
-/*! \addtogroup hdrenums enum tag definitions (together with typedef ) */
-/*!@{*/
-/*!@}*//*hdrenums*/
-
-/*! \addtogroup hdrstructs struct/union tag definitions (together with typedef) */
-/*!@{*/
-
 typedef struct slist_node_t slist_node_t;
 
 struct slist_node_t {
@@ -254,15 +228,6 @@ struct slist_node_t {
 };
 
 typedef slist_node_t slist_t; /*!< List instance is also a member of the list */
-
-/*!@}*//*hdrstructs*/
-
-/*! \addtogroup hdrextvars extern variable declarations */
-/*!@{*/
-/*!@}*//*hdrextvars*/
-
-/*! \addtogroup hdrfuncproto Function prototype declarations */
-/*!@{*/
 
 
 /*!
@@ -273,7 +238,7 @@ typedef slist_node_t slist_t; /*!< List instance is also a member of the list */
 
     \return     Predecessor of current node
 */
-slist_node_t* slist_prev(slist_t *slist, void *node);
+slist_node_t* slist_prev(slist_t *slist, void *existing_node);
 
 /*
     \brief      Counts number of nodes nb list
@@ -298,50 +263,22 @@ slist_node_t* slist_back(slist_t* slist);
 
 
 /*
-Delete last element
-Removes the last element in the list container, effectively reducing the container size by one.
+   \brief       Delete last element
+   \details     Removes the last element in the list container, effectively reducing the container size by one.
+
+   \param       slistptr    List
 */
 void slist_pop_back(slist_t *slist);
 
 
 /*
-Remove elements with specific value
-Removes from the container all the elements that compare equal to val. This calls the destructor of these objects and reduces the container size by the number of elements removed.
+    \brief      Checks if a node is in the list
+    \details    Iterates through list and checks if a specific node is in the list
 
-Unlike member function list::erase, which erases elements by their position (using an iterator), this function (list::remove) removes elements by their value.
-*/
-void slist_remove(slist_t* slist, bool (*equal) (void* node, void* value), void* value);
-
-/*
-Remove duplicate values
-Removes all but the first element from every consecutive group of equal elements in the container.
-
-Notice that an element is only removed from the list container if it compares equal to the element immediately preceding it. Thus, this function is especially useful for sorted lists.
-*/
-void slist_unique(slist_t* slist, bool (*equal) (void* node1, void* value));
-
-/*
-Reverse the order of elements
-Reverses the order of the elements in the list container.
-*/
-void slist_reverse (slist_t * slist);
-
-/*
-Sort elements in container
-Sorts the elements in the list, altering their position within the container.
-
-The sorting is performed by applying an algorithm that uses either operator< (in version (1)) or comp (in version (2)) to compare elements. This comparison shall produce a strict weak ordering of the elements (i.e., a consistent transitive comparison, without considering its reflexiveness).
-
-The resulting order of equivalent elements is  stable: i.e., equivalent elements preserve the relative order they had before the call.
+    \param      dlist       List
+    \param      node        Node to search for
+    \returns    Pointer to node if it exist, NULL otherwise
  */
-void slist_sort(slist_t* slist, bool (*swap) (void* node1, void* node2));
-
 slist_node_t* slist_find(slist_t *slist, void *node);
-
-/*!@}*//*hdrfuncproto*/
-
-/*! \addtogroup hdrinlines Function Inline functions */
-/*!@{*/
-/*!@}*//*hdrinlines*/
 
 #endif /* SLIST_H_ */

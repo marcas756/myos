@@ -1,5 +1,5 @@
 /*! \copyright
-    Copyright (c) 2013, marco@bacchi.at
+    Copyright (c) 2012, marcas756@gmail.com.
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -27,76 +27,34 @@
     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 /*!
-    \file   unittest_list.c
+    \file   debug.h
 
     \brief
 
     \details
 */
 
+#ifndef DEBUG_H
+#define DEBUG_H
 
-
-
-#include "unittest.h"
-#include <stdlib.h>
-#include <string.h>
-#include <stdbool.h>
-
-
-#ifdef UNITTEST_SLIST
-    #include"unittest_slist.h"
-#elif UNITTEST_DLIST
-    #include"unittest_dlist.h"
+/* Debugging output function (printf or any other var args function) */
+#ifdef DEBUG
+   #include <stdio.h>
+    #define DBG_FUNC(...)  printf(__VA_ARGS__)
 #else
-    #include"unittest_slist.h"
-    #error "Unknown list type"
-#endif
+    #define DBG_FUNC(...)
+#endif /* DEBUG */
 
-#define SIZE 3
+/* Following DEBUG check allows to write more complex debug sections beyond DBG("Debugmessage: %d",var). */
+/* But try to avoid more complex debug sections, for the readability of the code and run time issues (real time)! */
+#ifdef DEBUG
 
-
-typedef struct {
-    LIST_NODE_TYPE;
-    int testint;
-}int_node_t;
-
-int_node_t intnodes [SIZE];
+/* application modules */
+#define DEBUG_PROCESS   1
 
 
+/* ...... */
 
+#endif /* DEBUG */
 
-UNITTEST_TESTCASE(init)
-{
-   list_t list;
-   list_init(&list);
-   UNITTEST_ASSERT("Expected empty list",list_empty(&list));
-   UNITTEST_ASSERT("Expected empty list",list_size(&list) == 0);
-}
-
-
-#define UNITTEST_TESTSUITE_EXP(x) \
-    UNITTEST_TESTSUITE(x)
-
-UNITTEST_TESTSUITE_EXP(unittest_list_type)
-{
-    UNITTEST_TESTSUITE_BEGIN();
-
-    UNITTEST_EXEC_TESTCASE(init);
-    /*
-    UNITTEST_EXEC_TESTCASE(push_front_pop_back);
-    UNITTEST_EXEC_TESTCASE(push_back_pop_front);
-    UNITTEST_EXEC_TESTCASE(push_front_pop_front);
-    UNITTEST_EXEC_TESTCASE(push_back_pop_back);
-
-
-    UNITTEST_EXEC_TESTCASE(iterator);
-    UNITTEST_EXEC_TESTCASE(front_back_item);
-    UNITTEST_EXEC_TESTCASE(find_and_erase);
-    UNITTEST_EXEC_TESTCASE(remove);
-    UNITTEST_EXEC_TESTCASE(sort);
-    UNITTEST_EXEC_TESTCASE(unique);
-    UNITTEST_EXEC_TESTCASE(double_iterator_erase_problem);
-    */
-
-    UNITTEST_TESTSUITE_END();
-}
+#endif /* DEBUG_H */

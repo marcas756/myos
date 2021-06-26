@@ -40,11 +40,7 @@
 #include "slist.h"
 
 #define unittest_list_type slist
-
-
 typedef slist_t list_t;
-
-
 
 #define LIST_NODE_TYPE                              SLIST_NODE_TYPE
 #define list_node_t(type)                           slist_node_t(type)
@@ -65,10 +61,6 @@ typedef slist_t list_t;
 #define list_insert_before(listptr,posptr,nodeptr)  slist_insert_before(listptr,posptr,nodeptr)
 #define list_clear(listptr)                         slist_clear(listptr)
 #define list_erase(listptr,nodeptr)                 slist_erase(listptr,nodeptr)
-#define list_remove(listptr,compfptr,itemptr)       slist_remove(listptr,compfptr,itemptr)
-#define list_unique(listptr,compfptr)               slist_unique(listptr,compfptr)
-#define list_reverse(listptr)                       slist_reverse(listptr)
-#define list_sort(listptr,compfptr)                 slist_sort(listptr,compfptr)
 #define list_find(listptr,nodeptr)                  slist_find(listptr,nodeptr)
 
 

@@ -1,5 +1,5 @@
 /*! \copyright
-    Copyright (c) 2013-2018, marcas756@gmail.com.
+    Copyright (c) 2013-2018, marco@bacchi.at (marcas756@gmail.com)
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -26,49 +26,36 @@
     NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
+/*!
+    \file       slist.h
+    \authors    marco@bacchi.at
 
-/*! \addtogroup srcsyshdrs Inclusion of system headers */
-/*!@{*/
-/*!@}*//*srcsyshdrs*/
+    \brief      Circular singly linked list
 
-/*! \addtogroup srcusrhdrs Inclusion of user-defined headers */
-/*!@{*/
+    \details    In computer science, a linked list is a linear collection of data elements,
+                whose order is not given by their physical placement in memory.
+                Instead, each element points to the next. It is a data structure consisting
+                of a collection of nodes which together represent a sequence. In its most basic form,
+                each node contains: data, and a reference (in other words, a link) to the next node
+                in the sequence. This structure allows for efficient insertion or removal of elements
+                from any position in the sequence during iteration.
+                [https://en.wikipedia.org/wiki/Linked_list]
+
+                Singly linked lists contain nodes which have a data field as well as 'next' field,
+                which points to the next node in line of nodes. Operations that can be performed on
+                singly linked lists include insertion, deletion and traversal.
+                [https://en.wikipedia.org/wiki/Linked_list#Singly_linked_list]
+
+                In the last node of a list, the link field often contains a null reference, a
+                special value is used to indicate the lack of further nodes. A less common convention
+                is to make it point to the first node of the list; in that case, the list is said to
+                be 'circular' or 'circularly linked'; otherwise, it is said to be 'open' or 'linear'.
+                It is a list where the last pointer points to the first node.
+                [https://en.wikipedia.org/wiki/Linked_list#Circular_linked_list]
+*/
+
+#include <stdlib.h>
 #include "slist.h"
-/*!@}*//*srcusrhdrs*/
-/*! \addtogroup srcmacros #define macros used only in this file */
-/*!@{*/
-
-/*!@}*//*srcmacros*/
-/*! \addtogroup srcfuncmacros #define function macros used only in this file */
-/*!@{*/
-
-/*!@}*//*srcfucnmacros*/
-/*! \addtogroup srctypedefs typedef definitions used only in this file */
-/*!@{*/
-/*!@}*//*srctypedefs*/
-
-/*! \addtogroup srcenums enum tag definitions used only in this file */
-/*!@{*/
-/*!@}*//*srcenums*/
-
-/*! \addtogroup srcstructs struct/union tag definitions used only in this file */
-/*!@{*/
-/*!@}*//*srcstructs*/
-
-/*! \addtogroup srcstatvars static variable declarations shared in this file */
-/*!@{*/
-/*!@}*//*srcstatvars*/
-
-/*! \addtogroup srcstatfuncs static function declarations*/
-/*!@{*/
-/*!@}*//*srcstatfuncs*/
-
-/*! \addtogroup srcvardefs variable definitions*/
-/*!@{*/
-/*!@}*//*srcvardefs*/
-
-/*! \addtogroup srcfuncdefs function definitions*/
-/*!@{*/
 
 slist_node_t* slist_find(slist_t *slist, void *node)
 {
@@ -82,7 +69,7 @@ slist_node_t* slist_find(slist_t *slist, void *node)
        }
    }
 
-   return 0;
+   return NULL;
 }
 
 slist_node_t* slist_back(slist_t* slist)
@@ -96,6 +83,7 @@ slist_node_t* slist_back(slist_t* slist)
 
     return iterator;
 }
+
 
 
 void slist_pop_back(slist_t *slist)
@@ -124,39 +112,6 @@ slist_node_t* slist_prev(slist_t *slist, void* node)
     return iterator;
 }
 
-void slist_remove(slist_t* slist, bool (*equal) (void* node, void* value), void* value)
-{
-    slist_node_t *iterator;
-
-    slist_foreach(slist,iterator)
-    {
-        if( equal(iterator,value) == true )
-        {
-            slist_erase(slist,iterator); // second loop !
-        }
-    }
-}
-
-
-void slist_reverse (slist_t * slist)
-{
-    slist_t tmplist;
-    slist_node_t*node;
-
-    slist_init(&tmplist);
-
-    while( slist_empty(slist) == false )
-    {
-        node = slist_begin(slist);
-        slist_pop_front(slist);
-        slist_push_front(&tmplist,node);
-    }
-
-    *slist = tmplist;
-}
-
-
-
 
 size_t slist_size(slist_t *slist)
 {
@@ -172,24 +127,3 @@ size_t slist_size(slist_t *slist)
 }
 
 
-void slist_sort(slist_t* slist, bool(*swap)(void* node1,void* node2))
-{
-
-
-
-}
-
-
-void slist_unique(slist_t* slist, bool(*equal)(void* node1, void* node2))
-{
-
-
-
-
-
-
-
-
-
-}
-/*!@}*//*srcfuncdefs*/

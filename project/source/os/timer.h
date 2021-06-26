@@ -1,5 +1,5 @@
 /*! \copyright
-    Copyright (c) 2013, marco@bacchi.at
+    Copyright (c) 2016, marco@bacchi.at
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -27,76 +27,54 @@
     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 /*!
-    \file   unittest_list.c
+    \file       timer.h
 
     \brief
 
     \details
 */
 
+#ifndef  TIMER_H_
+#define  TIMER_H_
 
-
-
-#include "unittest.h"
-#include <stdlib.h>
-#include <string.h>
+#include "timestamp.h"
 #include <stdbool.h>
 
-
-#ifdef UNITTEST_SLIST
-    #include"unittest_slist.h"
-#elif UNITTEST_DLIST
-    #include"unittest_dlist.h"
-#else
-    #include"unittest_slist.h"
-    #error "Unknown list type"
-#endif
-
-#define SIZE 3
-
-
 typedef struct {
-    LIST_NODE_TYPE;
-    int testint;
-}int_node_t;
-
-int_node_t intnodes [SIZE];
+    timestamp_t start;
+    timespan_t span;
+}timer_t;
 
 
 
 
-UNITTEST_TESTCASE(init)
-{
-   list_t list;
-   list_init(&list);
-   UNITTEST_ASSERT("Expected empty list",list_empty(&list));
-   UNITTEST_ASSERT("Expected empty list",list_size(&list) == 0);
-}
+void timer_start(timer_t *timer, timespan_t span);
+
+timespan_t timer_left(timer_t *timer);
+
+void timer_reset(timer_t *timer);
+
+/*!
+    \brief      Restarts a previously set timer
+    \details    Restarts a previously set timer. Be aware of that the timer must have
+                been set properly before, otherwise behaviour is undefined.
+
+    \param[in]      timer       Timer instance to restart
+*/
+void timer_restart(timer_t *timer);
 
 
-#define UNITTEST_TESTSUITE_EXP(x) \
-    UNITTEST_TESTSUITE(x)
+/*!
+    \brief      Check if timer expired
+    \details    Checks if timer expired. Timer will expire as soon as the time span
+                provided with timer_start is elapsed.
 
-UNITTEST_TESTSUITE_EXP(unittest_list_type)
-{
-    UNITTEST_TESTSUITE_BEGIN();
-
-    UNITTEST_EXEC_TESTCASE(init);
-    /*
-    UNITTEST_EXEC_TESTCASE(push_front_pop_back);
-    UNITTEST_EXEC_TESTCASE(push_back_pop_front);
-    UNITTEST_EXEC_TESTCASE(push_front_pop_front);
-    UNITTEST_EXEC_TESTCASE(push_back_pop_back);
+    \param[in]      timer       Timer instance to check
+    \returns    true if timer expired, false otherwise
+*/
+#define timer_expired(timerptr) \
+    timestamp_passed((timerptr)->start+(timerptr)->span)
 
 
-    UNITTEST_EXEC_TESTCASE(iterator);
-    UNITTEST_EXEC_TESTCASE(front_back_item);
-    UNITTEST_EXEC_TESTCASE(find_and_erase);
-    UNITTEST_EXEC_TESTCASE(remove);
-    UNITTEST_EXEC_TESTCASE(sort);
-    UNITTEST_EXEC_TESTCASE(unique);
-    UNITTEST_EXEC_TESTCASE(double_iterator_erase_problem);
-    */
 
-    UNITTEST_TESTSUITE_END();
-}
+#endif /*  TIMER_H_ */
