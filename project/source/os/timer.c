@@ -54,16 +54,24 @@ void timer_start(timer_t *timer, timespan_t span)
    timer->start = timestamp_now();
 }
 
+void timer_restart(timer_t *timer)
+{
+    timer->start = timestamp_now();
+}
+
+
+void timer_set_span(timer_t *timer, timespan_t span)
+{
+   timer->span = span;
+}
+
 
 void timer_reset(timer_t *timer)
 {
    timer->start += timer->span;
 }
 
-void timer_restart(timer_t *timer)
-{
-    timer->start = timestamp_now();
-}
+
 
 /*!
     \brief      Get the time left for the timer to expire
@@ -80,12 +88,27 @@ timespan_t timer_left(timer_t *timer)
     timestamp_t now = timestamp_now();
     timestamp_t stop = timer->start + timer->span;
 
-    if( now > stop )
+    if( timestamp_less_than(now,stop) )
     {
-        return 0;
+       return stop - now;
     }
 
-    return stop - now;
+    return 0;
+}
+
+
+
+/*!
+    \brief      Check if timer expired
+    \details    Checks if timer expired. Timer will expire as soon as the time span
+                provided with timer_start is elapsed.
+
+    \param[in]      timer       Timer instance to check
+    \returns    true if timer expired, false otherwise
+*/
+bool timer_expired(timer_t *timer)
+{
+   return (timer_left(timer) == 0);
 }
 
 

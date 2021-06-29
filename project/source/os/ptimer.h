@@ -33,7 +33,8 @@ typedef slist_node_t ptlist_node_t;
 #define ptlist_next(listptr,nodeptr)                  slist_next(listptr,nodeptr)
 #define ptlist_push_front(listptr,nodeptr)            slist_push_front(listptr,nodeptr)
 #define ptlist_prev(listptr,nodeptr)                  slist_prev(listptr,nodeptr)
-#define ptlist_foreach(slist,iterator)                slist_foreach(slist,iterator)
+#define ptlist_foreach(listptr,iterator)              slist_foreach(listptr,iterator)
+#define ptlist_find(listptr,nodeptr)                  slist_findlistptr,nodeptr)
 
 #else
 #error "Unknown list type"
@@ -44,9 +45,16 @@ typedef void (*ptimer_handler_t) (void *data);
 typedef struct {
    PTLIST_NODE_TYPE;
    timer_t timer;
-   ptimer_handler_t *handler;
+   ptimer_handler_t handler;
+   bool running;
 }ptimer_t;
 
 void ptimer_module_init(void);
+void ptimer_start(ptimer_t* ptimer, timespan_t span, ptimer_handler_t handler);
+
+
+#define ptimer_expired(ptimerptr)   timer_expired(&(ptimerptr)->timer)
+#define ptimer_left(ptimerptr)      timer_left(&(ptimerptr)->timer)
+
 
 #endif /* PTIMER_H_ */

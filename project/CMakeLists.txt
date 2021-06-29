@@ -5,18 +5,19 @@ set_property(DIRECTORY APPEND PROPERTY
   COMPILE_DEFINITIONS $<$<CONFIG:Debug>:DEBUG=1>
 )
   
-set(CMAKE_C_FLAGS "-std=c99 -Wall -pedantic-errors")
+#set(CMAKE_C_FLAGS "-std=c99 -Wall -pedantic-errors")
+
 
 include_directories (
     ${PROJECT_SOURCE_DIR}
     ${PROJECT_SOURCE_DIR}/source
     ${PROJECT_SOURCE_DIR}/source/lib 
     ${PROJECT_SOURCE_DIR}/source/os 
-    ${PROJECT_SOURCE_DIR}/source/arch/hosted
+    ${PROJECT_SOURCE_DIR}/source/arch/hosted/linux
     )
 
 
 add_subdirectory("${PROJECT_SOURCE_DIR}/source")
 add_subdirectory("${PROJECT_SOURCE_DIR}/unittest")
-
+add_subdirectory("${PROJECT_SOURCE_DIR}/source/arch/hosted/linux")
 

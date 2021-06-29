@@ -19,8 +19,6 @@
 #define PROCESS_CONF_EVENT_FROM         MYOSCONF_YES
 
 
-#define PROCESS_CONF_RUNNING_FLAG       MYOSCONF_YES
-
 
 typedef uint8_t process_event_id_t;
 

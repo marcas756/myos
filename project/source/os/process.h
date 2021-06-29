@@ -72,8 +72,10 @@ typedef slist_node_t plist_node_t;
 #endif
 
 
-#define PROCESS_EVENT_START  0
-#define PROCESS_EVENT_POLL   1
+#define PROCESS_EVENT_START     0
+#define PROCESS_EVENT_POLL      1
+#define PROCESS_EVENT_CONTINUE  2
+#define PROCESS_EVENT_TIMEOUT   3
 
 #define PROCESS_BROADCAST NULL
 
@@ -90,9 +92,6 @@ struct process_t {
    void* data;
    pt_t pt;
    bool pollreq;
-#if (PROCESS_CONF_RUNNING_FLAG == MYOSCONF_YES)
-   bool running;
-#endif
 };
 
 
@@ -142,22 +141,20 @@ int process_thread_##name(process_t *process, process_event_t *evt)
 
 #define PROCESS_BEGIN()             PT_BEGIN(&PROCESS_PT())
 #define PROCESS_END()               PT_END(&PROCESS_PT())
-#define PROCESS_WAIT_EVENT(evtid)   PT_WAIT_UNTIL(&PROCESS_PT(), evt->id == evtid)
+#define PROCESS_WAIT_EVENT(evtid)   PT_WAIT_UNTIL(&PROCESS_PT(), PROCESS_EVENT_ID() == evtid)
+#define PROCESS_WAIT_ANY_EVENT()    PT_YIELD(&PROCESS_PT())
 
-
-
-
+#define PROCESS_SUSPEND() \
+   do{ \
+      process_post(PROCESS_THIS(),PROCESS_EVENT_CONTINUE,NULL); \
+      PROCESS_WAIT_EVENT(PROCESS_EVENT_CONTINUE); \
+   while(0)
 
 void process_module_init(void);
 void process_init( process_t *process, process_thread_t thread );
-void process_start(process_t *process, void* data);
-
-
-
+bool process_start(process_t *process, void* data);
 bool process_post(process_t *to, process_event_id_t evtid, void* data);
 bool process_post_sync(process_t *to, process_event_id_t evtid, void* data);
-
-
 
 
 #endif /* PROCESS_H_ */

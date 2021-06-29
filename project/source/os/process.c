@@ -104,23 +104,6 @@ bool process_post(process_t *to, process_event_id_t evtid, void* data)
 
 bool process_deliver_event(process_event_t *evt)
 {
-   /* Poll should only be triggered by interrupts. Interrupts always have a higher priority than the main loop context by definition.
-      Thus we first handle all poll requests from interrupts first, before we deliver the next non polling event to a process. */
-   while(process_global_pollreq)
-   {
-      process_t *process;
-
-      CRITICAL_EXPRESSION(process_global_pollreq = false);
-
-      plist_foreach(&process_running_list,process)
-      {
-         if( process->pollreq )
-         {
-            CRITICAL_EXPRESSION(process->pollreq = false);
-            process_post_sync(process, PROCESS_EVENT_POLL, NULL);
-         }
-      }
-   }
 
 #if (PROCESS_CONF_EVENT_FROM == MYOSCONF_YES)
    DBG_PROCESS("deliver_event from %p to %p evtid=%d ...\n",(void*)evt->from,(void*)evt->to,evt->id);
@@ -134,8 +117,8 @@ bool process_deliver_event(process_event_t *evt)
 
       if ( PROCESS_THIS()->thread(PROCESS_THIS(),evt) == PT_STATE_TERMINATED )
       {
-         process_remove_from_list(PROCESS_THIS());
-       /* broadcast exit to all ? */
+         plist_erase(&process_running_list, PROCESS_THIS());
+         /* broadcast exit to all ? */
       }
 
       PROCESS_CONTEXT_END();
@@ -169,7 +152,6 @@ bool process_post_sync(process_t *to, process_event_id_t evtid, void* data)
 
 bool process_start(process_t *process, void* data)
 {
-
    DBG_PROCESS("start %p ...\n",(void*)process);
 
    if( PROCESS_IS_RUNNING(process) )
@@ -192,9 +174,9 @@ bool process_start(process_t *process, void* data)
       evt.data = data;
       evt.id = PROCESS_EVENT_START;
 
-      PROCESS_CONTEXT_BEGIN(evt->to);
+      PROCESS_CONTEXT_BEGIN(evt.to);
 
-      if ( PROCESS_THIS()->thread(PROCESS_THIS(),evt) == PT_STATE_TERMINATED )
+      if ( PROCESS_THIS()->thread(PROCESS_THIS(),&evt) == PT_STATE_TERMINATED )
       {
          plist_erase(&process_running_list, PROCESS_THIS());
          /* broadcast exit to all ? */
@@ -204,6 +186,8 @@ bool process_start(process_t *process, void* data)
    }
 
    DBG_PROCESS("start %p success\n",(void*)process);
+
+   return true;
 }
 
 void process_poll(process_t *process)
@@ -215,6 +199,26 @@ void process_poll(process_t *process)
 
 int process_run(void)
 {
+   /* Poll should only be triggered by interrupts. Interrupts always have a higher priority than the main loop context by definition.
+      Thus we first handle all poll requests from interrupts first, before we deliver the next non polling event to a process. */
+   while(process_global_pollreq)
+   {
+      process_t *process;
+
+      CRITICAL_EXPRESSION(process_global_pollreq = false);
+
+      plist_foreach(&process_running_list,process)
+      {
+         if( process->pollreq )
+         {
+            CRITICAL_EXPRESSION(process->pollreq = false);
+            process_post_sync(process, PROCESS_EVENT_POLL, NULL);
+
+         }
+      }
+   }
+
+
    if( RINGBUFFER_COUNT(process_event_queue) )
    {
       process_deliver_event(RINGBUFFER_HEAD_PTR(process_event_queue));

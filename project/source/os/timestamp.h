@@ -55,6 +55,9 @@ typedef timestamp_t timespan_t;
 #define timestamp_passed(timestamp) \
     (timestamp_now()>(timestamp)) /* >= ? */
 
+#define timestamp_less_than(a,b)    (TIMESTAMP_DIFF((a),(b)) < 0)
+
+
 /*!
     \brief      Blocks until the time stamp provided is in the past
     \param[in]      timestamp       Time stamp to wait for
@@ -70,6 +73,7 @@ typedef timestamp_t timespan_t;
     do{                                                     \
         timestamp_block_until(timestamp_now()+(timespan));                      \
     }while(0)
+
 
 
 #endif /* TIMESTAMP_H_ */

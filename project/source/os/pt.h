@@ -73,7 +73,7 @@ typedef uint8_t ptstate_t;
 #define PT_STATE_TERMINATED     ((ptstate_t)(~((ptstate_t)(0))))
 
 
-#define PT_IS_RUNNING(pt) ((pt)->lc > 0 && (pt)->lc != LC_DEFAULT)
+#define PT_IS_RUNNING(pt) ( ((pt)->lc > 0) && ((pt)->lc != LC_DEFAULT) )
 
 
 

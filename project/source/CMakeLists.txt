@@ -8,6 +8,7 @@ SET (MYOS_SOURCES
 SET (MYOS_OBJECTS
     $<TARGET_OBJECTS:lib>
     $<TARGET_OBJECTS:os>
+    $<TARGET_OBJECTS:arch>
     
 )
 
