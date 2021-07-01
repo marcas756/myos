@@ -46,15 +46,7 @@
 
 process_t *process_current = NULL;
 
-#define PROCESS_CONTEXT_BEGIN(processptr) \
-      do{ \
-         process_t *process_backup; \
-         process_backup = PROCESS_THIS(); \
-         PROCESS_THIS() = processptr
 
-#define PROCESS_CONTEXT_END() \
-         PROCESS_THIS() = process_backup; \
-      }while(0)
 
 static plist_t process_running_list;
 

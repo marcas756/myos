@@ -10,10 +10,10 @@
 timestamp_t timestamp_now(void)
 {
    struct timespec tim;
-   timestamp_t microsec;
+   timestamp_t millisec;
    clock_gettime( CLOCK_MONOTONIC, &tim );
-   microsec = 1000000ULL * tim.tv_sec + tim.tv_nsec / 1000;
-   return microsec;
+   millisec = TICKS_PER_SEC * tim.tv_sec + tim.tv_nsec / 1000000;
+   return millisec;
 }
 
 bool timestamp_init(void)

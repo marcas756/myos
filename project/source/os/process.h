@@ -108,11 +108,23 @@ struct process_event_t {
 extern process_t *process_current;
 #define PROCESS_THIS() process_current
 
+#define PROCESS_CONTEXT_BEGIN(processptr) \
+      do{ \
+         process_t *process_backup; \
+         process_backup = PROCESS_THIS(); \
+         PROCESS_THIS() = processptr
+
+#define PROCESS_CONTEXT_END() \
+         PROCESS_THIS() = process_backup; \
+      }while(0)
+
 
 #define PROCESS(name,threadname) \
    int process_thread_##threadname(process_t *process, process_event_t *evt);  \
    process_t name = {{0},process_thread_##threadname,0,{0},false}
 
+#define PROCESS_EXTERN(name) \
+      extern process_t name
 
 #define PROCESS_DATA()            (process->data)
 #define PROCESS_PT()              (process->pt)
@@ -155,7 +167,8 @@ void process_init( process_t *process, process_thread_t thread );
 bool process_start(process_t *process, void* data);
 bool process_post(process_t *to, process_event_id_t evtid, void* data);
 bool process_post_sync(process_t *to, process_event_id_t evtid, void* data);
-
+int process_run(void);
+void process_poll(process_t *process);
 
 #endif /* PROCESS_H_ */
 

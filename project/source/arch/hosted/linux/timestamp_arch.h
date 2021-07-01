@@ -71,7 +71,7 @@ Thread-specific CPU-time clock.
 
 
 
-#define TICKS_PER_SEC 1000000
+#define TICKS_PER_SEC 1000
 
 
 typedef uint64_t timestamp_t;

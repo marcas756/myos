@@ -15,3 +15,7 @@ target_link_libraries(unittest_process myos unittest)
 
 add_executable(unittest_timer unittest_timer.c)
 target_link_libraries(unittest_timer myos unittest)
+
+add_executable(unittest_ctimer unittest_ctimer.c)
+set_target_properties(unittest_ctimer PROPERTIES COMPILE_DEFINITIONS "PROCESS_LIST_TYPE=SLIST")
+target_link_libraries(unittest_ctimer myos unittest)

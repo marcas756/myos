@@ -11,16 +11,23 @@
 
 #include "ptimer.h"
 
+typedef struct ctimer_t ctimer_t;
 
+typedef void (*ctimer_callback_t)(ctimer_t *ctimer);
 
-typedef void (*ctimer_callback_t)(void* data);
-
-typedef struct {
+struct ctimer_t {
    ptimer_t ptimer;
    process_t *context;
    ctimer_callback_t callback;
    void* data;
-}ctimer_t;
+};
+
+
+void ctimer_module_init(void);
+void ctimer_start(ctimer_t *ctimer, timespan_t span, ctimer_callback_t callback, void *data);
+
+#define ctimer_restart(ctimerptr) \
+      ptimer_restart(&((ctimerptr)->ptimer))
 
 
 

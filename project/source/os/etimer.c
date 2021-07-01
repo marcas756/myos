@@ -8,43 +8,35 @@
 
 #include "etimer.h"
 
+extern bool process_deliver_event(process_event_t *evt);
 
-etlist_t etimer_list;
-
-#define etimer_is_running(etimerptr) (etlist_next(&etimer_list,etimerptr) != ETIMER_NOT_RUNNING)
-
-void module_etimer_init()
+void etimer_timeout_handler(void* data)
 {
-   etlist_init(&etimer_list);
-}
+   etimer_t *etimer = data;
 
-bool etimer_set(etimer_t *etimer, timespan_t span, process_t *to, process_event_id_t evtid, void *data)
-{
-   if( etimer_is_running(etimer) )
+   if( PROCESS_IS_RUNNING(etimer->evt.to) )
    {
-      return false;
+      PROCESS_CONTEXT_BEGIN(etimer->evt.to);
+
+      process_deliver_event(&etimer->evt);
+
+      PROCESS_CONTEXT_END();
    }
-
-   timer_start(&etimer->timer,span);
-
-   etimer->event.from = process_current;
-   etimer->event.to = to;
-   etimer->event.id = evtid;
-   etimer->event.data = data;
-
-   etlist_push_front(&etimer_list,etimer);
-
-   return true;
 }
 
-bool etimer_stop(etimer_t *etimer)
+
+
+
+void etimer_start(etimer_t *etimer, timespan_t span, process_t *to, process_event_id_t evtid, void *data)
 {
-   if(etimer_is_running(etimer))
-   {
-      etlist_erase(&etimer_list,etimer);
-      etlist_next(&etimer_list,etimer) = ETIMER_NOT_RUNNING;
-      return true;
-   }
+   etimer->evt.id = evtid;
+   etimer->evt.data = data;
+#if (PROCESS_CONF_EVENT_FROM == MYOSCONF_YES)
+   etimer->evt.from = PROCESS_THIS();
+#endif
+   etimer->evt.to = to;
 
-   return false;
+   ptimer_start(&(etimer->ptimer), span, etimer_timeout_handler);
 }
+
+

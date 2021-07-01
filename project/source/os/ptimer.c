@@ -8,14 +8,9 @@
 #include "ptimer.h"
 
 
-
-
-
 ptlist_t ptimer_running_list;
 
 timestamp_t ptimer_next_expiration = 0;
-
-
 
 void ptimer_add_to_list(ptimer_t *ptimer)
 {
@@ -47,34 +42,34 @@ PROCESS_THREAD(ptimer_process)
    {
       PROCESS_WAIT_EVENT(PROCESS_EVENT_POLL);
 
-      ptimer_t *ptimer;
-
       timestamp_t now = timestamp_now();
+      ptimer_t *curr = (ptimer_t*)ptlist_begin(&ptimer_running_list);
 
-      ptlist_foreach(&ptimer_running_list,ptimer)
+      while(curr != (ptimer_t*)ptlist_end(&ptimer_running_list))
       {
-         if( ptimer_expired(ptimer) )
+         if( ptimer_expired(curr) )
          {
-            if( ptimer->handler )
+            ptimer_t *next = (ptimer_t*)ptlist_next(&ptimer_running_list,curr);
+
+            ptimer_remove_from_list(curr);
+
+            if( curr->handler )
             {
-               ptimer->handler(ptimer);
+               curr->handler(curr);
             }
 
-            ptimer_remove_from_list(ptimer);
+            curr = next;
          }
          else
          {
-
-
-
+            /* comp next exp time */
+            curr  = (ptimer_t*)ptlist_next(&ptimer_running_list,curr);
          }
       }
    }
 
    PROCESS_END();
 }
-
-
 
 void ptimer_module_init()
 {
@@ -105,7 +100,6 @@ void ptimer_set_span(ptimer_t* ptimer, timespan_t span)
 {
    timer_set_span(&ptimer->timer,span);
 }
-
 
 void ptimer_stop(ptimer_t* ptimer)
 {

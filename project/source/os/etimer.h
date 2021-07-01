@@ -8,26 +8,14 @@
 #ifndef ETIMER_H_
 #define ETIMER_H_
 
-#include "ctimer.h"
-
-
-
-#define ETIMER_NOT_RUNNING NULL
-
-
-
-
+#include "ptimer.h"
 
 typedef struct {
-   CTLIST_NODE_TYPE;
-   timer_t timer;
-   ctimer_callback_t callback;
+   ptimer_t ptimer;
    process_event_t evt;
 }etimer_t;
 
-#define etimer_init(etimerptr) \
-      etlist_next(&etimer_list, etimerptr) = ETIMER_NOT_RUNNING;
-
+#define etimer_module_init() ptimer_module_init()
 
 
 #endif /* ETIMER_H_ */
