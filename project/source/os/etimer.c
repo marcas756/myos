@@ -8,6 +8,7 @@
 
 #include "etimer.h"
 
+
 extern bool process_deliver_event(process_event_t *evt);
 
 void etimer_timeout_handler(void* data)
@@ -17,9 +18,7 @@ void etimer_timeout_handler(void* data)
    if( PROCESS_IS_RUNNING(etimer->evt.to) )
    {
       PROCESS_CONTEXT_BEGIN(etimer->evt.to);
-
       process_deliver_event(&etimer->evt);
-
       PROCESS_CONTEXT_END();
    }
 }

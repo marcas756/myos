@@ -86,7 +86,7 @@ void timer_reset(timer_t *timer)
 timespan_t timer_left(timer_t *timer)
 {
     timestamp_t now = timestamp_now();
-    timestamp_t stop = timer->start + timer->span;
+    timestamp_t stop = timer_timestamp_stop(timer);
 
     if( timestamp_less_than(now,stop) )
     {

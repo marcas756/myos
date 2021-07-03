@@ -65,7 +65,8 @@ void timer_set_span(timer_t *timer, timespan_t span);
 void timer_restart(timer_t *timer);
 bool timer_expired(timer_t *timer);
 
-
+#define timer_timestamp_stop(timerptr) \
+      ((timerptr)->start + (timerptr)->span)
 
 
 #endif /*  TIMER_H_ */

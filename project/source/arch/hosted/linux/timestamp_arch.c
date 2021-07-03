@@ -16,9 +16,10 @@ timestamp_t timestamp_now(void)
    return millisec;
 }
 
-bool timestamp_init(void)
-{
 
+bool timestamp_module_init(void)
+{
+  return true;
 }
 
 

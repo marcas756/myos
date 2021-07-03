@@ -8,4 +8,4 @@
 #ifndef CRITICAL_H_
 #define CRITICAL_H_
 #include "critical_arch.h"
-#endif /* SOURCE_OS_CRITICAL_H_ */
+#endif /* CRITICAL_H_ */

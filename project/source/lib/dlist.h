@@ -221,7 +221,7 @@ Removes the last element in the list container, effectively reducing the contain
     do{ \
         ((dlist_node_t*)existing_node)->prev->next = ((dlist_node_t*)existing_node)->next; \
         ((dlist_node_t*)existing_node)->next->prev = ((dlist_node_t*)existing_node)->prev; \
-    while(0)
+    } while(0)
 
 
 /*!

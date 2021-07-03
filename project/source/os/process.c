@@ -184,6 +184,7 @@ bool process_start(process_t *process, void* data)
 
 void process_poll(process_t *process)
 {
+   DBG_PROCESS("polling %p \n",(void*)process);
    process->pollreq = true;
    process_global_pollreq = true;
 }

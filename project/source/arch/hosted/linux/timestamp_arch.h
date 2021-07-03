@@ -34,7 +34,7 @@
     \details    Provides the architecture dependent part of time stamp implementation
                 for architecture hosted.
 
-                Hosted means that the yai runs in an own process on top of a host
+                Hosted means that the myos runs in an own process on top of a host
                 operating system.
 
 */
@@ -48,40 +48,14 @@
 #include <time.h>
 #include <stdbool.h>
 
-/*
-All implementations support the system-wide realtime clock, which is identified by CLOCK_REALTIME. Its time represents seconds and nanoseconds since the Epoch. When its time is changed, timers for a relative interval are unaffected, but timers for an absolute point in time are affected.
-
-More clocks may be implemented. The interpretation of the corresponding time values and the effect on timers is unspecified.
-
-Sufficiently recent versions of GNU libc and the Linux kernel support the following clocks:
-
-CLOCK_REALTIME
-System-wide realtime clock. Setting this clock requires appropriate privileges.
-CLOCK_MONOTONIC
-Clock that cannot be set and represents monotonic time since some unspecified starting point.
-CLOCK_PROCESS_CPUTIME_ID
-High-resolution per-process timer from the CPU.
-CLOCK_THREAD_CPUTIME_ID
-Thread-specific CPU-time clock.
-
-*/
-
-
-
-
-
 
 #define TICKS_PER_SEC 1000
-
 
 typedef uint64_t timestamp_t;
 #define TIMESTAMP_DIFF(a,b)         ((int64_t)((a)-(b)))
 
 
-
-
-
-bool timestamp_init(void);
+bool timestamp_module_init(void);
 timestamp_t timestamp_now(void);
 
 

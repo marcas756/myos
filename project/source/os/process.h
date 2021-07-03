@@ -153,7 +153,7 @@ int process_thread_##name(process_t *process, process_event_t *evt)
 
 #define PROCESS_BEGIN()             PT_BEGIN(&PROCESS_PT())
 #define PROCESS_END()               PT_END(&PROCESS_PT())
-#define PROCESS_WAIT_EVENT(evtid)   PT_WAIT_UNTIL(&PROCESS_PT(), PROCESS_EVENT_ID() == evtid)
+#define PROCESS_WAIT_EVENT(evtid)   PT_YIELD_UNTIL(&PROCESS_PT(), PROCESS_EVENT_ID() == evtid)
 #define PROCESS_WAIT_ANY_EVENT()    PT_YIELD(&PROCESS_PT())
 
 #define PROCESS_SUSPEND() \

@@ -16,7 +16,7 @@ void ctimer_timeout_handler(void* data)
    if( ctimer->callback )
    {
       PROCESS_CONTEXT_BEGIN(ctimer->context);
-      ctimer->callback(ctimer);
+      ctimer->callback(ctimer->data);
       PROCESS_CONTEXT_END();
    }
 }

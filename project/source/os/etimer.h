@@ -16,6 +16,12 @@ typedef struct {
 }etimer_t;
 
 #define etimer_module_init() ptimer_module_init()
+void etimer_start(etimer_t *etimer, timespan_t span, process_t *to, process_event_id_t evtid, void *data);
 
+#define PROCESS_SLEEP(etimerptr,span) \
+   do{ \
+      etimer_start(etimerptr, span, PROCESS_THIS(), PROCESS_EVENT_CONTINUE, NULL); \
+      PROCESS_WAIT_EVENT(PROCESS_EVENT_CONTINUE); \
+   }while(0)
 
 #endif /* ETIMER_H_ */
