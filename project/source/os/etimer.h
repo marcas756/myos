@@ -17,6 +17,14 @@ typedef struct {
 
 #define etimer_module_init() ptimer_module_init()
 void etimer_start(etimer_t *etimer, timespan_t span, process_t *to, process_event_id_t evtid, void *data);
+#define etimer_restart(etimerptr)                       ptimer_restart((ptimer_t*)etimerptr)
+#define etimer_restart_with_new_span(etimerptr,span)    ptimer_restart_with_new_span((ptimer_t*)etimerptr,span)
+#define etimer_reset(etimerptr)                         ptimer_rreset((ptimer_t*)etimerptr)
+#define etimer_reset_with_new_span(etimerptr,span)      ptimer_reset_with_new_span((ptimer_t*)etimerptr,span)
+#define etimer_stop(ptimerptr)                          ptimer_stop((ptimer_t*)etimerptr)
+#define etimer_expired(ptimerptr)                       ptimer_expired((ptimer_t*)etimerptr)
+#define etimer_left(ptimerptr)                          ptimer_left((ptimer_t*)etimerptr)
+
 
 #define PROCESS_SLEEP(etimerptr,span) \
    do{ \

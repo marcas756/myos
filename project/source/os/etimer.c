@@ -11,9 +11,18 @@
 
 extern bool process_deliver_event(process_event_t *evt);
 
-void etimer_timeout_handler(void* data)
+
+/*!
+    \brief      Get previous list node
+
+    \param      list   List
+    \param      node    Current node
+
+    \return     Precessor of current node
+*/
+void etimer_timeout_handler(ptimer_t* ptimer)
 {
-   etimer_t *etimer = data;
+   etimer_t *etimer = (etimer_t*)ptimer;
 
    if( PROCESS_IS_RUNNING(etimer->evt.to) )
    {
@@ -22,8 +31,6 @@ void etimer_timeout_handler(void* data)
       PROCESS_CONTEXT_END();
    }
 }
-
-
 
 
 void etimer_start(etimer_t *etimer, timespan_t span, process_t *to, process_event_id_t evtid, void *data)

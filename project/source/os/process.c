@@ -76,14 +76,14 @@ bool process_post(process_t *to, process_event_id_t evtid, void* data)
    }
 
    evt = RINGBUFFER_TAIL_PTR(process_event_queue);
-#if (PROCESS_CONF_EVENT_FROM == MYOSCONF_YES)
+#if (MYOSCONF_PROC_EVENT_FROM == MYOSCONF_YES)
    evt->from = PROCESS_THIS();
 #endif
    evt->to = to;
    evt->id = evtid;
    evt->data = data;
 
-#if (PROCESS_CONF_EVENT_FROM == MYOSCONF_YES)
+#if (MYOSCONF_PROC_EVENT_FROM == MYOSCONF_YES)
    DBG_PROCESS("post from %p to %p evtid=%d ...\n",(void*)evt->from,(void*)evt->to,evt->id);
 #else
    DBG_PROCESS("post to %p evtid=%d ...\n",(void*)evt->to,evt->id);
@@ -97,7 +97,7 @@ bool process_post(process_t *to, process_event_id_t evtid, void* data)
 bool process_deliver_event(process_event_t *evt)
 {
 
-#if (PROCESS_CONF_EVENT_FROM == MYOSCONF_YES)
+#if (MYOSCONF_PROC_EVENT_FROM == MYOSCONF_YES)
    DBG_PROCESS("deliver_event from %p to %p evtid=%d ...\n",(void*)evt->from,(void*)evt->to,evt->id);
 #else
    DBG_PROCESS("deliver_event to %p evtid=%d ...\n",(void*)evt->to,evt->id);
@@ -126,14 +126,14 @@ bool process_deliver_event(process_event_t *evt)
 bool process_post_sync(process_t *to, process_event_id_t evtid, void* data)
 {
    process_event_t evt;
-#if (PROCESS_CONF_EVENT_FROM == MYOSCONF_YES)
+#if (MYOSCONF_PROC_EVENT_FROM== MYOSCONF_YES)
    evt.from = PROCESS_THIS();
 #endif
    evt.to = to;
    evt.id = evtid;
    evt.data = data;
 
-#if (PROCESS_CONF_EVENT_FROM == MYOSCONF_YES)
+#if (MYOSCONF_PROC_EVENT_FROM == MYOSCONF_YES)
    DBG_PROCESS("post_sync from %p to %p evtid=%d ...\n",(void*)evt.from,(void*)evt.to,evt.id);
 #else
    DBG_PROCESS("post_sync to %p evtid=%d ...\n",(void*)evt.to,evt.id);
@@ -160,7 +160,7 @@ bool process_start(process_t *process, void* data)
       process_event_t evt;
 
       evt.to = process;
-#if (PROCESS_CONF_EVENT_FROM == MYOSCONF_YES)
+#if (MYOSCONF_PROC_EVENT_FROM == MYOSCONF_YES)
       evt.from = PROCESS_THIS();
 #endif
       evt.data = data;

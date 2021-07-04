@@ -9,25 +9,24 @@
 #include "critical.h"
 
 
-ptlist_t ptimer_running_list;
-
-ptimer_t *ptimer_next_in_time = NULL;
+static ptlist_t ptimer_running_list;
+static ptimer_t *ptimer_next_to_expire = NULL;
 
 void ptimer_next_update(ptimer_t *ptimer)
 {
-   if( ptimer_next_in_time )
+   if( ptimer_next_to_expire )
    {
-      timestamp_t next_stop = timer_timestamp_stop(&ptimer_next_in_time->timer);
+      timestamp_t next_stop = timer_timestamp_stop(&ptimer_next_to_expire->timer);
       timestamp_t this_stop = timer_timestamp_stop(&ptimer->timer);
 
       if( timestamp_less_than(this_stop,next_stop) )
       {
-         CRITICAL_EXPRESSION(ptimer_next_in_time = ptimer);
+         CRITICAL_EXPRESSION(ptimer_next_to_expire = ptimer);
       }
    }
    else
    {
-      CRITICAL_EXPRESSION(ptimer_next_in_time = ptimer);
+      CRITICAL_EXPRESSION(ptimer_next_to_expire = ptimer);
    }
 }
 
@@ -48,13 +47,6 @@ void ptimer_remove_from_list(ptimer_t *ptimer)
    {
       ptimer->running = false;
       ptlist_erase(&ptimer_running_list,ptimer);
-
-      CRITICAL_EXPRESSION(ptimer_next_in_time = NULL);
-
-      ptlist_foreach(&ptimer_running_list,ptimer)
-      {
-         ptimer_next_update(ptimer);
-      }
    }
 }
 
@@ -70,7 +62,7 @@ PROCESS_THREAD(ptimer_process)
    {
       PROCESS_WAIT_EVENT(PROCESS_EVENT_POLL);
 
-      CRITICAL_EXPRESSION(ptimer_next_in_time = NULL);
+      CRITICAL_EXPRESSION(ptimer_next_to_expire = NULL);
 
       ptimer_t *curr = (ptimer_t*)ptlist_begin(&ptimer_running_list);
 
@@ -103,10 +95,6 @@ PROCESS_THREAD(ptimer_process)
    PROCESS_END();
 }
 
-void ptimer_module_init()
-{
-    process_start(&ptimer_process, NULL);
-}
 
 void ptimer_start(ptimer_t* ptimer, timespan_t span, ptimer_handler_t handler)
 {
@@ -139,14 +127,9 @@ void ptimer_reset_with_new_span(ptimer_t* ptimer, timespan_t span)
    ptimer_reset(ptimer);
 }
 
-void ptimer_stop(ptimer_t* ptimer)
-{
-   ptimer_remove_from_list(ptimer);
-}
-
 void ptimer_poll(void)
 {
-   if (ptimer_next_in_time && ptimer_expired(ptimer_next_in_time))
+   if (ptimer_next_to_expire && ptimer_expired(ptimer_next_to_expire))
    {
       process_poll(&ptimer_process);
    }

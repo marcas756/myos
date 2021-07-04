@@ -55,23 +55,27 @@ typedef slist_node_t ptlist_node_t;
 
 PROCESS_EXTERN(ptimer_process);
 
-typedef void (*ptimer_handler_t) (void *data);
+typedef struct ptimer_t ptimer_t;
 
-typedef struct {
+typedef void (*ptimer_handler_t) (ptimer_t *data);
+
+struct ptimer_t{
    PTLIST_NODE_TYPE;
    timer_t timer;
    ptimer_handler_t handler;
    bool running;
-}ptimer_t;
+};
 
-void ptimer_module_init(void);
+
+#define ptimer_module_init() process_start(&ptimer_process, NULL);
+void ptimer_poll(void);
 void ptimer_start(ptimer_t* ptimer, timespan_t span, ptimer_handler_t handler);
 void ptimer_restart(ptimer_t* ptimer);
+void ptimer_restart_with_new_span(ptimer_t* ptimer, timespan_t span);
 void ptimer_reset(ptimer_t* ptimer);
-void ptimer_set_span(ptimer_t* ptimer, timespan_t span);
-void ptimer_stop(ptimer_t* ptimer);
+void ptimer_reset_with_new_span(ptimer_t* ptimer, timespan_t span);
+#define ptimer_stop(ptimerptr) ptimer_remove_from_list(ptimerptr);
 #define ptimer_expired(ptimerptr)   timer_expired(&(ptimerptr)->timer)
 #define ptimer_left(ptimerptr)      timer_left(&(ptimerptr)->timer)
-void ptimer_poll(void);
 
 #endif /* PTIMER_H_ */

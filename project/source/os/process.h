@@ -44,14 +44,11 @@
 #include <stdbool.h>
 
 
-#if (PROCESS_CONF_LIST_TYPE == MYOSCONF_DLIST)
-#elif (PROCESS_CONF_LIST_TYPE == MYOSCONF_SLIST)
-
+#if (MYOSCONF_PROC_LIST_TYPE == MYOSCONF_DLIST)
+#else
 #include "slist.h"
-
 typedef slist_t plist_t;
 typedef slist_node_t plist_node_t;
-
 #define PLIST_NODE_TYPE                              SLIST_NODE_TYPE
 #define plist_init(listptr)                          slist_init(listptr)
 #define plist_erase(listptr,nodeptr)                 slist_erase(listptr,nodeptr)
@@ -59,14 +56,12 @@ typedef slist_node_t plist_node_t;
 #define plist_push_front(listptr,nodeptr)            slist_push_front(listptr,nodeptr)
 #define plist_prev(listptr,nodeptr)                  slist_prev(listptr,nodeptr)
 #define plist_foreach(listptr,iterator)              slist_foreach(listptr,iterator)
-#else
-#error "Unknown list type"
 #endif
 
 
 
-#ifdef PROCESS_CONF_EVENT_QUEUE_SIZE
-#define PROCESS_EVENT_QUEUE_SIZE    PROCESS_CONF_EVENT_QUEUE_SIZE
+#ifdef MYOSCONF_PROC_EVENT_QUEUE_SIZE
+#define PROCESS_EVENT_QUEUE_SIZE    MYOSCONF_PROC_EVENT_QUEUE_SIZE
 #else
 #define PROCESS_EVENT_QUEUE_SIZE    8
 #endif
@@ -98,7 +93,7 @@ struct process_t {
 struct process_event_t {
    process_event_id_t id;
    void *data;
-#if (PROCESS_CONF_EVENT_FROM == MYOSCONF_YES)
+#if (MYOSCONF_PROC_EVENT_FROM == MYOSCONF_YES)
    process_t *from;
 #endif
    process_t *to;
@@ -138,7 +133,7 @@ extern process_t *process_current;
 #define PROCESS_THREAD(name) \
 int process_thread_##name(process_t *process, process_event_t *evt)
 
-#if (PROCESS_CONF_EVENT_FROM == MYOSCONF_YES)
+#if (MYOSCONF_PROC_EVENT_FROM == MYOSCONF_YES)
 #define PROCESS_RESPOND(evtid,dataptr) \
    process_respond(evt,evtid,dataptr)
 #endif

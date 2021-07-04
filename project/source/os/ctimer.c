@@ -8,10 +8,16 @@
 
 #include <ctimer.h>
 
+/*!
+    \brief      Callback timer handler used by process timer
 
-void ctimer_timeout_handler(void* data)
+    \param      data    Current node
+
+    \return     Precessor of current node
+*/
+void ctimer_timeout_handler(ptimer_t* ptimer)
 {
-   ctimer_t *ctimer = data;
+   ctimer_t *ctimer = (ctimer_t*)ptimer;
 
    if( ctimer->callback )
    {
@@ -22,10 +28,6 @@ void ctimer_timeout_handler(void* data)
 }
 
 
-void ctimer_module_init(void)
-{
-   ptimer_module_init();
-}
 
 void ctimer_start(ctimer_t *ctimer, timespan_t span, ctimer_callback_t callback, void *data)
 {
