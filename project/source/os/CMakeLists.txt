@@ -4,6 +4,7 @@ SET (OS_SOURCES
 	ptimer.c
 	ctimer.c
 	etimer.c
+	rtimer.c
 	
 )
 
@@ -15,6 +16,7 @@ SET (OS_HEADERS
 	ptimer.h
 	ctimer.h
 	etimer.h
+	rtimer.h
 )
 
 add_library(os OBJECT ${OS_SOURCES})

@@ -8,7 +8,7 @@
 #ifndef ETIMER_H_
 #define ETIMER_H_
 
-#include "ptimer.h"
+#include "myos.h"
 
 typedef struct {
    ptimer_t ptimer;

@@ -206,7 +206,6 @@ int process_run(void)
          {
             CRITICAL_EXPRESSION(process->pollreq = false);
             process_post_sync(process, PROCESS_EVENT_POLL, NULL);
-
          }
       }
    }

@@ -6,7 +6,7 @@
  */
 
 
-#include <ctimer.h>
+#include "ctimer.h"
 
 /*!
     \brief      Callback timer handler used by process timer

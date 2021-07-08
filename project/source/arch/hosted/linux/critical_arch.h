@@ -8,10 +8,10 @@
 #ifndef CRITICAL_ARCH_H_
 #define CRITICAL_ARCH_H_
 
-#define CRITICAL_SECTION_BEGIN()    do{
-#define CRITICAL_SECTION_END()      }while(0)
+#define CRITICAL_ARCH_SECTION_BEGIN()    do{
+#define CRITICAL_ARCH_SECTION_END()      }while(0)
 
-#define CRITICAL_EXPRESSION(x) \
+#define CRITICAL_ARCH_EXPRESSION(x) \
    CRITICAL_SECTION_BEGIN(); \
    x; \
    CRITICAL_SECTION_END();

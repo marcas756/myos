@@ -56,7 +56,7 @@ PROCESS_THREAD(p1)
 
    while(1)
    {
-      PROCESS_SLEEP(&et, TICKS_PER_SEC/2);
+      PROCESS_SLEEP(&et, TIMESTAMP_TICKS_PER_SEC/2);
       printf("P1 : %d\n",myint++);
    }
 
@@ -73,7 +73,7 @@ PROCESS_THREAD(p2)
 
    while(1)
    {
-      PROCESS_SLEEP(&et, TICKS_PER_SEC/3);
+      PROCESS_SLEEP(&et, TIMESTAMP_TICKS_PER_SEC/3);
       printf("P2 : %d\n",myint++);
    }
 

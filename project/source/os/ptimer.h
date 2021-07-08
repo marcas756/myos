@@ -8,16 +8,13 @@
 #ifndef PTIMER_H_
 #define PTIMER_H_
 
-#include "timer.h"
-#include "process.h"
+#include "myos.h"
 #include <stdbool.h>
 
-#define SLIST 0
-#define DLIST 1
 
-#define PTIMER_LIST_TYPE DLIST
 
-#if (PTIMER_LIST_TYPE == DLIST)
+#if (MYOSCONF_PTIMER_LIST_TYPE == MYOSCONF_DLIST)
+
 #include "dlist.h"
 typedef dlist_t ptlist_t;
 typedef dlist_node_t ptlist_node_t;
@@ -33,7 +30,8 @@ typedef dlist_node_t ptlist_node_t;
 #define ptlist_end(listptr)                           dlist_end(listptr)
 #define ptlist_empty(listptr)                         dlist_empty(listptr)
 
-#elif (PTIMER_LIST_TYPE == SLIST)
+#else
+
 #include "slist.h"
 typedef slist_t ptlist_t;
 typedef slist_node_t ptlist_node_t;
@@ -49,9 +47,9 @@ typedef slist_node_t ptlist_node_t;
 #define ptlist_end(listptr)                           slist_end(listptr)
 #define ptlist_empty(listptr)                         slist_empty(listptr)
 
-#else
-#error "Unknown list type"
 #endif
+
+
 
 PROCESS_EXTERN(ptimer_process);
 

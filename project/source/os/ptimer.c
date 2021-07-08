@@ -5,8 +5,7 @@
  *      Author: marco
  */
 
-#include "ptimer.h"
-#include "critical.h"
+#include "myos.h"
 
 
 static ptlist_t ptimer_running_list;

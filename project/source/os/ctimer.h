@@ -37,7 +37,7 @@
 #define CTIMER_H_
 
 
-#include "ptimer.h"
+#include "myos.h"
 
 typedef struct ctimer_t ctimer_t;
 

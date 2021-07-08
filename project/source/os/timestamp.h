@@ -43,7 +43,17 @@
 
 #include "timestamp_arch.h"
 
+#define TIMESTAMP_TICKS_PER_SEC TIMESTAMP_ARCH_TICKS_PER_SEC
+#define TIMESTAMP_DIFF TIMESTAMP_ARCH_DIFF
+
+typedef timestamp_arch_t timestamp_t;
 typedef timestamp_t timespan_t;
+
+#define timestamp_module_init  timestamp_arch_module_init
+
+#define timestamp_now timestamp_arch_now
+
+
 
 /*!
     \brief      Checks if a provided time stamp is in the past

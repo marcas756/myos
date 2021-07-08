@@ -63,7 +63,7 @@ UNITTEST_TESTCASE(timer)
 
     ctimer_module_init();
 
-    ctimer_start(&ctimer,TICKS_PER_SEC,ctimer_callback,&testint);
+    ctimer_start(&ctimer,TIMESTAMP_TICKS_PER_SEC,ctimer_callback,&testint);
 
     /* TEST */
 

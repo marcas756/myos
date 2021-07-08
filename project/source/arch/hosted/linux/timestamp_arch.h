@@ -49,14 +49,12 @@
 #include <stdbool.h>
 
 
-#define TICKS_PER_SEC 1000
+#define TIMESTAMP_ARCH_TICKS_PER_SEC 1000
 
-typedef uint64_t timestamp_t;
-#define TIMESTAMP_DIFF(a,b)         ((int64_t)((a)-(b)))
-
-
-bool timestamp_module_init(void);
-timestamp_t timestamp_now(void);
+typedef uint64_t timestamp_arch_t;
+#define TIMESTAMP_ARCH_DIFF(a,b)         ((int64_t)((a)-(b)))
+#define timestamp_arch_module_init() do{}while(0)
+timestamp_arch_t timestamp_arch_now(void);
 
 
 #endif /* TIMESTAMP_ARCH_H_ */

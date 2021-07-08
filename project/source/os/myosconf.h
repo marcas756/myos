@@ -17,11 +17,8 @@
 #define MYOSCONF_PROC_LIST_TYPE          MYOSCONF_SLIST
 #define MYOSCONF_PROC_EVENT_QUEUE_SIZE   8
 #define MYOSCONF_PROC_EVENT_FROM         MYOSCONF_YES
-
-
-#define MYOSCONF_ETIMER                  MYOSCONF_YES
-#define MYOSCONF_CTIMER                  MYOSCONF_YES
-
+#define MYOSCONF_PTIMER_LIST_TYPE        MYOSCONF_SLIST
+#define MYOSCONF_RTIMER_LIST_TYPE        MYOSCONF_SLIST
 
 typedef uint8_t process_event_id_t;
 

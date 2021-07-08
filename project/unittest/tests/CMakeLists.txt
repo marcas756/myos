@@ -23,3 +23,6 @@ target_link_libraries(unittest_ctimer myos unittest)
 add_executable(unittest_etimer unittest_etimer.c)
 set_target_properties(unittest_etimer PROPERTIES COMPILE_DEFINITIONS "PROCESS_LIST_TYPE=SLIST")
 target_link_libraries(unittest_etimer myos unittest)
+
+add_executable(unittest_rtimer unittest_rtimer.c)
+target_link_libraries(unittest_rtimer myos unittest)

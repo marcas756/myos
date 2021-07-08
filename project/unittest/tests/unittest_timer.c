@@ -51,7 +51,7 @@ UNITTEST_TESTCASE(timer)
 {
     /* PRECONDITIONS */
    timer_t timer;
-   timer_start(&timer, TICKS_PER_SEC);
+   timer_start(&timer, TIMESTAMP_TICKS_PER_SEC);
    int count = 0;
 
     /* TEST */
