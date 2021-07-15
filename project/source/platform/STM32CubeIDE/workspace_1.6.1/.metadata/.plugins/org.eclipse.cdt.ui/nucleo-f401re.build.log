@@ -1,0 +1,10 @@
+19:01:38 **** Incremental Build of configuration Debug for project nucleo-f401re ****
+make -j4 all 
+arm-none-eabi-size   nucleo-f401re.elf 
+   text	   data	    bss	    dec	    hex	filename
+   9880	    164	   1796	  11840	   2e40	nucleo-f401re.elf
+Finished building: default.size.stdout
+ 
+
+19:01:39 Build Finished. 0 errors, 0 warnings. (took 500ms)
+

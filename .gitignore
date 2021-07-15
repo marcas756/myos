@@ -28,3 +28,8 @@
 *.x86_64
 *.hex
 /build/
+
+# STM32CubeIDE ignores
+/project/source/platform/STM32CubeIDE/**/Debug/
+/project/source/platform/STM32CubeIDE/**/Release/
+/project/source/platform/STM32CubeIDE/**/.mxproject

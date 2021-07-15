@@ -1,0 +1,19 @@
+/*!
+	/file	uileds_leds.h
+
+*/
+
+#ifndef UILEDS_LEDS_H_
+#define UILEDS_LEDS_H_
+
+#include "uileds.h"
+
+void uileds_init();
+
+EXTERN_UILEDS_LED(led1);
+EXTERN_UILEDS_LED(led2);
+EXTERN_UILEDS_LED(led3);
+EXTERN_UILEDS_LED(led4);
+EXTERN_UILEDS_LED(led5);
+
+#endif /* UILEDS_LEDS_H_ */

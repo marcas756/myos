@@ -1,0 +1,41 @@
+/*!
+	/file	uileds_leds.c
+
+*/
+
+
+#include "myos.h"
+#include "uileds_leds.h"
+#include "uileds_patterns.h"
+#include "gpio.h"
+
+
+
+void set_ld2(bool state)
+{
+    (state)?GPIO_SET(LD2):GPIO_RST(LD2);
+}
+
+UILEDS_LED(LD2,set_ld2);
+UILEDS_LEDS(&LD2);
+
+PROCESS(led_process,led_Process);
+PROCESS_THREAD(led_process)
+{
+    PROCESS_BEGIN();
+
+    while(1)
+    {
+
+    }
+
+    PROCESS_END();
+}
+
+void uileds_leds_module_init()
+{
+    UILEDS_SET_PATTERN(LD2,triple_flash,UILEDS_ORIG);
+    process_start(&led_process,NULL);
+}
+
+

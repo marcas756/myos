@@ -1,0 +1,106 @@
+/*!
+	/file	uileds_leds.c
+
+*/
+
+
+#include <ncurses.h>
+#include "uileds_leds.h"
+#include "uileds_patterns.h"
+
+WINDOW *world;
+
+void set_led1(bool state)
+{
+    if(state)
+        mvwaddch(world, 0, 0, 'o');
+    else
+        mvwaddch(world, 0, 0, ' ');
+
+    wrefresh(world);
+}
+
+void set_led2(bool state)
+{
+    if(state)
+        mvwaddch(world, 0, 1, 'o');
+    else
+        mvwaddch(world, 0, 1, ' ');
+
+    wrefresh(world);
+}
+void set_led3(bool state)
+{
+    if(state)
+        mvwaddch(world, 0, 2, 'o');
+    else
+        mvwaddch(world, 0, 2, ' ');
+
+    wrefresh(world);
+}
+void set_led4(bool state)
+{
+    if(state)
+        mvwaddch(world, 0, 3, 'o');
+    else
+        mvwaddch(world, 0, 3, ' ');
+
+    wrefresh(world);
+}
+void set_led5(bool state)
+{
+    if(state)
+        mvwaddch(world, 0, 4, 'o');
+    else
+        mvwaddch(world, 0, 4, ' ');
+
+    wrefresh(world);
+}
+
+void set_led6(bool state)
+{
+    if(state)
+        mvwaddch(world, 1, 0, 'o');
+    else
+        mvwaddch(world, 1, 0, ' ');
+
+    wrefresh(world);
+}
+void set_led7(bool state)
+{
+    if(state)
+        mvwaddch(world, 1, 1, 'o');
+    else
+        mvwaddch(world, 1, 1, ' ');
+
+    wrefresh(world);
+}
+
+
+
+UILEDS_LED(led1,set_led1);
+UILEDS_LED(led2,set_led2);
+UILEDS_LED(led3,set_led3);
+UILEDS_LED(led4,set_led4);
+UILEDS_LED(led5,set_led5);
+
+void uileds_init()
+{
+    UILEDS_SET_PATTERN(led1,triple_flash,UILEDS_ORIG);
+    UILEDS_SET_PATTERN(led2,off,UILEDS_ORIG);
+    UILEDS_SET_PATTERN(led3,off,UILEDS_ORIG);
+    UILEDS_SYNC(led4,led1,UILEDS_ORIG);
+    UILEDS_SYNC(led5,led1,UILEDS_INV);
+
+    initscr();
+    noecho();
+    curs_set(0);
+
+    refresh();
+
+    world = newwin(2,5,0,0);
+    wclear(world);
+}
+
+
+UILEDS_REGISTER_LEDS(&led1,&led2,&led3,&led4,&led5);

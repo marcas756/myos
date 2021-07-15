@@ -95,7 +95,7 @@ UNITTEST_TESTCASE(timer)
    while(1)
    {
       process_run();
-      ptimer_poll();
+      ptimer_poll_if_necessary();
    }
 
 

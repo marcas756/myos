@@ -1,5 +1,5 @@
-add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/lib")
-add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/os")
+add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/portable")
+
 
 SET (MYOS_SOURCES 
     debug.c

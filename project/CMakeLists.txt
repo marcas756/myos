@@ -11,8 +11,8 @@ set_property(DIRECTORY APPEND PROPERTY
 include_directories (
     ${PROJECT_SOURCE_DIR}
     ${PROJECT_SOURCE_DIR}/source
-    ${PROJECT_SOURCE_DIR}/source/lib 
-    ${PROJECT_SOURCE_DIR}/source/os 
+    ${PROJECT_SOURCE_DIR}/source/portable/lib 
+    ${PROJECT_SOURCE_DIR}/source/portable/os 
     ${PROJECT_SOURCE_DIR}/source/arch/hosted/linux
     )
 

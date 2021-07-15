@@ -1,0 +1,3 @@
+buildConsole/keepLog=true
+buildConsole/logLocation=/home/marco/eclipse-workspace/myosx/project/source/platform/STM32CubeIDE/workspace_1.6.1/.metadata/.plugins/org.eclipse.cdt.ui/nucleo-f401re.build.log
+eclipse.preferences.version=1
