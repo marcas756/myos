@@ -1,3 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<session version="1.0">&#x0A;<refactoring comment="Rename resource &apos;nucleo-f401re/myos&apos; to &apos;MyOs&apos;" description="Rename resource &apos;myos&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="myos" name="MyOs" stamp="1626264485642" updateReferences="true"/>&#x0A;<refactoring comment="Rename resource &apos;nucleo-f401re/myos&apos; to &apos;MyOs&apos;" description="Rename resource &apos;myos&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="myos" name="MyOs" stamp="1626266568673" updateReferences="true"/>
-</session>

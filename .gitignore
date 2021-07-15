@@ -33,3 +33,5 @@
 /project/source/platform/STM32CubeIDE/**/Debug/
 /project/source/platform/STM32CubeIDE/**/Release/
 /project/source/platform/STM32CubeIDE/**/.mxproject
+/project/source/platform/STM32CubeIDE/**/.metadata/
+/project/source/platform/STM32CubeIDE/**/.settings/

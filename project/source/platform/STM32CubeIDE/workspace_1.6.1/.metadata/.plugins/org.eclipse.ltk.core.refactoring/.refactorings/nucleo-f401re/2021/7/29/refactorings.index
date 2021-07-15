@@ -1,4 +1,0 @@
-1626251136602	Rename resource 'stm32f4xx'
-1626271354839	Rename resource 'gpio_arch.h'
-1626273619795	Move 'uileds_process.c' to 'uileds'
-1626274340121	Move 'uileds_process.h' to 'uileds'
