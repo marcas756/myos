@@ -46,8 +46,6 @@
 
 process_t *process_current = NULL;
 
-
-
 static plist_t process_running_list;
 
 RINGBUFFER_TYPEDEF(process_event_queue,process_event_t,PROCESS_EVENT_QUEUE_SIZE);

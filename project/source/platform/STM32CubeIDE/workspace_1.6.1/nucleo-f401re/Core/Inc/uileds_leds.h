@@ -7,6 +7,7 @@
 #define UILEDS_LEDS_H_
 
 #include "uileds.h"
+#include "uileds_patterns.h"
 
 void uileds_leds_module_init(void);
 
