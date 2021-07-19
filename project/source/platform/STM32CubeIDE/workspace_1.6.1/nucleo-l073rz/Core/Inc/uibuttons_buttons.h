@@ -35,6 +35,8 @@
 #ifndef UIBUTTONS_BUTTONS_H_
 #define UIBUTTONS_BUTTONS_H_
 
+#include "uibuttons_process.h"
+
 void uibuttons_buttons_module_init(void);
 
 #endif /* UIBUTTONS_BUTTONS_H_ */

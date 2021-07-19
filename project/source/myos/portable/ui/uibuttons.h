@@ -38,22 +38,7 @@
 
 #include <stdbool.h>
 #include <stdint.h>
-
-
-#define UIBUTTONS_ENABLE_EDGES          1
-#define UIBUTTONS_ENABLE_SINGLE_PRESS   1
-#define UIBUTTONS_ENABLE_LONG_PRESS     1
-#define UIBUTTONS_ENABLE_REPEAT_PRESS   1
-#define UIBUTTONS_ENABLE_MULTI_CLICK    1
-#define UIBUTTONS_ENABLE_DEBOUNCING     1
-
-#define UIBUTTONS_DEBOUNCE_COUNT             1
-#define UIBUTTONS_LONG_PRESS_TIMEOUT        50
-#define UIBUTTONS_LONGER_PRESS_TIMEOUT      100
-#define UIBUTTONS_LONGEST_PRESS_TIMEOUT     150
-#define UIBUTTONS_REPEAT_DELAY              50
-#define UIBUTTONS_REPEAT_RATE               20
-#define UIBUTTONS_CLICK_TIMEOUT             10
+#include "uibuttons_conf.h"
 
 
 

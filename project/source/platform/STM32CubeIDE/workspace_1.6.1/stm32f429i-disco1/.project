@@ -29,4 +29,11 @@
 		<nature>org.eclipse.cdt.managedbuilder.core.managedBuildNature</nature>
 		<nature>org.eclipse.cdt.managedbuilder.core.ScannerConfigNature</nature>
 	</natures>
+	<linkedResources>
+		<link>
+			<name>MyOs</name>
+			<type>2</type>
+			<locationURI>PARENT-4-PROJECT_LOC/myos</locationURI>
+		</link>
+	</linkedResources>
 </projectDescription>

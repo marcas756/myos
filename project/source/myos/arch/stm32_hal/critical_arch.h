@@ -11,8 +11,19 @@
 #include "main.h"
 
 
-#define CRITICAL_ARCH_SECTION_BEGIN()    do{
-#define CRITICAL_ARCH_SECTION_END()      }while(0)
+
+/* Read PRIMASK register, check interrupt status before you disable them */
+/* Returns 0 if they are enabled, or non-zero if disabled */
+/* Disable interrupts */
+#define CRITICAL_ARCH_SECTION_BEGIN() \
+	do{ \
+		bool istate = !__get_PRIMASK(); \
+		__disable_irq();
+
+/* Enable interrupts back only if they were enabled before we disable it here in this function */
+#define CRITICAL_ARCH_SECTION_END()   \
+		if( istate ) __enable_irq(); \
+	}while(0)
 
 #define CRITICAL_ARCH_EXPRESSION(x) \
    CRITICAL_SECTION_BEGIN(); \

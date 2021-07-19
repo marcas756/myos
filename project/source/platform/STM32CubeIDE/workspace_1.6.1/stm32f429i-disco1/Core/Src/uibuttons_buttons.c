@@ -33,6 +33,7 @@
   \date 17.10.2013
 */
 #include "uibuttons_buttons.h"
+#include "uibuttons_process.h"
 #include "gpio.h"
 #include "uileds_leds.h"
 
@@ -40,10 +41,10 @@ static bool uibuttons_get_b1()
 {  
 	if ( GPIO_RD(B1) == GPIO_STATE_SET )
 	{
-		return false;
+		return true;
 	}
 
-	return true;
+	return false;
 }
 
 
@@ -113,7 +114,8 @@ void uibuttons_fire_single_click(uibutton_t *button)
 	  switch( UIBUTTONS_GET_ID(button) )
 	  {
 	    case  UIBUTTON_B1:
-			UILEDS_SET_PATTERN(LD2,single_flash,UILEDS_ORIG);
+			UILEDS_SET_PATTERN(LD3,single_flash,UILEDS_ORIG);
+			 UILEDS_SYNC(LD4,LD3,UILEDS_INV);
 			break;
 	  }
 }
@@ -123,7 +125,8 @@ void uibuttons_fire_double_click(uibutton_t *button)
 	  switch( UIBUTTONS_GET_ID(button) )
 	  {
 	    case  UIBUTTON_B1:
-			UILEDS_SET_PATTERN(LD2,double_flash,UILEDS_ORIG);
+			UILEDS_SET_PATTERN(LD3,double_flash,UILEDS_ORIG);
+			UILEDS_SYNC(LD4,LD3,UILEDS_INV);
 			break;
 	  }
 }
@@ -133,14 +136,11 @@ void uibuttons_fire_triple_click(uibutton_t *button)
 	  switch( UIBUTTONS_GET_ID(button) )
 	  {
 	    case  UIBUTTON_B1:
-			UILEDS_SET_PATTERN(LD2,triple_flash,UILEDS_ORIG);
+			UILEDS_SET_PATTERN(LD3,triple_flash,UILEDS_ORIG);
+			UILEDS_SYNC(LD4,LD3,UILEDS_INV);
 			break;
 	  }
 }
-
-
-
-
 
 void uibuttons_buttons_module_init(void)
 {
