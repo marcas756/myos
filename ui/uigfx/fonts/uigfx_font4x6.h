@@ -1,3 +1,5 @@
+/*! \copyright
+ 
    https://opensource.org/licenses/BSD-3-Clause
  
    Copyright 2013-2021 Marco Bacchi <marco@bacchi.at>
@@ -27,3 +29,14 @@
    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
    POSSIBILITY OF SUCH DAMAGE.
+*/
+
+
+#ifndef UIGFX_FONT4X6_H_
+#define UIGFX_FONT4X6_H_
+
+#include "uigfx.h"
+
+extern const uigfx_font_t uigfx_font4x6;
+
+#endif /* UIGFX_FONT4X6_H_ */

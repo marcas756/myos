@@ -1,3 +1,5 @@
+/*! \copyright
+ 
    https://opensource.org/licenses/BSD-3-Clause
  
    Copyright 2013-2021 Marco Bacchi <marco@bacchi.at>
@@ -27,3 +29,39 @@
    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
    POSSIBILITY OF SUCH DAMAGE.
+*/
+
+
+/*!
+    \file   debug.h
+
+    \brief
+
+    \details
+    	https://github.com/contiki-os/contiki/wiki/Debugging-system%3A-ideas-on-how-to-improve-the-debugging-system#global-debugh-and-debug_archh
+*/
+
+#ifndef DEBUG_H
+#define DEBUG_H
+
+/* Debugging output function (printf or any other var args function) */
+#ifdef DEBUG
+   #include <stdio.h>
+    #define DBG_FUNC(...)  printf(__VA_ARGS__)
+#else
+    #define DBG_FUNC(...)
+#endif /* DEBUG */
+
+/* Following DEBUG check allows to write more complex debug sections beyond DBG("Debugmessage: %d",var). */
+/* But try to avoid more complex debug sections, for the readability of the code and run time issues (real time)! */
+#ifdef DEBUG
+
+/* application modules */
+#define DEBUG_PROCESS   1
+
+
+/* ...... */
+
+#endif /* DEBUG */
+
+#endif /* DEBUG_H */

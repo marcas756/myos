@@ -1,3 +1,5 @@
+/*! \copyright
+ 
    https://opensource.org/licenses/BSD-3-Clause
  
    Copyright 2013-2021 Marco Bacchi <marco@bacchi.at>
@@ -27,3 +29,15 @@
    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
    POSSIBILITY OF SUCH DAMAGE.
+*/
+
+
+#ifndef CRITICAL_H_
+#define CRITICAL_H_
+#include "critical_arch.h"
+
+#define CRITICAL_SECTION_BEGIN  CRITICAL_ARCH_SECTION_BEGIN
+#define CRITICAL_SECTION_END    CRITICAL_ARCH_SECTION_END
+#define CRITICAL_EXPRESSION     CRITICAL_ARCH_EXPRESSION
+
+#endif /* CRITICAL_H_ */

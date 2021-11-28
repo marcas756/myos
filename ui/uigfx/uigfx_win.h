@@ -1,3 +1,5 @@
+/*! \copyright
+ 
    https://opensource.org/licenses/BSD-3-Clause
  
    Copyright 2013-2021 Marco Bacchi <marco@bacchi.at>
@@ -27,3 +29,25 @@
    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
    POSSIBILITY OF SUCH DAMAGE.
+*/
+
+
+#ifndef UIGFX_WIN_H_
+#define UIGFX_WIN_H_
+
+#include "uigfx.h"
+
+
+
+typedef struct {
+    char* title;
+    uigfx_widget_t title_widget;
+    uigfx_widget_t window_widget;
+} uigfx_window_t;
+
+void uigfx_draw_window(uint8_t* buff, uigfx_window_t *win);
+void uigfx_init_window(uigfx_window_t *win, char* title, int16_t xpos, int16_t ypos, uint16_t xres, uint16_t yres);
+uigfx_widget_t* uigfx_get_window_widget(uigfx_window_t *win);
+void uigfx_draw_desktop_wallpaper(uint8_t* buff, uigfx_image_t *wallpaper);
+
+#endif /* UIGFX_WIN_H_ */

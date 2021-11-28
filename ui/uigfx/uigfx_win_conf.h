@@ -1,3 +1,5 @@
+/*! \copyright
+ 
    https://opensource.org/licenses/BSD-3-Clause
  
    Copyright 2013-2021 Marco Bacchi <marco@bacchi.at>
@@ -27,3 +29,28 @@
    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
    POSSIBILITY OF SUCH DAMAGE.
+*/
+
+
+#ifndef UIGFX_WIN_CONF_H_
+#define UIGFX_WIN_CONF_H_
+
+#include "fonts/uigfx_font4x6.h"
+#include "fonts/uigfx_font8x8_c64.h"
+#include "fonts/uigfx_font8x8_vic.h"
+
+#define UIGFX_COLOR_BLACK  0
+#define UIGFX_COLOR_WHITE  1
+
+#define UIGFX_WIN_TITLE_FONT        uigfx_font8x8_c64
+#define UIGFX_WIN_TITLE_FONT_COLOR  UIGFX_COLOR_BLACK
+#define UIGFX_WIN_TITLE_BG_COLOR    UIGFX_COLOR_WHITE
+#define UIGFX_WIN_TITLE_BORDER      1
+
+#define UIGFX_WIN_BORDER_COLOR      UIGFX_WIN_TITLE_BG_COLOR
+#define UIGFX_WIN_WIDGET_BG_COLOR   UIGFX_COLOR_BLACK
+
+
+
+
+#endif /* UIGFX_UIGFX_WIN_CONF_H_ */

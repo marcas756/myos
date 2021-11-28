@@ -1,4 +1,4 @@
-Oz
+myos
 ==
 
-tbd
+MyOs based on Contiki-Os concepts

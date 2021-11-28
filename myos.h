@@ -1,3 +1,5 @@
+/*! \copyright
+ 
    https://opensource.org/licenses/BSD-3-Clause
  
    Copyright 2013-2021 Marco Bacchi <marco@bacchi.at>
@@ -27,3 +29,27 @@
    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
    POSSIBILITY OF SUCH DAMAGE.
+*/
+
+
+#ifndef MYOS_H_
+#define MYOS_H_
+
+
+#include "myosconf.h"
+
+
+#include "critical.h"
+#include "pt.h"
+#include "process.h"
+
+#include "timestamp.h"
+#include "timer.h"
+#include "ptimer.h"
+#include "ctimer.h"
+#include "etimer.h"
+#include "rtimer.h"
+
+void myos_module_init(void);
+
+#endif /* MYOS_H_ */

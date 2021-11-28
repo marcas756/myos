@@ -1,3 +1,5 @@
+/*! \copyright
+ 
    https://opensource.org/licenses/BSD-3-Clause
  
    Copyright 2013-2021 Marco Bacchi <marco@bacchi.at>
@@ -27,3 +29,30 @@
    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
    POSSIBILITY OF SUCH DAMAGE.
+*/
+
+
+/*!
+    \file       hash_sdbm.h
+
+    \brief      
+
+    \details    
+*/
+
+
+#ifndef HASH_SDBM_H_
+#define HASH_SDBM_H_
+
+#include <stdint.h>
+#include <stddef.h>
+
+#define hash_sdbm_acc(hash,byte) \
+	(byte + (hash << 6) + (hash << 16) - hash)
+
+uint32_t hash_sdbm(uint32_t seed, void *data, size_t size);
+
+
+
+
+#endif /* HASH_H_ */

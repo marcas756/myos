@@ -1,3 +1,5 @@
+/*! \copyright
+ 
    https://opensource.org/licenses/BSD-3-Clause
  
    Copyright 2013-2021 Marco Bacchi <marco@bacchi.at>
@@ -27,3 +29,14 @@
    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
    POSSIBILITY OF SUCH DAMAGE.
+*/
+
+
+#ifndef PAT_CHESS_MEDIUM_H_
+#define PAT_CHESS_MEDIUM_H_
+
+#include "uigfx.h"
+
+extern const uigfx_image_t pat_chess_medium;
+
+#endif /* PAT_CHESS_MEDIUM_H_ */

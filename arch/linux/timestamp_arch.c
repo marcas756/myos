@@ -1,3 +1,5 @@
+/*! \copyright
+ 
    https://opensource.org/licenses/BSD-3-Clause
  
    Copyright 2013-2021 Marco Bacchi <marco@bacchi.at>
@@ -27,3 +29,17 @@
    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
    POSSIBILITY OF SUCH DAMAGE.
+*/
+
+
+#include"timestamp_arch.h"
+
+timestamp_arch_t timestamp_arch_now(void)
+{
+   struct timespec tim;
+   timestamp_arch_t millisec;
+   clock_gettime( CLOCK_MONOTONIC, &tim );
+   millisec = TIMESTAMP_ARCH_TICKS_PER_SEC * tim.tv_sec + tim.tv_nsec / 1000000UL;
+   return millisec;
+}
+

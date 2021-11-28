@@ -1,3 +1,5 @@
+/*! \copyright
+ 
    https://opensource.org/licenses/BSD-3-Clause
  
    Copyright 2013-2021 Marco Bacchi <marco@bacchi.at>
@@ -27,3 +29,38 @@
    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
    POSSIBILITY OF SUCH DAMAGE.
+*/
+
+
+/*!
+    \file       timestamp_arch.h
+
+    \brief      Architecture depending part of time stamp implementation
+
+    \details    Provides the architecture dependent part of time stamp implementation
+                for architecture hosted.
+
+                Hosted means that the myos runs in an own process on top of a host
+                operating system.
+
+*/
+
+
+#ifndef TIMESTAMP_ARCH_H_
+#define TIMESTAMP_ARCH_H_
+
+
+#include <stdint.h>
+#include <time.h>
+#include <stdbool.h>
+
+
+#define TIMESTAMP_ARCH_TICKS_PER_SEC 1000
+
+typedef uint64_t timestamp_arch_t;
+#define TIMESTAMP_ARCH_DIFF(a,b)         ((int64_t)((a)-(b)))
+#define timestamp_arch_module_init() do{}while(0)
+timestamp_arch_t timestamp_arch_now(void);
+
+
+#endif /* TIMESTAMP_ARCH_H_ */

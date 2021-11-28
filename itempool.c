@@ -1,3 +1,5 @@
+/*! \copyright
+ 
    https://opensource.org/licenses/BSD-3-Clause
  
    Copyright 2013-2021 Marco Bacchi <marco@bacchi.at>
@@ -27,3 +29,54 @@
    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
    POSSIBILITY OF SUCH DAMAGE.
+*/
+
+
+/*!
+    \file   itempool.c
+
+    \brief
+
+    \details
+*/
+
+#include "itempool.h"
+
+/*
+ tmp = (int*)ITEMPOOL_ALLOC(pool);
+ 00442E    403F 0005          mov.w   #0x5,R15          !!!! pass param
+ 004432    432E               mov.w   #0x2,R14          !!!! pass param
+ 004434    403D 1C00          mov.w   #0x1C00,R13       !!!! pass param
+ 004438    403C 1C06          mov.w   #0x1C06,R12       !!!! pass param
+ 00443C    13B0 4482          calla   #itempool_alloc
+ 004440    4C0A               mov.w   R12,R10
+ */
+void* itempool_alloc(uint8_t* items, uint8_t* status, size_t itemsize, size_t poolsize)
+{
+    size_t tmp;
+    for (tmp=0; tmp < poolsize; tmp++)
+    {
+        if (status[tmp] == ITEMPOOL_ITEM_FREE)
+        {
+            status[tmp] =  ITEMPOOL_ITEM_USED;
+            return items;
+        }
+        items+=itemsize;
+    }
+
+
+    return NULL;
+}
+
+void* itempool_calloc(uint8_t* items, uint8_t* status, size_t itemsize, size_t poolsize)
+{
+    items = itempool_alloc(items,status,itemsize,poolsize);
+
+    if (items)
+    {
+        memset(items,0x00,itemsize);
+    }
+
+    return items;
+}
+
