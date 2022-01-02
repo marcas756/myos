@@ -64,7 +64,3 @@ void ctimer_start(ctimer_t *ctimer, timespan_t span, ctimer_callback_t callback,
    ptimer_start(&(ctimer->ptimer), span, ctimer_timeout_handler);
 }
 
-
-
-
-
