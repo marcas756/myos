@@ -28,7 +28,7 @@ MyOs based on Contiki-Os concepts for memory constrained microcontrollers. Stric
 - User Interface Buttons
 - Graphical User Interface
 
-  For further information on MyOs consult :
-  [MyOs Wiki](https://github.com/marcas756/myos/wiki)
-  [MyOs Doxygen Documentation](tbd)
+  For further information on MyOs consult : <br>
+  [MyOs Wiki](https://github.com/marcas756/myos/wiki) <br>
+  [MyOs Doxygen Documentation](tbd) <br>
 
