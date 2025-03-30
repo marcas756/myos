@@ -12,7 +12,7 @@ include_directories (
     ${PROJECT_SOURCE_DIR}
     ${PROJECT_SOURCE_DIR}/src
     ${PROJECT_SOURCE_DIR}/src/lib 
-#    ${PROJECT_SOURCE_DIR}/source/os 
+    ${PROJECT_SOURCE_DIR}/src/os 
 #    ${PROJECT_SOURCE_DIR}/source/arch/hosted/linux
     )
 add_compile_definitions(UNITTEST)

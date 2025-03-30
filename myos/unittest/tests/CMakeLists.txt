@@ -31,3 +31,6 @@ target_link_libraries(myunit_crc16 myos myunit)
 
 add_executable(myunit_hash myunit_hash.c)
 target_link_libraries(myunit_hash myos myunit)
+
+add_executable(myunit_pt myunit_pt.c)
+target_link_libraries(myunit_pt myos myunit m)
