@@ -1,0 +1,3 @@
+[submodule "myos/unittest/myunit"]
+	path = myos/unittest/myunit
+	url = git@github.com:marcas756/myunit.git

@@ -436,8 +436,6 @@ typedef uint8_t ptstate_t; //!< Represents the state of a protothread
 /*!
     \brief Yield from the protothread until a condition is true.
 
-
-
     \details This macro yields the protothread, allowing other processing to take place,
     and will only resume the protothread when the specified condition becomes true.
     The condition is evaluated each time the protothread is scheduled to run. If
