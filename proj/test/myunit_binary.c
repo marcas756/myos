@@ -102,10 +102,11 @@ MYUNIT_TESTCASE(test_binary_value_matches_index)
 {
     // PRECONDITIONS:
     // -------------------------------------------------
+    int i;
 
     // EXECUTE TESTCASE:
     // -------------------------------------------------
-    for (int i = 0; i < sizeof(binary_numbers); ++i)
+    for (i = 0; i < sizeof(binary_numbers); ++i)
     {
         MYUNIT_ASSERT_EQUAL(binary_numbers[i], (uint8_t)i);
     }

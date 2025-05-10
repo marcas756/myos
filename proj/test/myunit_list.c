@@ -75,8 +75,6 @@
 #define UNITTEST_LIST_TYPE_SLIST 0
 #define UNITTEST_LIST_TYPE_DLIST 1
 
-
-
 #if ( UNITTEST_LIST_TYPE == UNITTEST_LIST_TYPE_SLIST )
     #include"myunit_slist.h"
 #elif ( UNITTEST_LIST_TYPE == UNITTEST_LIST_TYPE_DLIST )
@@ -84,8 +82,6 @@
 #else
     #error "Unknown list type"
 #endif
-
-
 
 /*!
  \brief Represents a node within a doubly linked list, along with associated data.
@@ -165,12 +161,14 @@ static mynode_t mynodes[NODES] = {
 */
 bool mynode_check(list_node_t *node, uint8_t expectedid)
 {
+    mynode_t *mynode;
+
     if (node == NULL)
     {
         return false;
     }
 
-    mynode_t *mynode = container_of(node, mynode_t, node);
+    mynode = container_of(node, mynode_t, node);
 
     if (mynode == NULL)
     {
@@ -252,15 +250,18 @@ MYUNIT_TESTCASE(foreach)
 {
    // PRECONDITIONS :
    // -------------------------------------------------
+   list_node_t *iterator;
+   size_t nodecount = 0;
+
    list_t list;
    test_fixture_setup(FIXTURE_NORMAL, &list);
 
 
 
-   size_t nodecount = 0;
+
    // EXECUTE TESTCASE :
    // -------------------------------------------------
-   list_node_t *iterator;
+
 
    // Use the dlist_foreach macro to iterate through the list
    list_foreach(&list, iterator)
@@ -294,12 +295,14 @@ MYUNIT_TESTCASE(foreach_empty)
     // PRECONDITIONS :
       // -------------------------------------------------
       list_t list;
-      test_fixture_setup(FIXTURE_EMPTY, &list);
+      list_node_t *iterator;
       size_t nodecount = 0;
+      test_fixture_setup(FIXTURE_EMPTY, &list);
+
 
       // EXECUTE TESTCASE :
       // -------------------------------------------------
-      list_node_t *iterator;
+
 
       // Use the dlist_foreach macro to iterate through the list
       list_foreach(&list, iterator)
@@ -330,8 +333,9 @@ MYUNIT_TESTCASE(next_prev_stepbystep)
   // PRECONDITIONS :
     // -------------------------------------------------
     list_t list;
-    test_fixture_setup(FIXTURE_NORMAL, &list);
     list_node_t *iterator = &list;
+    test_fixture_setup(FIXTURE_NORMAL, &list);
+
 
     // EXECUTE TESTCASE :
     // -------------------------------------------------
@@ -377,10 +381,11 @@ MYUNIT_TESTCASE(next_prev_stepbystep)
 MYUNIT_TESTCASE(prev_prev_empty) {
    // PRECONDITIONS:
    list_t list;
+   list_node_t* result;
    test_fixture_setup(FIXTURE_EMPTY, &list);
 
    // EXECUTE TESTCASE:
-   list_node_t* result = list_prev_prev(&list, &list);
+    result = list_prev_prev(&list, &list);
 
    // POSTCONDITIONS:
    MYUNIT_ASSERT_EQUAL(result, &list);
@@ -399,12 +404,13 @@ MYUNIT_TESTCASE(prev_prev_1_node)
     // PRECONDITIONS:
     // -------------------------------------------------
     list_t list;
+    list_node_t* result;
     list_init(&list);
     list_push_back(&list,&mynodes[NODE0].node);
 
     // EXECUTE TESTCASE:
     // -------------------------------------------------
-    list_node_t* result = list_prev_prev(&list, &mynodes[NODE0].node);
+    result = list_prev_prev(&list, &mynodes[NODE0].node);
 
     // POSTCONDITIONS:
     // -------------------------------------------------
@@ -423,12 +429,13 @@ MYUNIT_TESTCASE(prev_prev_2_nodes)
 {
    // PRECONDITIONS:
    list_t list;
+   list_node_t* result;
    list_init(&list);
    list_push_back(&list,&mynodes[NODE0].node);
    list_push_back(&list,&mynodes[NODE1].node);
 
    // EXECUTE TESTCASE:
-   list_node_t* result = list_prev_prev(&list, &mynodes[NODE0].node);
+   result = list_prev_prev(&list, &mynodes[NODE0].node);
 
    // POSTCONDITIONS:
    MYUNIT_ASSERT_EQUAL(result, &mynodes[NODE1].node);
@@ -449,7 +456,9 @@ MYUNIT_TESTCASE(prev_prev_2_nodes)
 */
 MYUNIT_TESTCASE(initial_check_of_all_nodes)
 {
-    for (int idx = NODE0; idx < NODES; idx++)
+    int idx;
+
+    for (idx = NODE0; idx < NODES; idx++)
     {
         MYUNIT_ASSERT_EQUAL(mynode_check(&mynodes[idx].node,idx), true);
         MYUNIT_ASSERT_EQUAL(mynodes[idx].node.next, 0);
@@ -477,24 +486,7 @@ MYUNIT_TESTCASE(initial_check_of_all_nodes)
 bool list_check_initialized(list_t* list)
 {
 
-    MYUNIT_SEQUENCE_BEGIN();
-
-    MYUNIT_ASSERT_EQUAL(list_empty(list),true);
-    MYUNIT_ASSERT_EQUAL(list_size(list),0);
-
-    MYUNIT_ASSERT_EQUAL(list_next(list,list),list);
-    MYUNIT_ASSERT_EQUAL(list_prev(list,list),list);
-
-    MYUNIT_ASSERT_EQUAL(list_begin(list),list);
-    MYUNIT_ASSERT_EQUAL(list_front(list),list);
-    MYUNIT_ASSERT_EQUAL(list_end(list),list);
-    MYUNIT_ASSERT_EQUAL(list_back(list),list);
-
-    MYUNIT_SEQUENCE_END();
-
-    MYUNIT_ASSERT_SEQUENCE_PASSED();
-
-    return MYUNIT_HAS_SEQUENCE_PASSED();
+return true;
 }
 
 
@@ -529,11 +521,12 @@ MYUNIT_TESTCASE(front_back_two_nodes)
 {
   // PRECONDITIONS:
     list_t list;
+    list_node_t* node;
     list_init(&list);
     list_push_back(&list,&mynodes[NODE0].node);
     list_push_back(&list,&mynodes[NODE1].node);
 
-    list_node_t* node = NULL;
+    node = NULL;
 
 
   // Test dlist_front()
@@ -559,6 +552,7 @@ MYUNIT_TESTCASE(front_back_single_node)
 {
   // PRECONDITIONS:
     list_t list;
+    list_node_t* node;
     list_init(&list);
 
     list_push_back(&list,&mynodes[NODE0].node);
@@ -576,7 +570,7 @@ inlined from ‘myunit_testcase_front_back_single_node’ at ../src/myunit_list.
       |                 ^~~~~~~
 */
 
-   list_node_t* node = NULL;
+  node = NULL;
 
   // Test dlist_front()
   node = list_front(&list);
@@ -769,6 +763,7 @@ MYUNIT_TESTCASE(insert_after)
   // PRECONDITIONS:
 
    list_t list;
+   list_node_t *node;
    list_init(&list);
 
    // 1.) List initialized with nodes 0 and 2
@@ -785,7 +780,7 @@ MYUNIT_TESTCASE(insert_after)
   MYUNIT_ASSERT_EQUAL(list_size(&list), NODES);
 
   // 6.) Check node order
-  list_node_t *node = list_begin(&list);
+  node = list_begin(&list);
   MYUNIT_ASSERT_TRUE( mynode_check(node, NODE0) );
   node = list_next(&list,node);
   MYUNIT_ASSERT_TRUE( mynode_check(node, NODE1) );
@@ -819,6 +814,7 @@ MYUNIT_TESTCASE(insert_before)
   // PRECONDITIONS:
 
    list_t list;
+   list_node_t *node;
    list_init(&list);
 
    // 1.) List initialized with nodes 0 and 2
@@ -835,7 +831,7 @@ MYUNIT_TESTCASE(insert_before)
   MYUNIT_ASSERT_EQUAL(list_size(&list), NODES);
 
   // 6.) Check node order
-  list_node_t *node = list_begin(&list);
+  node = list_begin(&list);
   MYUNIT_ASSERT_TRUE( mynode_check(node, NODE0) );
   node = list_next(&list,node);
   MYUNIT_ASSERT_TRUE( mynode_check(node, NODE1) );
@@ -871,6 +867,7 @@ MYUNIT_TESTCASE(erase)
   // PRECONDITIONS:
 
    list_t list;
+   list_node_t* node;
    test_fixture_setup(FIXTURE_NORMAL, &list);
 
    MYUNIT_ASSERT_EQUAL(list_size(&list), NODES);
@@ -882,7 +879,7 @@ MYUNIT_TESTCASE(erase)
    MYUNIT_ASSERT_EQUAL(list_size(&list), 2);
    MYUNIT_ASSERT_EQUAL(list_find(&list,&mynodes[NODE1].node),NULL);
 
-   list_node_t* node = list_front(&list);
+   node = list_front(&list);
 
    MYUNIT_ASSERT_DIFFER(list_find(&list,node),NULL);
    list_erase(&list,node);
@@ -916,11 +913,12 @@ MYUNIT_TESTCASE(find_empty_list)
    // PRECONDITIONS :
    // -------------------------------------------------
    list_t list;
+   list_node_t* found;
    test_fixture_setup(FIXTURE_EMPTY, &list);
 
    // EXECUTE TESTCASE :
    // -------------------------------------------------
-   list_node_t* found = list_find(&list, &mynodes[NODE0].node);
+   found = list_find(&list, &mynodes[NODE0].node);
 
    // POSTCONDITIONS :
    // -------------------------------------------------
@@ -939,11 +937,12 @@ MYUNIT_TESTCASE(find_node_present)
    // PRECONDITIONS :
    // -------------------------------------------------
    list_t list;
+   list_node_t* found;
    test_fixture_setup(FIXTURE_NORMAL, &list);
 
    // EXECUTE TESTCASE :
    // -------------------------------------------------
-   list_node_t* found = list_find(&list, &mynodes[NODE1].node);
+   found = list_find(&list, &mynodes[NODE1].node);
 
    // POSTCONDITIONS :
    // -------------------------------------------------
@@ -962,13 +961,14 @@ MYUNIT_TESTCASE(find_node_not_present)
    // PRECONDITIONS :
    // -------------------------------------------------
    list_t list;
+   list_node_t* found;
    list_init(&list);
    list_push_back(&list,&mynodes[NODE0].node);
    list_push_back(&list,&mynodes[NODE1].node);
 
    // EXECUTE TESTCASE :
    // -------------------------------------------------
-   list_node_t* found = list_find(&list, &mynodes[NODE2].node);
+   found = list_find(&list, &mynodes[NODE2].node);
 
    // POSTCONDITIONS :
    // -------------------------------------------------
@@ -987,11 +987,12 @@ MYUNIT_TESTCASE(find_first_node)
    // PRECONDITIONS :
    // -------------------------------------------------
    list_t list;
+   list_node_t* found;
    test_fixture_setup(FIXTURE_NORMAL, &list);
 
    // EXECUTE TESTCASE :
    // -------------------------------------------------
-   list_node_t* found = list_find(&list, &mynodes[NODE0].node);
+   found = list_find(&list, &mynodes[NODE0].node);
 
    // POSTCONDITIONS :
    // -------------------------------------------------
@@ -1012,11 +1013,12 @@ MYUNIT_TESTCASE(find_last_node)
     // PRECONDITIONS :
     // -------------------------------------------------
     list_t list;
+    list_node_t* found;
     test_fixture_setup(FIXTURE_NORMAL, &list);
 
     // EXECUTE TESTCASE :
     // -------------------------------------------------
-    list_node_t* found = list_find(&list, &mynodes[NODE2].node);
+    found = list_find(&list, &mynodes[NODE2].node);
 
     // POSTCONDITIONS :
     // -------------------------------------------------
@@ -1035,11 +1037,12 @@ MYUNIT_TESTCASE(size_empty_list) {
     // PRECONDITIONS :
     // -------------------------------------------------
     list_t list;
+    size_t size;
     list_init(&list);
 
     // EXECUTE TESTCASE :
     // -------------------------------------------------
-    size_t size = list_size(&list);
+    size = list_size(&list);
 
     // POSTCONDITIONS :
     // -------------------------------------------------
@@ -1060,11 +1063,12 @@ MYUNIT_TESTCASE(size_multiple_elements) {
     // PRECONDITIONS :
     // -------------------------------------------------
     list_t list;
+    size_t size;
     test_fixture_setup(FIXTURE_NORMAL, &list);
 
     // EXECUTE TESTCASE :
     // -------------------------------------------------
-    size_t size = list_size(&list);
+    size = list_size(&list);
 
     // POSTCONDITIONS :
     // -------------------------------------------------

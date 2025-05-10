@@ -28,9 +28,9 @@
 */
 
 /*!
-    \file       slist.h
+    \file       dlist.h
 
-    \brief      Circular singly linked list header file
+    \brief      Circular doubly linked list header file
 
     \details    In computer science, a linked list is a linear collection of data elements,
                 whose order is not given by their physical placement in memory.
@@ -41,10 +41,10 @@
                 from any position in the sequence during iteration.
                 [Wikipedia - Linked list](https://en.wikipedia.org/wiki/Linked_list)
 
-                Singly linked lists contain nodes which have a data field as well as 'next' field,
-                which points to the next node in line of nodes. Operations that can be performed on
-                singly linked lists include insertion, deletion and traversal.
-                [Wikipedia - Singly linked list](https://en.wikipedia.org/wiki/Linked_list#Singly_linked_list)
+                In a 'doubly linked list', each node contains, besides the next-node link, a second link field
+                pointing to the 'previous' node in the sequence. The two links may be called 'forward('s') and
+                'backwards', or 'next' and 'prev'('previous').
+                [Wikipedia - Doubly linked list](https://en.wikipedia.org/wiki/Doubly_linked_list)
 
                 In the last node of a list, the link field often contains a null reference, a
                 special value is used to indicate the lack of further nodes. A less common convention
@@ -54,63 +54,59 @@
                 [Wikipedia - Circular linked list](https://en.wikipedia.org/wiki/Linked_list#Circular_linked_list)
 */
 
-#ifndef SLIST_H_
-#define SLIST_H_
+#ifndef DLIST_H_
+#define DLIST_H_
 
 #include <stddef.h>
 #include <stdbool.h>
+#include "utils.h"
 
-typedef struct slist_node_t slist_node_t;
+
+typedef struct dlist_node_t dlist_node_t;
+
+ struct dlist_node_t {
+     dlist_node_t *next; //!< Pointer to the next node in the list
+     dlist_node_t *prev; //!< Pointer to the previous node in the list
+ };
+
+ /*!
+    \brief     Type Definition for Doubly Linked List
+    \details   Creates an alias for 'dlist_node_t', representing the entire
+               doubly linked list.
+
+               This allows the list to be treated as a single entity, simplifying
+               function signatures and variable declarations. The first node in the
+               list serves as the list's head.
+ */
+typedef dlist_node_t dlist_t;
 
 /*!
-    \brief      Singly Linked List Node Structure
-    \details    Represents a node within a singly linked list.
+    \brief      Iterates through a singly linked list.
+    \details    Defines a convenient macro for iterating through all nodes in a
+                singly linked list. It initializes an iterator to the beginning
+                of the list and continues until the end is reached, advancing
+                the iterator to the next node in each step.
 
-                Each node contains a pointer to the next node,
-                allowing for traversal through the list.
+   \param list          A pointer to the list's control node
+   \param iterator      A pointer to a `slist_node_t` that will be used as the iterator.
 */
-struct slist_node_t {
-    slist_node_t *next;    //!< Pointer to the next node in the list
-};
+#define dlist_foreach(dlist,iterator) \
+    for(iterator = dlist_begin(dlist); ((dlist_node_t*)iterator) != dlist_end(dlist); iterator=dlist_next(dlist,iterator))
+
 
 /*!
-   \brief     Type Definition for Singly Linked List
-   \details   Creates an alias for 'slist_node_t', representing the entire
-              singly linked list.
+    \brief  Retrieves the next node in a singly linked list.
 
-              This allows the list to be treated as a single entity, simplifying
-              function signatures and variable declarations. The first node in the
-              list serves as the list's head.
-*/
-typedef slist_node_t slist_t;
+    \details    Returns a pointer to the node following the given node in the list.
 
-/*!
-   \brief     Iterates through a singly linked list.
-   \details   Defines a convenient macro for iterating through all nodes in a
-              singly linked list. It initializes an iterator to the beginning
-              of the list and continues until the end is reached, advancing
-              the iterator to the next node in each step.
-
-   \param list      A pointer to the list's control node
-   \param iterator   A pointer to a `slist_node_t` that will be used as the iterator.
-*/
-#define slist_foreach(list,iterator) \
-    for(iterator = slist_begin(list); (iterator) != slist_end(list); iterator=slist_next(list,iterator))
-
-/*!
-  \brief    Retrieves the next node in a singly linked list.
-
-  \details  Returns a pointer to the node following the given node in the list.
-
-  \param list A pointer to the list's control node
-  \param node  A pointer to the current node.
+    \param list     A pointer to the list's control node
+      \param node   A pointer to the current node.
 
   \return A pointer to the next node in the list.
 */
-inline slist_node_t* slist_next(slist_t* list, slist_node_t* node)
-{
-    return node->next;
-}
+#define dlist_next(list,node) \
+        (((dlist_node_t*)(node))->next)
+
 
 /*!
  \brief  Retrieves the node preceding the given node in a circular singly linked list.
@@ -124,8 +120,8 @@ inline slist_node_t* slist_next(slist_t* list, slist_node_t* node)
 
  \return A pointer to the node preceding the given node, or the list control node if the list is empty or the given node is the first node.
 */
-slist_node_t* slist_prev(slist_t *list, slist_node_t* node);
-
+#define dlist_prev(list,node) \
+        (((dlist_node_t*)(node))->prev)
 
 /*!
  \brief Initializes a list control node.
@@ -134,10 +130,11 @@ slist_node_t* slist_prev(slist_t *list, slist_node_t* node);
 
  \param list A pointer to the list control node to initialize.
 */
-inline void slist_init(slist_t* list)
-{
-    list->next = list;
-}
+#define dlist_init(list) \
+    do { \
+        ((dlist_t*)(list))->next = (dlist_t*)(list); \
+        ((dlist_t*)(list))->prev = (dlist_t*)(list); \
+    }while(0)
 
 
 /*!
@@ -150,10 +147,9 @@ inline void slist_init(slist_t* list)
 
  \return A pointer to the first data node in the list, or a pointer to the list control node if the list is empty.
 */
-inline slist_node_t* slist_begin(slist_t* list)
-{
-    return list->next;
-}
+#define dlist_begin(list) \
+        (((dlist_t*)(list))->next)
+
 
 /*!
  \brief Returns a pointer to the first data node in a circular singly linked list.
@@ -165,10 +161,9 @@ inline slist_node_t* slist_begin(slist_t* list)
 
  \return A pointer to the first data node in the list, or a pointer to the list control node if the list is empty.
 */
-inline slist_node_t* slist_front(slist_t* list)
-{
-    return list->next;
-}
+#define dlist_front(list) \
+    (((dlist_t*)(list))->next)
+
 
 /*!
  \brief Returns a pointer to the past-the-end element in the list.
@@ -180,10 +175,9 @@ inline slist_node_t* slist_front(slist_t* list)
 
  \return A pointer to the list control node, representing the end of the list.
 */
-inline slist_node_t* slist_end(slist_t* list)
-{
-    return list;
-}
+#define dlist_end(list) \
+    ((dlist_t*)(list))
+
 
 /*!
  \brief Returns a pointer to the last data node in the list.
@@ -195,10 +189,9 @@ inline slist_node_t* slist_end(slist_t* list)
 
  \return A pointer to the last data node in the list, or the list control node if the list is empty.
 */
-inline slist_node_t* slist_back(slist_t* list)
-{
-    return slist_prev(list,list);
-}
+#define dlist_back(list) \
+    dlist_prev((dlist_t*)(list),(dlist_t*)(list))
+
 
 /*!
  \brief Checks if the list is empty.
@@ -209,10 +202,9 @@ inline slist_node_t* slist_back(slist_t* list)
 
  \return True if the list is empty, false otherwise.
 */
-inline bool slist_empty(slist_t* list)
-{
-    return list->next == list;
-}
+#define dlist_empty(list) \
+    ((dlist_t*)(list))->next == ((dlist_t*)(list))
+
 
 /*!
  \brief Inserts a new node at the beginning of the list.
@@ -222,11 +214,14 @@ inline bool slist_empty(slist_t* list)
  \param list A pointer to the list control node.
  \param node A pointer to the new node to be inserted.
 */
-inline void slist_push_front(slist_t* list, slist_node_t* node)
-{
-    node->next = list->next;
-    list->next = node;
-}
+#define dlist_push_front(list,node) \
+    do{ \
+        ((dlist_node_t*)(node))->next = ((dlist_t*)(list))->next; \
+        ((dlist_node_t*)(node))->prev = ((dlist_t*)(list)); \
+        ((dlist_t*)(list))->next->prev = ((dlist_node_t*)(node)); \
+        ((dlist_t*)(list))->next = ((dlist_node_t*)(node)); \
+    }while(0)
+
 
 /*!
  \brief Removes the first node from the list.
@@ -235,10 +230,11 @@ inline void slist_push_front(slist_t* list, slist_node_t* node)
 
  \param list A pointer to the list control node.
 */
-inline void slist_pop_front(slist_t* list)
-{
-    list->next = list->next->next;
-}
+#define dlist_pop_front(list) \
+    do{ \
+        ((dlist_t*)(list))->next = ((dlist_t*)(list))->next->next; \
+        ((dlist_t*)(list))->next->prev = ((dlist_t*)(list)); \
+    }while(0)
 
 
 /*!
@@ -249,11 +245,13 @@ inline void slist_pop_front(slist_t* list)
  \param list A pointer to the list control node.
  \param node A pointer to the new node to be inserted.
 */
-inline void slist_push_back(slist_t* list, slist_node_t* node)
-{
-    slist_back(list)->next = node;
-    node->next = list;
-}
+#define dlist_push_back(list,node) \
+    do{ \
+        ((dlist_node_t*)(node))->next = ((dlist_t*)(list)); \
+        ((dlist_node_t*)(node))->prev = ((dlist_t*)(list))->prev; \
+        ((dlist_t*)(list))->prev->next = ((dlist_node_t*)(node)); \
+        ((dlist_t*)(list))->prev = ((dlist_node_t*)(node)); \
+    }while(0)
 
 
 /*!
@@ -267,12 +265,8 @@ inline void slist_push_back(slist_t* list, slist_node_t* node)
 
  \return A pointer to the node two positions before the given node.
 */
-inline slist_node_t* slist_prev_prev(slist_t *list, slist_node_t* node)
-{
-    // Optimize! Current O = 2*n
-    return slist_prev(list,slist_prev(list,node));
-}
-
+#define dlist_prev_prev(list,node) \
+    (((dlist_node_t*)(node))->prev->prev)
 
 /*!
  \brief Removes the last node from the list.
@@ -281,10 +275,11 @@ inline slist_node_t* slist_prev_prev(slist_t *list, slist_node_t* node)
 
  \param list A pointer to the list control node.
 */
-inline void slist_pop_back(slist_t* list)
-{
-    slist_prev_prev(list,list)->next = (list);
-}
+#define dlist_pop_back(list) \
+    do{ \
+        ((dlist_t*)(list))->prev = ((dlist_t*)(list))->prev->prev; \
+        ((dlist_t*)(list))->prev->next = ((dlist_t*)(list)); \
+    }while(0)
 
 /*!
  \brief Removes a node from the list.
@@ -295,10 +290,12 @@ inline void slist_pop_back(slist_t* list)
  \param list A pointer to the list control node.
  \param node A pointer to the node to be removed from the list.
 */
-inline void slist_erase(slist_t* list, slist_node_t* node)
-{
-    slist_prev(list,node)->next = node->next;
-}
+#define dlist_erase(list,node) \
+    do{ \
+        ((dlist_node_t*)(node))->prev->next = ((dlist_node_t*)(node))->next; \
+        ((dlist_node_t*)(node))->next->prev = ((dlist_node_t*)(node))->prev; \
+    }while(0)
+
 
 /*!
  \brief Inserts a new node after a given position in the list.
@@ -309,11 +306,13 @@ inline void slist_erase(slist_t* list, slist_node_t* node)
  \param pos A pointer to the node after which the new node should be inserted.
  \param node A pointer to the new node to be inserted.
 */
-inline void slist_insert_after(slist_t* list, slist_node_t* pos, slist_node_t* node)
-{
-    node->next = pos->next;
-    pos->next = node;
-}
+#define dlist_insert_after(list,pos,node) \
+    do{ \
+        ((dlist_node_t*)(node))->next = ((dlist_node_t*)(pos))->next; \
+        ((dlist_node_t*)(node))->prev = ((dlist_node_t*)(pos)); \
+        ((dlist_node_t*)(pos))->next->prev = ((dlist_node_t*)(node)); \
+        ((dlist_node_t*)(pos))->next = ((dlist_node_t*)(node)); \
+    }while(0)
 
 /*!
  \brief Inserts a new node before a given position in the list.
@@ -324,11 +323,13 @@ inline void slist_insert_after(slist_t* list, slist_node_t* pos, slist_node_t* n
  \param pos A pointer to the node before which the new node should be inserted.
  \param node A pointer to the new node to be inserted.
 */
-inline void slist_insert_before(slist_t* list, slist_node_t* pos, slist_node_t* node)
-{
-    slist_prev(list,pos)->next = node;
-    node->next = pos;
-}
+#define dlist_insert_before(list,pos,node) \
+    do{ \
+        ((dlist_node_t*)(node))->next = ((dlist_node_t*)(pos)); \
+        ((dlist_node_t*)(node))->prev = ((dlist_node_t*)(pos))->prev; \
+        ((dlist_node_t*)(pos))->prev->next = ((dlist_node_t*)(node)); \
+        ((dlist_node_t*)(pos))->prev = ((dlist_node_t*)(node)); \
+    }while(0)
 
 /*!
  \brief Returns the number of nodes in the list.
@@ -339,7 +340,7 @@ inline void slist_insert_before(slist_t* list, slist_node_t* pos, slist_node_t* 
 
  \return The number of nodes in the list.
 */
-size_t slist_size(slist_t *list);
+size_t dlist_size(dlist_t *list);
 
 /*!
  \brief Searches for a node within the list.
@@ -351,9 +352,9 @@ size_t slist_size(slist_t *list);
 
  \return A pointer to the found node if it exists in the list, otherwise NULL.
 */
-slist_node_t* slist_find(slist_t* list, slist_node_t* node);
+dlist_node_t* dlist_find(dlist_t* list, dlist_node_t* node);
 
-#endif /* SLIST_H_ */
+#endif /* DLIST_H_ */
 
 
 

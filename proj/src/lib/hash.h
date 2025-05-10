@@ -61,10 +61,8 @@
 
     \return         The updated hash value after accumulating the byte.
 */
-inline uint32_t hash_sdbm_acc(uint32_t hash, uint8_t byte)
-{
-	return (byte + (hash << 6) + (hash << 16) - hash);
-}
+#define hash_sdbm_acc(hash, byte) \
+ ((byte + (hash << 6) + (hash << 16) - hash))
 
 /*!
     \brief      Calculates a hash value using the SDBM algorithm.

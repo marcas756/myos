@@ -1,5 +1,13 @@
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
+add_subdirectory(myunit/proj)
+include_directories (myunit/proj)
+
+
+#add_compile_definitions(MYUNIT_VERBOSE=MYUNIT_SILENT)
+
+
+
 add_executable(myunit_slist myunit_list.c)
 target_compile_definitions(myunit_slist PRIVATE UNITTEST_LIST_TYPE=UNITTEST_LIST_TYPE_SLIST)
 target_link_libraries(myunit_slist myos myunit)

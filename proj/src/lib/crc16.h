@@ -93,6 +93,7 @@
 #define CRC16_H_
 #include <stdint.h>
 #include <stdlib.h>
+#include <stddef.h>
 #include <stdbool.h>
 
 typedef enum
@@ -262,6 +263,8 @@ uint16_t crc16_update(crc16_id_t id, uint16_t seed, uint8_t *data, size_t size);
 uint16_t crc16_finalize (crc16_id_t id, uint16_t seed);
 const crc16_conf_t* crc16_get_conf(crc16_id_t id);
 int crc16_conf_count(void);
+
+
 
 
     /*!

@@ -26,38 +26,36 @@
     OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
     OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-#ifndef MYUNIT_SLIST_H_
-#define MYUNIT_SLIST_H_
+#ifndef MYUNIT_DLIST_H_
+#define MYUNIT_DLIST_H_
 
 
-#include "slist.h"
+#include "dlist.h"
 
-#define myunit_list_type slist
+#define myunit_list_type dlist
 
+typedef dlist_t list_t;
+typedef dlist_node_t list_node_t;
 
-#define list_t                  slist_t
-#define list_node_t             slist_node_t
-#define list_t                  slist_t
-#define list_next               slist_next
-#define list_prev               slist_prev
-#define list_prev_prev          slist_prev_prev
-#define list_init               slist_init
-#define list_begin              slist_begin
-#define list_front              slist_front
-#define list_end                slist_end
-#define list_back               slist_back
-#define list_foreach            slist_foreach
-#define list_empty              slist_empty
-#define list_push_front         slist_push_front
-#define list_pop_front          slist_pop_front
-#define list_push_back          slist_push_back
-#define list_pop_back           slist_pop_back
-#define list_insert_after       slist_insert_after
-#define list_insert_before      slist_insert_before
-#define list_clear              slist_clear
-#define list_erase              slist_erase
-#define list_size               slist_size
-#define list_find               slist_find
+#define list_next(list,node)                dlist_next(list,node)
+#define list_prev(list,node)                dlist_prev(list,node)
+#define list_prev_prev(list,node)           dlist_prev_prev(list,node)
+#define list_init(list)                     dlist_init(list)
+#define list_begin(list)                    dlist_begin(list)
+#define list_front(list)                    dlist_front(list)
+#define list_end(list)                      dlist_end(list)
+#define list_back(list)                     dlist_back(list)
+#define list_foreach(list,it)               dlist_foreach(list,it)
+#define list_empty(list)                    dlist_empty(list)
+#define list_push_front(list,node)          dlist_push_front(list,node)
+#define list_pop_front(list)                dlist_pop_front(list)
+#define list_push_back(list,node)           dlist_push_back(list,node)
+#define list_pop_back(list)                 dlist_pop_back(list)
+#define list_insert_after(list,pos,node)    dlist_insert_after(list,pos,node)
+#define list_insert_before(list,pos,node)   dlist_insert_before(list,pos,node)
+#define list_erase(list,node)               dlist_erase(list,node)
+#define list_size(list)                     dlist_size(list)
+#define list_find(list,node)                dlist_find(list,node)
 
 
-#endif /* MYUNIT_SLIST_H_ */
+#endif /* MYUNIT_DLIST_H_ */

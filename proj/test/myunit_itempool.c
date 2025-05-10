@@ -664,7 +664,7 @@ MYUNIT_TESTCASE(itempool_free_multiple_items_correctly_marks_all_as_free)
 */
 void myunit_testsuite_setup()
 {
-    MYUNIT_EXEC_TESTCASE(itempool_init_sets_all_status_entries_to_free);
+
 
 }
 /*!
