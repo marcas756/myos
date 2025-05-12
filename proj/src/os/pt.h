@@ -360,24 +360,6 @@ typedef uint8_t ptstate_t; //!< Represents the state of a protothread
 
 
 /*!
-    \brief Restart the protothread.
-
-    \details This macro causes the protothread to restart its execution from the beginning.
-    It reinitializes the protothread's state and returns `PT_STATE_INITIALIZED`, indicating
-    that the protothread is ready to be scheduled again from its start.
-
-    This is useful in situations where the protothread needs to be reset and run again
-    from the beginning, typically in response to certain events or conditions.
-
-    \param pt A pointer to the protothread control structure.
-*/
-#define PT_RESTART(pt)            \
-  do {                            \
-    PT_INIT(pt);                  \
-    return PT_STATE_INITIALIZED;  \
-  } while(0)
-
-/*!
     \brief Exit the protothread.
 
     \details This macro causes the protothread to exit. It sets the local continuation state

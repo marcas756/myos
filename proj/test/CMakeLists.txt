@@ -4,7 +4,7 @@ add_subdirectory(myunit/proj)
 include_directories (myunit/proj)
 
 
-#add_compile_definitions(MYUNIT_VERBOSE=MYUNIT_SILENT)
+add_compile_definitions(MYUNIT_VERBOSE=MYUNIT_VERB1_FAILED_ASSERTS)
 
 
 
